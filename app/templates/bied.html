@@ -27,7 +27,7 @@
       font-size: 24px;
       margin-bottom: 20px;
     }
-    input[type="number"], input[type="text"] {
+    select, input[type="number"], input[type="text"] {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -58,6 +58,9 @@
   <div class="form-container">
     <h1>Doe een Bod</h1>
     <form id="bidForm">
+      <select id="vinylSelect" required>
+        <option value="" disabled selected>Selecteer een plaat</option>
+      </select>
       <input type="text" id="name" placeholder="Jouw Naam" required>
       <input type="number" id="bidAmount" placeholder="Bied Bedrag (€)" min="1" required>
       <button type="submit">Verstuur Bod</button>
@@ -68,6 +71,23 @@
   </div>
 
   <script>
+    // Fetch vinyl records dynamically from the server
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('/get-vinyls')
+        .then(response => response.json())
+        .then(data => {
+          const vinylSelect = document.getElementById('vinylSelect');
+          data.forEach(vinyl => {
+            const option = document.createElement('option');
+            option.value = vinyl.id;
+            option.textContent = `${vinyl.artist} - ${vinyl.album}`;
+            vinylSelect.appendChild(option);
+          });
+        })
+        .catch(error => console.error('Error fetching vinyl records:', error));
+    });
+
+    // Handle form submission
     document.getElementById('bidForm').addEventListener('submit', function(event) {
       event.preventDefault();
       document.getElementById('successMessage').style.display = 'block';
@@ -80,3 +100,4 @@
 
 </body>
 </html>
+
