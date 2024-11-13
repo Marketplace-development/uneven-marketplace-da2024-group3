@@ -3,18 +3,31 @@
 <head>
     <title>Login</title>
     <script>
-        function goToHome(event) {
+        function validateLogin(event) {
             event.preventDefault(); // Voorkom standaard formulierverwerking
-            window.location.href = 'home.html'; // Stuur de gebruiker door naar home.html
+
+            const username = document.getElementById('username').value.trim();
+            const registeredUsername = localStorage.getItem('registeredUsername'); // Haal de geregistreerde gebruikersnaam op
+
+            if (username === registeredUsername) {
+                // Als de naam overeenkomt, ga naar home.html
+                alert('Login successful! Redirecting to home...');
+                window.location.href = 'home.html';
+            } else {
+                // Als de naam niet overeenkomt, toon een foutmelding
+                alert('Ben je reeds met deze naam geregistreerd? Voer de correcte naam in.');
+            }
         }
     </script>
 </head>
 <body>
     <h1>Login</h1>
-    <form onsubmit="goToHome(event);">
+    <form onsubmit="validateLogin(event);">
+        <!-- Inputveld voor gebruikersnaam -->
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <br>
+        <!-- Enkele knop "Login" -->
         <button type="submit">Login</button>
     </form>
 </body>
