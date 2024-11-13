@@ -48,19 +48,16 @@
     }
   </style>
   <script>
-    // Functie om te controleren of de gebruiker is ingelogd
+    // Controleer inlogstatus
     function checkLoginAndRedirect(page) {
-        // Haal de login-status op uit localStorage
-        const loggedIn = localStorage.getItem('loggedIn');
-        
-        // Als de gebruiker niet is ingelogd
-        if (loggedIn !== 'true') {
-            alert('Gelieve eerst in te loggen.');
-            window.location.href = 'login.html'; // Verwijs naar loginpagina
-        } else {
-            // Als de gebruiker ingelogd is, ga naar de gewenste pagina
-            window.location.href = page;
-        }
+      const loggedIn = localStorage.getItem('loggedIn') === 'true'; // Controleer of de gebruiker is ingelogd
+      if (loggedIn) {
+        // Als de gebruiker is ingelogd, ga naar de gevraagde pagina
+        window.location.href = page;
+      } else {
+        // Toon foutmelding als de gebruiker niet is ingelogd
+        alert('Je moet eerst inloggen!');
+      }
     }
   </script>
 </head>
@@ -68,7 +65,7 @@
     <h1>Welcome to Our Marketplace App</h1>
     
     <div class="button-container">
-        <!-- Knoppen die naar verschillende pagina's verwijzen, met logincheck -->
+        <!-- Knoppen met logincontrole -->
         <button onclick="checkLoginAndRedirect('add_listing.html')">Add Listing</button>
         <button onclick="checkLoginAndRedirect('bied.html')">Maak een bod</button>
         <button onclick="checkLoginAndRedirect('verkoopoffer.html')">Maak een verkoopoffer</button>
