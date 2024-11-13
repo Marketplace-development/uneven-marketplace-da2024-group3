@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verkoopaanbieding Vinylplaat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="file"] {
+      padding: 3px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h1>Verkoop Vinylplaat</h1>
+    <form id="vinylForm">
+      <input type="text" id="title" placeholder="Titel van de Plaat" required>
+      <input type="text" id="artist" placeholder="Artiest" required>
+      <textarea id="description" rows="4" placeholder="Beschrijving" required></textarea>
+      <input type="number" id="price" placeholder="Vraagprijs (€)" min="1" required>
+      <input type="file" id="image" accept="image/*" required>
+      <button type="submit">Plaats Aanbieding</button>
+    </form>
+    <div class="message" id="successMessage" style="display: none;">
+      Je aanbieding is succesvol geplaatst!
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('vinylForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      document.getElementById('successMessage').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('vinylForm').reset();
+      }, 3000);
+    });
+  </script>
+
+</body>
+</html>
