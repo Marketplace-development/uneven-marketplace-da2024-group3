@@ -1,7 +1,116 @@
-<!-- templates/add_listing.html -->
-<h1>Add Listing</h1>
-<form method="post">
-    Listing Name: <input type="text" name="listing_name" required><br>
-    Price: <input type="number" step="0.01" name="price" required><br>
-    <input type="submit" value="Add Listing">
-</form>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nieuwe Vinyl Listing Toevoegen</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: green;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h1>Voeg een Nieuwe Vinyl Listing Toe</h1>
+    <form id="listingForm">
+      <label for="recordID">Record ID (Artiest - Albumnaam)</label>
+      <input type="text" id="recordID" placeholder="Bijv. The Beatles - Abbey Road" required>
+      
+      <label for="minPrice">Minimumprijs (€)</label>
+      <input type="number" id="minPrice" placeholder="Bijv. 20" min="1" required>
+      
+      <label for="condition">Staat van de Plaat</label>
+      <select id="condition" required>
+        <option value="">Selecteer de staat</option>
+        <option value="M">M (Mint)</option>
+        <option value="NM">NM (Near Mint)</option>
+        <option value="VG+">VG+ (Very Good Plus)</option>
+        <option value="VG">VG (Very Good)</option>
+        <option value="G">G (Good)</option>
+        <option value="P">P (Poor)</option>
+      </select>
+      
+      <label for="color">Kleur van de Plaat</label>
+      <input type="text" id="color" placeholder="Bijv. Zwart, Rood" required>
+      
+      <label for="size">Grootte van de Plaat</label>
+      <select id="size" required>
+        <option value="">Selecteer de grootte</option>
+        <option value="12">12-inch</option>
+        <option value="10">10-inch</option>
+        <option value="7">7-inch</option>
+      </select>
+      
+      <button type="submit">Listing Toevoegen</button>
+    </form>
+    <div class="message" id="successMessage">
+      De listing is succesvol toegevoegd!
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('listingForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      document.getElementById('successMessage').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('listingForm').reset();
+      }, 3000);
+    });
+  </script>
+
+</body>
+</html>
