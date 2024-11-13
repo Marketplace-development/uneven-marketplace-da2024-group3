@@ -4,8 +4,11 @@
     <title>Register</title>
     <script>
         function redirectToLogin() {
-            const username = document.getElementById('username').value;
-            if (username.trim() !== "") {
+            const username = document.getElementById('username').value.trim();
+            if (username !== "") {
+                // Sla de geregistreerde gebruikersnaam op in localStorage
+                localStorage.setItem('registeredUsername', username);
+                alert('Registration successful! Redirecting to login...');
                 // Stuur de gebruiker naar de loginpagina
                 window.location.href = 'login.html';
             } else {
