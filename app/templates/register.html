@@ -2,12 +2,28 @@
 <html>
 <head>
     <title>Register</title>
+    <script>
+        function redirectToLogin() {
+            const username = document.getElementById('username').value;
+            if (username.trim() !== "") {
+                // Stuur de gebruiker naar de loginpagina
+                window.location.href = 'login.html';
+            } else {
+                alert('Please enter a username before registering.');
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Register</h1>
-    <form method="post">
-        Username: <input type="text" name="username" required>
-        <input type="submit" value="Register">
+    <form onsubmit="event.preventDefault(); redirectToLogin();">
+        <!-- Inputveld voor gebruikersnaam -->
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <!-- Enkele knop "Register" -->
+        <button type="submit">Register</button>
     </form>
 </body>
 </html>
+
