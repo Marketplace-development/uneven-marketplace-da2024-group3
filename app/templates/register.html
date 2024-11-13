@@ -8,7 +8,6 @@
             if (username !== "") {
                 // Sla de geregistreerde gebruikersnaam op in localStorage
                 localStorage.setItem('registeredUsername', username);
-                alert('Registration successful! Redirecting to login...');
                 // Stuur de gebruiker naar de loginpagina
                 window.location.href = 'login.html';
             } else {
@@ -26,6 +25,7 @@
         <br>
         <!-- Enkele knop "Register" -->
         <button type="submit">Register</button>
+        <button onclick="location.href='home.html'">Terug naar home</button>
     </form>
 </body>
 </html>
