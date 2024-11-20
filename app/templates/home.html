@@ -27,7 +27,7 @@
     .button-container {
       display: flex;
       flex-direction: column;
-      gap: 15px; /* Adds spacing between buttons */
+      gap: 15px;
       width: 100%;
       max-width: 300px;
     }
@@ -52,12 +52,17 @@
     function checkLoginAndRedirect(page) {
       const loggedIn = localStorage.getItem('loggedIn') === 'true'; // Controleer of de gebruiker is ingelogd
       if (loggedIn) {
-        // Als de gebruiker is ingelogd, ga naar de gevraagde pagina
-        window.location.href = page;
+        window.location.href = page; // Ga naar de gevraagde pagina
       } else {
-        // Toon foutmelding als de gebruiker niet is ingelogd
-        alert('Je moet eerst inloggen!');
+        alert('Je moet eerst inloggen!'); // Toon foutmelding
       }
+    }
+
+    // Uitlogfunctie
+    function logout() {
+      localStorage.removeItem('loggedIn'); // Verwijder de inlogstatus
+      alert('Je bent succesvol uitgelogd.'); // Toon bevestigingsbericht
+      window.location.href = 'home.html'; // Redirect naar de homepage
     }
   </script>
 </head>
@@ -65,12 +70,14 @@
     <h1>Welcome to Our Marketplace App</h1>
     
     <div class="button-container">
-        <!-- Knoppen met logincontrole -->
         <button onclick="checkLoginAndRedirect('add_listing.html')">Add Listing</button>
         <button onclick="checkLoginAndRedirect('bied.html')">Maak een bod</button>
         <button onclick="checkLoginAndRedirect('verkoopoffer.html')">Maak een verkoopoffer</button>
         <button onclick="location.href='login.html'">Log in</button>
         <button onclick="location.href='register.html'">Registreer</button>
+        <button onclick="logout()">Log uit</button>
     </div>
 </body>
 </html>
+
+
