@@ -61,3 +61,10 @@ def add_listing():
 def listings():
     all_listings = Listing.query.all()
     return render_template('listings.html', listings=all_listings)
+@main.route('/dashboard')
+def dashboard():
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        user_listings = Listing.query.filter_by(user_id=user.id).all()
+        return render_template('dashboard.html', username=user.username, listings=user_listings)
+    return redirect(url_for('main.login'))
