@@ -9,7 +9,7 @@
                 // Sla de geregistreerde gebruikersnaam op in localStorage
                 localStorage.setItem('registeredUsername', username);
                 // Stuur de gebruiker naar de loginpagina
-                window.location.href = 'login.html';
+                window.location.href = '/login';
             } else {
                 alert('Please enter a username before registering.');
             }
@@ -25,7 +25,7 @@
         <br>
         <!-- Enkele knop "Register" -->
         <button type="submit">Register</button>
-        <button onclick="location.href='home.html'">Terug naar home</button>
+        <button onclick="location.href='/home'">Terug naar home</button>
     </form>
 </body>
 </html>
