@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -60,14 +59,16 @@
       text-align: center;
       display: none;
     }
-    .form-container button + button {
-     margin-top: 10px;
+    .error-message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+      text-align: center;
+      display: none;
     }
-  
   </style>
 </head>
 <body>
-
   <div class="form-container">
     <h1>Voeg een Nieuwe Vinyl Listing Toe</h1>
     <form id="listingForm">
@@ -100,24 +101,59 @@
       </select>
       
       <button type="submit">Listing Toevoegen</button>
-      <button onclick="location.href='/home'">Terug naar home</button>
+      <button type="button" onclick="location.href='/home'">Terug naar home</button>
     </form>
-    <div class="message" id="successMessage">
-      De listing is succesvol toegevoegd!
-    </div>
+    <div class="message" id="successMessage">De listing is succesvol toegevoegd!</div>
+    <div class="error-message" id="errorMessage">Er is een fout opgetreden bij het toevoegen van de listing.</div>
   </div>
 
   <script>
-    document.getElementById('listingForm').addEventListener('submit', function(event) {
+    document.getElementById('listingForm').addEventListener('submit', async function(event) {
       event.preventDefault();
-      document.getElementById('successMessage').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('successMessage').style.display = 'none';
-        document.getElementById('listingForm').reset();
-      }, 3000);
+
+      // Get form data
+      const recordID = document.getElementById('recordID').value;
+      const minPrice = document.getElementById('minPrice').value;
+      const condition = document.getElementById('condition').value;
+      const color = document.getElementById('color').value;
+      const size = document.getElementById('size').value;
+
+      const listingData = {
+        recordID,
+        minPrice: parseFloat(minPrice),
+        condition,
+        color,
+        size
+      };
+
+      try {
+        const response = await fetch('/add_listing', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(listingData),
+        });
+
+        if (response.ok) {
+          document.getElementById('successMessage').style.display = 'block';
+          document.getElementById('errorMessage').style.display = 'none';
+          document.getElementById('listingForm').reset();
+
+          setTimeout(() => {
+            document.getElementById('successMessage').style.display = 'none';
+          }, 3000);
+        } else {
+          const errorData = await response.json();
+          document.getElementById('errorMessage').textContent = errorData.error || 'Er is een fout opgetreden.';
+          document.getElementById('errorMessage').style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('errorMessage').textContent = 'Netwerkfout. Probeer het later opnieuw.';
+        document.getElementById('errorMessage').style.display = 'block';
+      }
     });
   </script>
-
 </body>
 </html>
-
