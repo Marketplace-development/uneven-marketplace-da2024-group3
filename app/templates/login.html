@@ -12,7 +12,7 @@
             if (username === registeredUsername) {
                 // Als de naam overeenkomt, markeer de gebruiker als ingelogd
                 localStorage.setItem('loggedIn', 'true');
-                window.location.href = '/home'; // Stuur de gebruiker door naar home.html
+                window.location.href = '/dashboard'; // Stuur de gebruiker door naar home.html
             } else {
                 // Als de naam niet overeenkomt, toon een foutmelding
                 alert('Ben je reeds met deze naam geregistreerd? Voer de correcte naam in.');
