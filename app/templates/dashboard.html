@@ -1,20 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <title>User Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spinnback</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome, {{ username }}!</h1>
-    <h2>Your Listings</h2>
-    {% if listings %}
-        <ul>
-        {% for listing in listings %}
-            <li>{{ listing.albumname }} - ${{ listing.price }}</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>You have no listings yet. <a href="{{ url_for('main.add_listing') }}">Add your first listing!</a></p>
-    {% endif %}
+    <h1>Welcome to Our Marketplace App</h1>
+    
+    <div class="button-container">
+        <button onclick="location.href='/add_listing'">Add Listing</button>
+        <button onclick="location.href='/bied'">Bieden</button>
+        <button onclick="location.href='/'">Verkopen</button>
+        <button onclick="logout()">Log uit</button>
+    </div>
 </body>
 </html>
