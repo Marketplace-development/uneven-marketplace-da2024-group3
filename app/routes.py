@@ -19,7 +19,8 @@ def home():
         if user:
             records = Records.query.filter_by(ownerid=user.userid).all()  
             return render_template('home.html', username=user.username, listings=records)
-    return render_template('home.html', username=None)
+    else:
+        return render_template('home.html', username=None)
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -40,7 +41,7 @@ def login():
         user = Users.query.filter_by(username=username).first()
         if user:
             session['user_id'] = user.userid  
-            return redirect(url_for('main.index'))
+            return redirect(url_for('main.home'))
         return 'User not found'
     return render_template('login.html')
 
@@ -51,38 +52,15 @@ def logout():
 
 @main.route('/add-listing', methods=['GET', 'POST'])
 def add_listing():
-    if 'user_id' not in session:
-        return redirect(url_for('main.login'))
-    
-    if request.method == 'POST':
-        listing_name = request.form['listing_name']  
-        price = float(request.form['price'])
-        new_listing = Records(albumname=listing_name,price=price,ownerid=session['user_id'],  artist='Unknown',genre='Unknown',size='Unknown',condition='Unknown',colour='Unknown')
-        db.session.add(new_listing)
-        db.session.commit()
-        return redirect(url_for('main.listings'))
+        return render_template('add_listing.html')
 
-    return render_template('add_listing.html')
 
 @main.route('/listings')
 def listings():
     all_listings = Records.query.all()
     return render_template('listings.html', listings=all_listings)
 
-@main.route('/verkoopoffer')
-def verkoopoffer():
-    if 'user_id' in session:
-        user = Users.query.get(session['user_id'])
-        if user:
-            user_listings = Records.query.filter_by(ownerid=user.userid).all()  
-            return render_template('verkoopoffer.html', username=user.username, listings=user_listings)
-    return redirect(url_for('main.login'))
-
 @main.route('/bied')
 def bied():
-    if 'user_id' in session:
-        user = Users.query.get(session['user_id'])
-        if user:
-            user_listings = Records.query.filter_by(ownerid=user.userid).all()  
-            return render_template('bied.html', username=user.username, listings=user_listings)
     return redirect(url_for('main.login'))
+
