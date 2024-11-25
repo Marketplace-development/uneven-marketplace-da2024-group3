@@ -9,56 +9,100 @@ def index():
         user = Users.query.get(session['user_id'])
         if user:
             records = Records.query.filter_by(ownerid=user.userid).all()  
-            return render_template('home.html', username=user.username, listings=records)
-    return render_template('home.html', username=None)
+            return render_template('start_listing.html', username=user.username, listings=records)
+    return render_template('start_listing.html', username=None)
 
-@main.route('/home')
-def home():
+@main.route('/start_listing')
+def start_listing():
     if 'user_id' in session:
         user = Users.query.get(session['user_id'])
-        if user:
-            records = Records.query.filter_by(ownerid=user.userid).all()  
-            return render_template('home.html', username=user.username, listings=records)
+        if user:  
+            return render_template('start_listing.html', username=user.username)
     else:
-        return render_template('home.html', username=None)
-@main.route('/register', methods=['GET', 'POST'])
+        return render_template('start_listing.html', username=None)
+
+#register
+@main.route('/register', methods=['GET','POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        if Users.query.filter_by(username=username).first() is None:
-            new_user = Users(username=username, email="example@example.com")  
+        user = Users.query.filter_by(username=username).first()
+        if user:
+            return render_template("start_listing.html", errors="Gebruiker al geregistreerd!")
+        else:
+            new_user = Users(username=username)
             db.session.add(new_user)
             db.session.commit()
-            session['user_id'] = new_user.userid  
-            return redirect(url_for('main.index'))
-        return 'Username already registered'
+            session['username'] = username
+            return redirect(url_for('main.dashboard'))
     return render_template('register.html')
-
+#login
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         user = Users.query.filter_by(username=username).first()
         if user:
-            session['user_id'] = user.userid  
-            return redirect(url_for('main.home'))
-        return 'User not found'
+            session['username'] = username
+            return redirect(url_for('main.dashboard'))
+        else:
+            return render_template('start_listing.html', error ="Ongeldige Gebruikersnaam")
     return render_template('login.html')
+@main.route('/dashboard')
+def dashboard():
+    username = session.get('username')
+    if 'username' in session:
+      return redirect(url_for('main.login'))
+    return render_template('dashboard.html', username = username)
 
 @main.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('main.index'))
 
-@main.route('/add-listing', methods=['GET', 'POST'])
+@main.route('/add_listing', methods=['GET','POST'])
 def add_listing():
-        return render_template('add_listing.html')
+    if request.method == 'POST':
+        data = request.json
 
+        # Validate the input data
+        required_fields = ["recordID", "minPrice", "condition", "color", "size"]
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"Fout": f"Veld '{field}' verplicht in te vullen."}), 400
 
-@main.route('/listings')
+        # Add the new listing
+        new_listing = {
+            "recordID": data["recordID"],
+            "minPrice": data["minPrice"],
+            "condition": data["condition"],
+            "color": data["color"],
+            "size": data["size"]
+        }
+        listings.append(new_listing)
+
+        return jsonify({"message": "Plaat succesvol aangeboden!"}), 201
+    return render_template('add_listing.html')
+
+@main.route('/get_listings', methods=['GET'])
 def listings():
-    all_listings = Records.query.all()
-    return render_template('listings.html', listings=all_listings)
+    records = Records.query.all()  # Fetch all records
+    listings_data = [
+        {
+            "albumname": record.albumname,
+            "artist": record.artist,
+            "genre": record.genre,
+            "size": record.size,
+            "condition": record.condition,
+            "color": record.color,
+            "description": record.description,
+            "price": record.price,
+        }
+        for record in records
+    ]
+    return jsonify(listings)
+
+
 
 @main.route('/bied')
 def bied():
