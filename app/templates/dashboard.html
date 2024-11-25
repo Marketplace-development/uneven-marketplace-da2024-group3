@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <h2>Your Listings</h2>
+    {% if listings %}
+        <ul>
+        {% for listing in listings %}
+            <li>{{ listing.albumname }} - ${{ listing.price }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no listings yet. <a href="{{ url_for('main.add_listing') }}">Add your first listing!</a></p>
+    {% endif %}
+</body>
+</html>
