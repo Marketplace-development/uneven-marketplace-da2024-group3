@@ -1,22 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
-
 db = SQLAlchemy()
 
-# Users model
+
 class Users(db.Model):
     __tablename__ = 'users'
     userid = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)  # Username should be unique
+    username = db.Column(db.String(25), unique=True, nullable=False)  # Username should be unique
     email = db.Column(db.String(80), unique=True, nullable=False)  # Email should also be unique
     libraries = db.relationship('Libraries', backref='user', lazy=True)
     buyers = db.relationship('Buyers', backref='user', lazy=True, uselist=False)  # Assuming a user can be a buyer once
     sellers = db.relationship('Sellers', backref='user', lazy=True, uselist=False)  # Assuming a user can be a seller once
     records = db.relationship('Records', backref='user', lazy=True)
 
-    def __repr__(self):
-        return f'<User {self.username}>'
+   #def __repr__(self):
+    #    return f'<User {self.username}>'
 
-# Libraries model
 class Libraries(db.Model):
     __tablename__ = 'libraries'
     libraryid = db.Column(db.Integer, primary_key=True)
