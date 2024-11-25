@@ -48,21 +48,21 @@
     }
   </style>
   <script>
-    // Controleer inlogstatus
+    // Check login status
     function checkLoginAndRedirect(page) {
-      const loggedIn = localStorage.getItem('loggedIn') === 'true'; // Controleer of de gebruiker is ingelogd
+      const loggedIn = localStorage.getItem('loggedIn') === 'true'; // Check if the user is logged in
       if (loggedIn) {
-        window.location.href = page; // Ga naar de gevraagde pagina
+        window.location.href = page; // Go to the requested page
       } else {
-        alert('Je moet eerst inloggen!'); // Toon foutmelding
+        alert('Je moet eerst inloggen!'); // Show an alert
       }
     }
 
-    // Uitlogfunctie
+    // Logout function
     function logout() {
-      localStorage.removeItem('loggedIn'); // Verwijder de inlogstatus
-      alert('Je bent succesvol uitgelogd.'); // Toon bevestigingsbericht
-      window.location.href = 'home.html'; // Redirect naar de homepage
+      localStorage.removeItem('loggedIn'); // Remove the login status
+      alert('Je bent succesvol uitgelogd.'); // Show confirmation
+      window.location.href = '/'; // Redirect to the home route
     }
   </script>
 </head>
@@ -70,14 +70,15 @@
     <h1>Welcome to Our Marketplace App</h1>
     
     <div class="button-container">
-        <button onclick="checkLoginAndRedirect('add_listing.html')">Add Listing</button>
-        <button onclick="checkLoginAndRedirect('bied.html')">Maak een bod</button>
-        <button onclick="checkLoginAndRedirect('verkoopoffer.html')">Maak een verkoopoffer</button>
-        <button onclick="location.href='login.html'">Log in</button>
-        <button onclick="location.href='register.html'">Registreer</button>
+        <button onclick="checkLoginAndRedirect('/add-listing')">Add Listing</button>
+        <button onclick="checkLoginAndRedirect('/bied')">Maak een bod</button>
+        <button onclick="checkLoginAndRedirect('/verkoopoffer')">Maak een verkoopoffer</button>
+        <button onclick="location.href='/login'">Log in</button>
+        <button onclick="location.href='/register'">Registreer</button>
         <button onclick="logout()">Log uit</button>
     </div>
 </body>
 </html>
+
 
 
