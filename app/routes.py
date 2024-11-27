@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify
-from .models import db, Users, Libraries, Buyers, Records, Sellers, LibraryRecords, Transactions, Reviews
+from .models import db, Users, Libraries, Records, LibraryRecords, Transactions, Reviews
 
 main = Blueprint('main', __name__)  
 
@@ -9,8 +9,8 @@ def index():
         user = Users.query.get(session['user_id'])
         if user:
             records = Records.query.filter_by(ownerid=user.userid).all()  
-            return render_template('start_records.html', username=user.username, listings=records)
-    return render_template('start_records.html', username=None)
+            return render_template('overview_records.html', username=user.username, listings=records)
+    return render_template('overview_records.html', username=None)
 
 @main.route('/start_listing')
 def start_listing():
