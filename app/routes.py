@@ -102,7 +102,12 @@ def verkopen():
         return jsonify({"message": "Plaat succesvol aangeboden!"}), 201
     return render_template('verkopen.html')
 
-@main.route('/bieden')
+
+@main.route('/bieden', methods=['GET', 'POST'])
 def bieden():
-    pass
+    if request.method == 'POST':
+        bid = request.form['bid']
+        # Verwerk het bod hier (bijvoorbeeld opslaan in de database)
+        return render_template('bied.html', message=f"Je bod van {bid} is succesvol geplaatst!")
+    return render_template('bied.html')
 
