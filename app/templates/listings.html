@@ -37,7 +37,7 @@
         async function loadListings() {
             const container = document.getElementById('listings-container');
             try {
-                const response = await fetch('/api/listings'); // Fetch data from the backend
+                const response = await fetch('/verkopen'); // Fetch data from the backend
                 const listings = await response.json();
 
                 // Clear the loading message
