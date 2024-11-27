@@ -49,12 +49,10 @@ def login():
             return redirect(url_for('main.dashboard'))
         else:
             return render_template('start_records.html', error ="Ongeldige Gebruikersnaam")
-    return render_template('dashboard_records.html')
+    return render_template('login.html')
 @main.route('/dashboard')
 def dashboard():
     username = session.get('username')
-    if not username:
-      return redirect(url_for('main.login'))
     return render_template('dashboard_records.html', username = username)
 
 @main.route('/logout', methods=['POST'])
