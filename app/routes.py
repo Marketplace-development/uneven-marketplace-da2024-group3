@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for, render_template, session
+from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify
 from .models import db, Users, Libraries, Buyers, Records, Sellers, LibraryRecords, Transactions, Reviews
 
 main = Blueprint('main', __name__)  
@@ -9,28 +9,29 @@ def index():
         user = Users.query.get(session['user_id'])
         if user:
             records = Records.query.filter_by(ownerid=user.userid).all()  
-            return render_template('start_listing.html', username=user.username, listings=records)
-    return render_template('start_listing.html', username=None)
+            return render_template('start_records.html', username=user.username, listings=records)
+    return render_template('start_records.html', username=None)
 
 @main.route('/start_listing')
 def start_listing():
     if 'user_id' in session:
         user = Users.query.get(session['user_id'])
         if user:  
-            return render_template('start_listing.html', username=user.username)
+            return render_template('start_records.html', username=user.username)
     else:
-        return render_template('start_listing.html', username=None)
+        return render_template('start_records.html', username=None)
 
 #register
 @main.route('/register', methods=['GET','POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
+        email = request.form['email']
         user = Users.query.filter_by(username=username).first()
         if user:
-            return render_template("start_listing.html", errors="Gebruiker al geregistreerd!")
+            return render_template("start_records.html", errors="Gebruiker al geregistreerd!")
         else:
-            new_user = Users(username=username)
+            new_user = Users(username=username, email = email)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username
@@ -41,27 +42,46 @@ def register():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        user = Users.query.filter_by(username=username).first()
+        email = request.form['email']
+        user = Users.query.filter_by(username=username, email=email).first()
         if user:
             session['username'] = username
             return redirect(url_for('main.dashboard'))
         else:
-            return render_template('start_listing.html', error ="Ongeldige Gebruikersnaam")
+            return render_template('start_records.html', error ="Ongeldige Gebruikersnaam")
     return render_template('login.html')
 @main.route('/dashboard')
 def dashboard():
     username = session.get('username')
-    if 'username' in session:
+    if not username:
       return redirect(url_for('main.login'))
-    return render_template('dashboard.html', username = username)
+    return render_template('dashboard_records.html', username = username)
 
 @main.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('main.index'))
 
-@main.route('/add_listing', methods=['GET','POST'])
-def add_listing():
+@main.route('/get_records', methods=['GET'])
+def get_records():
+    records_list = Records.query.all()  # Fetch all records
+    listings_data = [
+        {
+            "albumname": record.albumname,
+            "artist": record.artist,
+            "genre": record.genre,
+            "size": record.size,
+            "condition": record.condition,
+            "color": record.color,
+            "description": record.description,
+            "price": record.price,
+        }
+        for record in records_list
+    ]
+    return jsonify(records_list)
+
+@main.route('/verkopen', methods=['GET','POST'])
+def verkopen():
     if request.method == 'POST':
         data = request.json
 
@@ -82,29 +102,9 @@ def add_listing():
         listings.append(new_listing)
 
         return jsonify({"message": "Plaat succesvol aangeboden!"}), 201
-    return render_template('add_listing.html')
+    return render_template('verkopen.html')
 
-@main.route('/get_listings', methods=['GET'])
-def listings():
-    records = Records.query.all()  # Fetch all records
-    listings_data = [
-        {
-            "albumname": record.albumname,
-            "artist": record.artist,
-            "genre": record.genre,
-            "size": record.size,
-            "condition": record.condition,
-            "color": record.color,
-            "description": record.description,
-            "price": record.price,
-        }
-        for record in records
-    ]
-    return jsonify(listings)
-
-
-
-@main.route('/bied')
-def bied():
-    return redirect(url_for('main.login'))
+@main.route('/bieden')
+def bieden():
+    pass
 
