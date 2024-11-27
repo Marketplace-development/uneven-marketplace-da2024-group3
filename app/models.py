@@ -13,8 +13,6 @@ class Users(db.Model):
     address = db.Column(db.String(255))  # Address of the user
 
     libraries = db.relationship('Libraries', backref='user', lazy=True)
-    buyers = db.relationship('Buyers', backref='user', lazy=True, uselist=False)  # Assuming a user can be a buyer once
-    sellers = db.relationship('Sellers', backref='user', lazy=True, uselist=False)  # Assuming a user can be a seller once
     records = db.relationship('Records', backref='user', lazy=True)
 
    #def __repr__(self):
