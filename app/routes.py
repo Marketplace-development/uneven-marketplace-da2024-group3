@@ -78,8 +78,8 @@ def get_records():
     ]
     return jsonify(records_list)
 
-@main.route('/verkopen', methods=['GET','POST'])
-def verkopen():
+@main.route('/records', methods=['GET','POST'])
+def records():
     if request.method == 'POST':
         data = request.json
 
@@ -100,10 +100,10 @@ def verkopen():
         listings.append(new_listing)
 
         return jsonify({"message": "Plaat succesvol aangeboden!"}), 201
-    return render_template('verkopen.html')
+    return render_template('records.html')
 
 
-@main.route('/bieden', methods=['GET', 'POST'])
+@main.route('/transactions', methods=['GET', 'POST'])
 def transactions():
     if request.method == 'POST':
         bid = request.form['bid']
