@@ -104,10 +104,10 @@ def verkopen():
 
 
 @main.route('/bieden', methods=['GET', 'POST'])
-def bieden():
+def transactions():
     if request.method == 'POST':
         bid = request.form['bid']
         # Verwerk het bod hier (bijvoorbeeld opslaan in de database)
-        return render_template('bied.html', message=f"Je bod van {bid} is succesvol geplaatst!")
-    return render_template('bied.html')
+        return render_template('transactions.html', message=f"Je bod van {bid} is succesvol geplaatst!")
+    return render_template('transactions.html')
 
