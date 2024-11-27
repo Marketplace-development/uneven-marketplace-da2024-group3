@@ -11,7 +11,6 @@ class Users(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)  # Email should also be unique
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Timestamp for when the user was created
     address = db.Column(db.String(255))  # Address of the user
-
     libraries = db.relationship('Libraries', backref='user', lazy=True)
     records = db.relationship('Records', backref='user', lazy=True)
 
@@ -39,7 +38,7 @@ class Records(db.Model):
     description = db.Column(db.String(100), nullable=True)
     price = db.Column(db.Float, nullable=False)
     ownerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)  # Foreign key to Users
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  
+    created_at = db.Column(db.DateTime, default=datetime.now)  
     library_records = db.relationship('LibraryRecords', backref='record', lazy=True)
     transactions = db.relationship('Transactions', backref='record', lazy=True)
 
@@ -58,7 +57,7 @@ class Transactions(db.Model):
     __tablename__ = 'transactions'
     transactionid = db.Column(db.Integer, primary_key=True)
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), nullable=False)  # Link to Records
-    buyerid = db.Column(db.Integer, db.ForeignKey('buyers.buyerid'), nullable=False)
+    buyerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
     status = db.Column(db.String(100), nullable=False)  # Making status non-nullable
     reviews = db.relationship('Reviews', backref='transaction', lazy=True)
 
