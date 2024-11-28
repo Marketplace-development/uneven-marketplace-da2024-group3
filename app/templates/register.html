@@ -1,28 +1,19 @@
-<form id="registerForm">
-    <input type="text" id="username" placeholder="Username" required>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="text" id="address" placeholder="Address" required>
-    <button type="submit">Register</button>
-</form>
-<script>
-document.getElementById('registerForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const data = {
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        address: document.getElementById('address').value,
-    };
-    const response = await fetch('/register', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
-    });
-    if (response.ok) {
-        alert('Registration successful.');
-        window.location.href = '/login';
-    } else {
-        const error = await response.json();
-        alert(error.error || 'Registration failed.');
-    }
-});
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form method="POST" action="/register">
+        <input type="text" name="username" placeholder="Username" required>
+        <br>
+        <input type="email" name="email" placeholder="Email" required>
+        <br>
+        <input type="text" name="address" placeholder="Address" required>
+        <br>
+        <button type="submit">Register</button>
+    </form>
+    <a href="/">Back to Home</a>
+</body>
+</html>
