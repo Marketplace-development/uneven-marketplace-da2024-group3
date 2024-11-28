@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class Users(db.Model):
+class users(db.Model):
     __tablename__ = 'users'
     
     userid = db.Column(db.Integer, primary_key=True)
@@ -17,7 +17,7 @@ class Users(db.Model):
    #def __repr__(self):
     #    return f'<User {self.username}>'
 
-class Libraries(db.Model):
+class libraries(db.Model):
     __tablename__ = 'libraries'
     libraryid = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
@@ -26,7 +26,7 @@ class Libraries(db.Model):
 
 
 # Records model
-class Records(db.Model):
+class records(db.Model):
     __tablename__ = 'records'
     recordid = db.Column(db.Integer, primary_key=True)
     albumname = db.Column(db.String(100), nullable=False)
@@ -47,13 +47,13 @@ class Records(db.Model):
 
 
 # LibraryRecords model (linking libraries and records)
-class LibraryRecords(db.Model):
+class libraryrecords(db.Model):
     __tablename__ = 'library_records'
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), primary_key=True)
     libraryid = db.Column(db.Integer, db.ForeignKey('libraries.libraryid'), primary_key=True)
 
 # Transactions model
-class Transactions(db.Model):
+class transactions(db.Model):
     __tablename__ = 'transactions'
     transactionid = db.Column(db.Integer, primary_key=True)
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), nullable=False)  # Link to Records
@@ -65,7 +65,7 @@ class Transactions(db.Model):
         return f'Transaction {self.transactionid}, Status {self.status}'
 
 # Reviews model
-class Reviews(db.Model):
+class reviews(db.Model):
     __tablename__ = 'reviews'
     reviewid = db.Column(db.Integer, primary_key=True)
     transactionid = db.Column(db.Integer, db.ForeignKey('transactions.transactionid'), nullable=False)
