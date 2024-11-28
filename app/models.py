@@ -11,8 +11,8 @@ class users(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)  # Email should also be unique
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Timestamp for when the user was created
     address = db.Column(db.String(255))  # Address of the user
-    libraries = db.relationship('Libraries', backref='user', lazy=True)
-    records = db.relationship('Records', backref='user', lazy=True)
+    libraries = db.relationship('libraries', backref='user', lazy=True)
+    records = db.relationship('records', backref='user', lazy=True)
 
    #def __repr__(self):
     #    return f'<User {self.username}>'
@@ -21,7 +21,7 @@ class libraries(db.Model):
     __tablename__ = 'libraries'
     libraryid = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
-    library_records = db.relationship('LibraryRecords', backref='library', lazy=True)
+    library_records = db.relationship('libraryrecords', backref='library', lazy=True)
 
 
 
@@ -39,8 +39,8 @@ class records(db.Model):
     price = db.Column(db.Float, nullable=False)
     ownerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)  # Foreign key to Users
     created_at = db.Column(db.DateTime, default=datetime.now)  
-    library_records = db.relationship('LibraryRecords', backref='record', lazy=True)
-    transactions = db.relationship('Transactions', backref='record', lazy=True)
+    library_records = db.relationship('libraryrecords', backref='record', lazy=True)
+    transactions = db.relationship('transactions', backref='record', lazy=True)
 
     def __repr__(self):
         return f'<Record {self.albumname}, ${self.price}>'
@@ -59,10 +59,10 @@ class transactions(db.Model):
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), nullable=False)  # Link to Records
     buyerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
     status = db.Column(db.String(100), nullable=False)  # Making status non-nullable
-    reviews = db.relationship('Reviews', backref='transaction', lazy=True)
+    reviews = db.relationship('reviews', backref='transaction', lazy=True)
 
     def __repr__(self):
-        return f'Transaction {self.transactionid}, Status {self.status}'
+        return f'transaction {self.transactionid}, status {self.status}'
 
 # Reviews model
 class reviews(db.Model):
@@ -73,4 +73,4 @@ class reviews(db.Model):
     reasoning = db.Column(db.String(100))
 
     def __repr__(self):
-        return f'<Review {self.reviewscore}, {self.reasoning}>'
+        return f'<review {self.reviewscore}, {self.reasoning}>'
