@@ -3,35 +3,51 @@
 <head>
     <title>Login</title>
     <script>
-        function validateLogin(event) {
-            event.preventDefault(); // Voorkom standaard formulierverwerking
-
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+    
             const username = document.getElementById('username').value.trim();
-            const registeredUsername = localStorage.getItem('registeredUsername'); // Haal de geregistreerde gebruikersnaam op
-
-            if (username === registeredUsername) {
-                // Als de naam overeenkomt, markeer de gebruiker als ingelogd
-                localStorage.setItem('loggedIn', 'true');
-                window.location.href = '/dashboard'; // Stuur de gebruiker door naar home.html
+    
+            if (username !== "") {
+                try {
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username: username }),
+                    });
+    
+                    if (response.ok) {
+                        // Redirect directly to the dashboard without showing an alert
+                        window.location.href = '/dashboard';
+                    } else {
+                        const errorData = await response.json();
+                        alert(errorData.error || 'Failed to log in. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while logging in. Please try again.');
+                }
             } else {
-                // Als de naam niet overeenkomt, toon een foutmelding
-                alert('Ben je reeds met deze naam geregistreerd? Voer de correcte naam in.');
-                localStorage.setItem('loggedIn', 'false');
+                alert('Please enter a username before logging in.');
             }
-        }
+        });
     </script>
+    
+    
 </head>
 <body>
     <h1>Login</h1>
-    <form onsubmit="validateLogin(event);">
-        <!-- Inputveld voor gebruikersnaam -->
+    <form onsubmit="loginUser(event);">
+        <!-- Input field for username -->
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <br>
-        <!-- Enkele knop "Login" -->
+        <!-- Login button -->
         <button type="submit">Login</button>
-        <button onclick="location.href='/register'">Registreer</button>
-        <button onclick="location.href='/home'">Terug naar home</button>
+        <button type="button" onclick="location.href='/register'">Register</button>
+        <button type="button" onclick="location.href='/'">Back to Home</button>
     </form>
 </body>
 </html>
