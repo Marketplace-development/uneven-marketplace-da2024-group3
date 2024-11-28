@@ -1,33 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-    <script>
-        function redirectToLogin() {
-            const username = document.getElementById('username').value.trim();
-            if (username !== "") {
-                // Sla de geregistreerde gebruikersnaam op in localStorage
-                localStorage.setItem('registeredUsername', username);
-                // Stuur de gebruiker naar de loginpagina
-                window.location.href = '/login';
-            } else {
-                alert('Please enter a username before registering.');
-            }
-        }
-    </script>
-</head>
-<body>
-    <h1>Register</h1>
-    <form onsubmit="event.preventDefault(); redirectToLogin();">
-        <!-- Inputveld voor gebruikersnaam -->
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <!-- Enkele knop "Register" -->
-        <button type="submit">Register</button>
-        <button onclick="location.href='/home'">Terug naar home</button>
-    </form>
-</body>
-</html>
-
-
+<form id="registerForm">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="address" placeholder="Address" required>
+    <button type="submit">Register</button>
+</form>
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+    };
+    const response = await fetch('/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+    });
+    if (response.ok) {
+        alert('Registration successful.');
+        window.location.href = '/login';
+    } else {
+        const error = await response.json();
+        alert(error.error || 'Registration failed.');
+    }
+});
+</script>
