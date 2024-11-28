@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for
 from .models import db, users, records
-from . import supabase
 import logging
 
 main = Blueprint('main', __name__)
