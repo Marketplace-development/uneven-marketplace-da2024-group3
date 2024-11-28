@@ -2,52 +2,14 @@
 <html>
 <head>
     <title>Login</title>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent default form submission
-    
-            const username = document.getElementById('username').value.trim();
-    
-            if (username !== "") {
-                try {
-                    const response = await fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ username: username }),
-                    });
-    
-                    if (response.ok) {
-                        // Redirect directly to the dashboard without showing an alert
-                        window.location.href = '/dashboard';
-                    } else {
-                        const errorData = await response.json();
-                        alert(errorData.error || 'Failed to log in. Please try again.');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('An error occurred while logging in. Please try again.');
-                }
-            } else {
-                alert('Please enter a username before logging in.');
-            }
-        });
-    </script>
-    
-    
 </head>
 <body>
     <h1>Login</h1>
-    <form onsubmit="loginUser(event);">
-        <!-- Input field for username -->
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+    <form method="POST" action="/login">
+        <input type="text" name="username" placeholder="Username" required>
         <br>
-        <!-- Login button -->
         <button type="submit">Login</button>
-        <button type="button" onclick="location.href='/register'">Register</button>
-        <button type="button" onclick="location.href='/'">Back to Home</button>
     </form>
+    <a href="/">Back to Home</a>
 </body>
 </html>
