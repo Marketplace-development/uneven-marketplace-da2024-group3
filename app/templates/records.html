@@ -3,29 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nieuwe Vinyl Listing Toevoegen</title>
+  <title>Voeg een Nieuwe Vinyl Listing Toe</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    }
+    .page-container {
+      padding: 20px;
+    }
+    h1.page-title {
+      font-size: 28px;
+      margin: 20px 0;
+      text-align: center;
     }
     .form-container {
       background-color: #ffffff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 400px;
-    }
-    h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
     }
     label {
       display: block;
@@ -69,65 +69,113 @@
   </style>
 </head>
 <body>
-  <div class="form-container">
-    <h1>Voeg een Nieuwe Vinyl Listing Toe</h1>
-    <form id="listingForm">
-      <label for="recordID">Record ID (Artiest - Albumnaam)</label>
-      <input type="text" id="recordID" placeholder="Bijv. The Beatles - Abbey Road" required>
-      
-      <label for="minPrice">Minimumprijs (€)</label>
-      <input type="number" id="minPrice" placeholder="Bijv. 20" min="1" required>
-      
-      <label for="condition">Staat van de Plaat</label>
-      <select id="condition" required>
-        <option value="">Selecteer de staat</option>
-        <option value="M">M (Mint)</option>
-        <option value="NM">NM (Near Mint)</option>
-        <option value="VG+">VG+ (Very Good Plus)</option>
-        <option value="VG">VG (Very Good)</option>
-        <option value="G">G (Good)</option>
-        <option value="P">P (Poor)</option>
-      </select>
-      
-      <label for="color">Kleur van de Plaat</label>
-      <input type="text" id="color" placeholder="Bijv. Zwart, Rood" required>
-      
-      <label for="size">Grootte van de Plaat</label>
-      <select id="size" required>
-        <option value="">Selecteer de grootte</option>
-        <option value="12">12-inch</option>
-        <option value="10">10-inch</option>
-        <option value="7">7-inch</option>
-      </select>
-      
-      <button type="submit">Record Toevoegen</button>
-      <button type="button" onclick="location.href='/home'">Terug naar start</button>
-    </form>
-    <div class="message" id="successMessage">De record is succesvol toegevoegd!</div>
-    <div class="error-message" id="errorMessage">Er is een fout opgetreden bij het toevoegen van de record.</div>
+  <div class="page-container">
+    <h1 class="page-title">Voeg een Nieuwe Vinyl Listing Toe</h1>
+    <div class="form-container">
+      <form id="listingForm">
+  
+        <label for="albumName">Albumnaam</label>
+        <input type="text" id="albumName" placeholder="Bijv. Abbey Road" required>
+        
+        <label for="artist">Artiest</label>
+        <input type="text" id="artist" placeholder="Bijv. The Beatles" maxlength="50" required>
+        
+        <label for="genre">Genre</label>
+        <select id="genre" required>
+          <option value="">Selecteer een genre</option>
+          <option value="Pop">Pop</option>
+          <option value="Rock">Rock</option>
+          <option value="Jazz">Jazz</option>
+          <option value="Blues">Blues</option>
+          <option value="Hip-hop/Rap">Hip-hop/Rap</option>
+          <option value="Classical">Classical</option>
+          <option value="Electronic/Dance">Electronic/Dance</option>
+          <option value="Reggae">Reggae</option>
+          <option value="R&B/Soul">R&B/Soul</option>
+          <option value="Country">Country</option>
+          <option value="Folk">Folk</option>
+          <option value="Metal">Metal</option>
+          <option value="Latin">Latin</option>
+          <option value="Indie/Alternative">Indie/Alternative</option>
+          <option value="World Music">World Music</option>
+        </select>
+        
+        <label for="size">Grootte van de Plaat</label>
+        <select id="size" required>
+          <option value="">Selecteer de grootte</option>
+          <option value="12">12-inch</option>
+          <option value="10">10-inch</option>
+          <option value="7">7-inch</option>
+        </select>
+        
+        <label for="condition">Staat van de Plaat</label>
+        <select id="condition" required>
+          <option value="">Selecteer de staat</option>
+          <option value="M">M (Mint)</option>
+          <option value="NM">NM (Near Mint)</option>
+          <option value="VG+">VG+ (Very Good Plus)</option>
+          <option value="VG">VG (Very Good)</option>
+          <option value="G">G (Good)</option>
+          <option value="P">P (Poor)</option>
+        </select>
+        
+        <label for="color">Kleur van de Plaat</label>
+        <input type="text" id="color" placeholder="Bijv. Zwart, Rood" required>
+        
+        <label for="description">Beschrijving</label>
+        <textarea id="description" placeholder="Geef een korte beschrijving" maxlength="300" required></textarea>
+        
+        <label for="minPrice">Minimumprijs (€)</label>
+        <input type="number" id="minPrice" placeholder="Bijv. 20" min="1" required>
+        
+        <label for="ownerID">Eigenaar ID</label>
+        <input type="text" id="ownerID" placeholder="Bijv. 12345" required>
+        
+        <label for="createdAt">Aangemaakt op</label>
+        <input type="text" id="createdAt" disabled>
+
+        <button type="submit">Record Toevoegen</button>
+        <button type="button" onclick="location.href='/home'">Terug naar start</button>
+      </form>
+      <div class="message" id="successMessage">De record is succesvol toegevoegd!</div>
+      <div class="error-message" id="errorMessage">Er is een fout opgetreden bij het toevoegen van de record.</div>
+    </div>
   </div>
 
   <script>
+    // Vul de datum automatisch in
+    document.getElementById('createdAt').value = new Date().toLocaleDateString();
+
     document.getElementById('listingForm').addEventListener('submit', async function(event) {
       event.preventDefault();
 
-      // Get form data
       const recordID = document.getElementById('recordID').value;
-      const minPrice = document.getElementById('minPrice').value;
+      const albumName = document.getElementById('albumName').value;
+      const artist = document.getElementById('artist').value;
+      const genre = document.getElementById('genre').value;
+      const size = document.getElementById('size').value;
       const condition = document.getElementById('condition').value;
       const color = document.getElementById('color').value;
-      const size = document.getElementById('size').value;
+      const description = document.getElementById('description').value;
+      const minPrice = document.getElementById('minPrice').value;
+      const ownerID = document.getElementById('ownerID').value;
 
       const listingData = {
         recordID,
-        minPrice: parseFloat(minPrice),
+        albumName,
+        artist,
+        genre,
+        size,
         condition,
         color,
-        size
+        description,
+        minPrice: parseFloat(minPrice),
+        ownerID,
+        createdAt: new Date().toISOString(),
       };
 
       try {
-        const response = await fetch('/records', {
+        const response = await fetch('/verkopen', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -139,7 +187,6 @@
           document.getElementById('successMessage').style.display = 'block';
           document.getElementById('errorMessage').style.display = 'none';
           document.getElementById('listingForm').reset();
-
           setTimeout(() => {
             document.getElementById('successMessage').style.display = 'none';
           }, 3000);
@@ -149,7 +196,6 @@
           document.getElementById('errorMessage').style.display = 'block';
         }
       } catch (error) {
-        console.error('Error:', error);
         document.getElementById('errorMessage').textContent = 'Netwerkfout. Probeer het later opnieuw.';
         document.getElementById('errorMessage').style.display = 'block';
       }
