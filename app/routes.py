@@ -24,32 +24,30 @@ def get_records():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        data = request.get_json()
-        username = data.get('username')
-        email = data.get('email')
-        address = data.get('address')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        address = request.form.get('address')  # Fetch the address from the form
 
-        if not all([username, email, address]):
-            return jsonify({"error": "All fields are required"}), 400
+        # Check if the username already exists
+        user = users.query.filter_by(username=username).first()
+        if user:
+            return render_template("register.html", errors="Gebruiker al geregistreerd!")
 
+        # Create a new user entry
+        new_user = users(username=username, email=email, address=address)
         try:
-            response = supabase.table('users').insert({
-                'username': username,
-                'email': email,
-                'address': address,
-                'created_at': 'now()'
-            }).execute()
+            db.session.add(new_user)
+            db.session.commit()
 
-            if response.data:
-                return jsonify({"message": "User registered successfully"}), 201
-            return jsonify({"error": "Failed to register user"}), 500
+            # Store username in session and redirect to the dashboard
+            session['username'] = username
+            return redirect(url_for('main.dashboard'))
         except Exception as e:
-            logging.error(f"Error registering user: {e}")
-            return jsonify({"error": "Server error"}), 500
-
+            # Handle database errors or commit issues
+            return render_template("register.html", errors="Er is een fout opgetreden bij registratie.")
     return render_template('register.html')
 
-
+    
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
