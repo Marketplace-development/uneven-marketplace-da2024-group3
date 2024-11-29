@@ -89,6 +89,7 @@
         <div>
             <button onclick="location.href='/records'">Verkopen</button>
             <button onclick="location.href='/transactions'">Kopen</button>
+            <button onclick="logout()">Log out</button> <!-- Call logout function -->
         </div>
     </div>
 
@@ -101,6 +102,12 @@
     </div>
 
     <script>
+        // Logout function to show alert and redirect
+        function logout() {
+            alert("U bent succesvol uitgelogd!"); // Show the success message
+            window.location.href = '/logout'; // Redirect to the logout route
+        }
+
         // Fetch listings from the backend and render them
         async function loadListings() {
             const container = document.getElementById('listings-container');
