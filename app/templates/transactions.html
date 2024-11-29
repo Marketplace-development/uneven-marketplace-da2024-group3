@@ -1,42 +1,34 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prijs Bieden</title>
+  <title>Koop een Vinyl</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 20px;
     }
     .form-container {
-      background-color: #ffffff;
+      max-width: 600px;
+      margin: auto;
+      background-color: #fff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 300px;
-      text-align: center;
     }
     h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
+      text-align: center;
     }
-    select, input[type="number"], input[type="text"] {
+    label, select, button {
       width: 100%;
+      display: block;
+      margin-top: 10px;
       padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      font-size: 16px;
     }
     button {
-      width: 100%;
-      padding: 10px;
       background-color: #007bff;
       color: white;
       border: none;
@@ -46,62 +38,21 @@
     button:hover {
       background-color: #0056b3;
     }
-    .message {
-      margin-top: 15px;
-      font-size: 14px;
-      color: green;
-    }
-    .form-container button + button {
-      margin-top: 10px;
-    }
   </style>
 </head>
 <body>
-
   <div class="form-container">
-    <h1>Doe een Bod</h1>
-    <form id="bidForm">
-      <select id="vinylSelect" required>
-        <option value="" disabled selected>Selecteer een plaat</option>
+    <h1>Koop een Vinyl</h1>
+    <form action="/transactions" method="POST">
+      <label for="recordid">Kies een Record</label>
+      <select id="recordid" name="recordid" required>
+        <!-- Records will be populated by Python -->
+        {records_options}
       </select>
-      <input type="text" id="name" placeholder="Jouw Naam" required>
-      <input type="number" id="bidAmount" placeholder="Bied Bedrag (€)" min="1" required>
-      <button type="submit">Verstuur Bod</button>
-      <button onclick="location.href='/dashboard'">Terug naar home</button>
+      <button type="submit">Kopen</button>
     </form>
-    <div class="message" id="successMessage" style="display: none;">
-      Bedankt! Je bod is succesvol geplaatst.
-    </div>
+    <button onclick="location.href='/dashboard'">Terug naar Dashboard</button>
   </div>
-
-  <script>
-    // Fetch vinyl records dynamically from the server
-    document.addEventListener('DOMContentLoaded', function() {
-      fetch('/get-vinyls')
-        .then(response => response.json())
-        .then(data => {
-          const vinylSelect = document.getElementById('vinylSelect');
-          data.forEach(vinyl => {
-            const option = document.createElement('option');
-            option.value = vinyl.id;
-            option.textContent = `${vinyl.artist} - ${vinyl.album}`;
-            vinylSelect.appendChild(option);
-          });
-        })
-        .catch(error => console.error('Error fetching vinyl records:', error));
-    });
-
-    // Handle form submission
-    document.getElementById('bidForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      document.getElementById('successMessage').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('successMessage').style.display = 'none';
-        document.getElementById('bidForm').reset();
-      }, 3000);
-    });
-  </script>
-
 </body>
 </html>
 
