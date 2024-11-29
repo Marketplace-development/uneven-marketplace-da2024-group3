@@ -11,27 +11,61 @@
       margin: 0;
       padding: 0;
     }
-    .page-container {
-      padding: 20px;
+
+    /* Top Navigation Bar */
+    .top-bar {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between; /* Space between the title and buttons */
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-    h1.page-title {
-      font-size: 28px;
-      margin: 20px 0;
-      text-align: center;
+
+    .top-bar h1 {
+      margin: 0;
+      font-size: 20px;
     }
+
+    .top-bar button {
+      padding: 5px 10px;
+      background-color: white;
+      color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px; /* Space between the buttons */
+    }
+
+    .top-bar button:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Form and page content styling */
     .form-container {
       background-color: #ffffff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       max-width: 600px;
-      margin: 0 auto;
+      margin: 20px auto;
     }
+
+    h1.page-title {
+      font-size: 28px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
     label {
       display: block;
       font-weight: bold;
       margin-top: 10px;
     }
+
     input, select, textarea {
       width: 100%;
       padding: 10px;
@@ -39,6 +73,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     button {
       width: 100%;
       padding: 10px;
@@ -49,9 +84,11 @@
       cursor: pointer;
       font-size: 16px;
     }
+
     button:hover {
       background-color: #0056b3;
     }
+
     .message {
       margin-top: 15px;
       font-size: 14px;
@@ -59,6 +96,7 @@
       text-align: center;
       display: none;
     }
+
     .error-message {
       margin-top: 15px;
       font-size: 14px;
@@ -69,6 +107,15 @@
   </style>
 </head>
 <body>
+  <!-- Top Bar with title and only the "Back to Dashboard" button -->
+  <div class="top-bar">
+    <h1>Spinnback</h1>
+    <div>
+      <button onclick="location.href='/dashboard'">Terug naar Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Form Section -->
   <div class="form-container">
     <h1>Voeg een Nieuwe Vinyl Listing Toe</h1>
     <form action="/records" method="POST">
@@ -80,11 +127,6 @@
 
       <label for="genre">Genre</label>
       <select id="genre" name="genre" required>
-        <option value="Pop">Pop</option>
-        <option value="Rock">Rock</option>
-        <option value="Jazz">Jazz</option>
-        <option value="Blues">Blues</option>
-        <option value="">Selecteer een genre</option>
         <option value="Pop">Pop</option>
         <option value="Rock">Rock</option>
         <option value="Jazz">Jazz</option>
@@ -104,15 +146,13 @@
 
       <label for="size">Grootte van de Plaat</label>
       <select id="size" name="size" required>
-        <option value="">Selecteer de grootte</option>
         <option value='12"'>12-inch</option>
         <option value='10"'>10-inch</option>
         <option value='7"'>7-inch</option>
       </select>
 
       <label for="condition">Staat van de Plaat</label>
-      <select id="condition" name = "condition" required>
-        <option value="">Selecteer de staat</option>
+      <select id="condition" name="condition" required>
         <option value="M">M (Mint)</option>
         <option value="NM">NM (Near Mint)</option>
         <option value="VG+">VG+ (Very Good Plus)</option>
@@ -132,8 +172,6 @@
 
       <button type="submit">Toevoegen</button>
     </form>
-    <br>
-    <button onclick="location.href='/dashboard'">Terug naar Dashboard</button>
   </div>
 </body>
 </html>
