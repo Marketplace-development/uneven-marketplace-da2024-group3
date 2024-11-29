@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spinnback - Home & Listings</title>
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
@@ -17,6 +18,7 @@
             min-height: 100vh;
         }
 
+        /* Top Navigation Bar */
         .top-bar {
             width: 100%;
             background-color: #007bff;
@@ -47,22 +49,26 @@
             background-color: #e0e0e0;
         }
 
+        /* Listings Container */
         .listing-container {
             width: 90%;
             max-width: 800px;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
+            text-align: center;
         }
 
+        /* Individual Listing */
         .listing {
             border: 1px solid #ddd;
             border-radius: 5px;
             background: #fff;
             padding: 15px;
             margin-bottom: 10px;
+            text-align: left;
         }
 
         .listing h3 {
@@ -72,23 +78,67 @@
 
         .listing p {
             margin: 5px 0;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
+    <!-- Top Bar -->
     <div class="top-bar">
         <h1>Spinnback</h1>
         <div>
-            <button onclick="location.href='/login'">login</button>
-            <button onclick="location.href='/register'">register</button>
-            <button onclick="logout()">Log uit</button>
+            <button onclick="location.href='/login'">Log in</button>
+            <button onclick="location.href='/register'">Registreer</button>
         </div>
     </div>
 
+    <!-- Listings Section -->
     <div class="listing-container">
         <h1>All Listings</h1>
-        <!-- Injected content here -->
-        {{ records_html|safe }}
+        <div id="listings-container">
+            <p>Loading listings...</p>
+        </div>
     </div>
+
+    <script>
+        // Fetch listings from the backend and render them
+        async function loadListings() {
+            const container = document.getElementById('listings-container');
+            try {
+                const response = await fetch('/get_records'); // Fetch data from the backend route
+                const listings = await response.json();
+
+                // Clear the loading message
+                container.innerHTML = '';
+
+                // Render each listing dynamically
+                if (listings.length > 0) {
+                    listings.forEach(listing => {
+                        const listingDiv = document.createElement('div');
+                        listingDiv.className = 'listing';
+                        listingDiv.innerHTML = `
+                            <h3>${listing.albumname}</h3>
+                            <p><strong>Artist:</strong> ${listing.artist}</p>
+                            <p><strong>Genre:</strong> ${listing.genre}</p>
+                            <p><strong>Size:</strong> ${listing.size}</p>
+                            <p><strong>Condition:</strong> ${listing.condition}</p>
+                            <p><strong>Color:</strong> ${listing.colour}</p>
+                            <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
+                            <p><strong>Price:</strong> $${listing.price.toFixed(2)}</p>
+                        `;
+                        container.appendChild(listingDiv);
+                    });
+                } else {
+                    container.innerHTML = '<p>No listings available.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading listings:', error);
+                container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
+            }
+        }
+
+        // Load the listings when the page loads
+        window.onload = loadListings;
+    </script>
 </body>
 </html>
