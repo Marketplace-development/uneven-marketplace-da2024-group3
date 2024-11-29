@@ -5,11 +5,19 @@
 </head>
 <body>
     <h1>Login</h1>
+    
+    <!-- Formulier -->
     <form method="POST" action="/login">
         <input type="text" name="username" placeholder="Username" required>
         <br>
         <button type="submit">Login</button>
     </form>
+
+    <!-- Toon foutmelding indien aanwezig -->
+    {% if errors %}
+        <p style="color: red;">{{ errors }}</p>
+    {% endif %}
+
     <a href="/">Back to Home</a>
 </body>
 </html>
