@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for
 from .models import db, users, records
 import logging
+from . import supabase
 
 main = Blueprint('main', __name__)
 
@@ -8,77 +9,19 @@ main = Blueprint('main', __name__)
 def index():
     return render_template('overview_records.html')
 
-@main.route('/get_records1', methods=['GET'])
-def get_records1():
+@main.route('/get_records', methods=['GET'])
+def get_records():
     try:
-        # Fetch records from Supabase
         response = supabase.table('records').select('*').execute()
-
-        # Check if data is returned
         if response.data:
-            records = response.data  # List of records
+            return jsonify(response.data), 200
         else:
-            records = []  # No records found
-
-        # Generate HTML for the listings
-        records_html = ""
-        if records:
-            for record in records:
-                records_html += f"""
-                    <div class="listing">
-                        <h3>{record['albumname']}</h3>
-                        <p>Artist: {record['artist']}</p>
-                        <p>Genre: {record['genre']}</p>
-                        <p>Size: {record['size']}</p>
-                        <p>Condition: {record['condition']}</p>
-                        <p>Color: {record['colour']}</p>
-                        <p>Description: {record.get('description', 'No description provided.')}</p>
-                        <p>Price: €{record['price']:.2f}</p>
-                    </div>
-                """
-        else:
-            records_html = "<p>No listings available.</p>"
-
-        return render_template('overview_records.html', records_html=records_html)
+            return jsonify({"message": "No records found"}), 404
+	
     except Exception as e:
         logging.error(f"Error fetching records: {e}")
-        return render_template('overview_records.html', records_html="<p>Failed to load listings. Please try again later.</p>")
+        return jsonify({"error": "Unable to fetch records"}), 500
 
-@main.route('/get_records2', methods=['GET'])
-def get_records2():
-    try:
-        # Fetch records from Supabase
-        response = supabase.table('records').select('*').execute()
-
-        # Check if data is returned
-        if response.data:
-            records = response.data  # List of records
-        else:
-            records = []  # No records found
-
-        # Generate HTML for the listings
-        records_html = ""
-        if records:
-            for record in records:
-                records_html += f"""
-                    <div class="listing">
-                        <h3>{record['albumname']}</h3>
-                        <p>Artist: {record['artist']}</p>
-                        <p>Genre: {record['genre']}</p>
-                        <p>Size: {record['size']}</p>
-                        <p>Condition: {record['condition']}</p>
-                        <p>Color: {record['colour']}</p>
-                        <p>Description: {record.get('description', 'No description provided.')}</p>
-                        <p>Price: €{record['price']:.2f}</p>
-                    </div>
-                """
-        else:
-            records_html = "<p>No listings available.</p>"
-
-        return render_template('dashboard_records.html', records_html=records_html)
-    except Exception as e:
-        logging.error(f"Error fetching records: {e}")
-        return render_template('dashboard_records.html', records_html="<p>Failed to load listings. Please try again later.</p>")
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -119,44 +62,10 @@ def login():
 
         # Store username in session and redirect to the dashboard
         session['username'] = username
+        session['userid'] = user.userid
         return redirect(url_for('main.dashboard'))
 
     return render_template('login.html')  # Render login page for GET requests
-
-
-@main.route('/records', methods=['GET', 'POST'])
-def records():
-    if request.method == 'POST':
-        data = request.json
-        required_fields = ['albumname', 'artist', 'genre', 'size', 'condition', 'colour', 'price']
-
-        for field in required_fields:
-            if field not in data:
-                return jsonify({"error": f"Field '{field}' is required"}), 400
-
-        try:
-            response = supabase.table('records').insert({
-                'albumname': data['albumname'],
-                'artist': data['artist'],
-                'genre': data['genre'],
-                'size': data['size'],
-                'condition': data['condition'],
-                'colour': data['colour'],
-                'description': data.get('description', ''),
-                'price': data['price'],
-                'created_at': 'now()'
-            }).execute()
-
-            if response.status_code == 201:
-                return jsonify({"message": "Record added successfully"}), 201
-            else:
-                return jsonify({"error": "Failed to add record"}), response.status_code
-
-        except Exception as e:
-            logging.error(f"Error adding record: {e}")
-            return jsonify({"error": "Unable to add record"}), 500
-
-    return render_template('records.html')
 
 @main.route('/dashboard', methods=['GET'])
 def dashboard():
@@ -164,6 +73,67 @@ def dashboard():
     if not username:
         return redirect(url_for('main.login'))  # Redirect to login if no user is logged in
     return render_template('dashboard_records.html')
+
+@main.route('/records', methods=['GET', 'POST'])
+def manage_records():
+    if request.method == 'POST':
+        # Ensure user is logged in
+        ownerid = session.get('userid')
+        if not ownerid:
+            return "User not logged in", 401
+
+        # Extract form data
+        albumname = request.form.get('albumname')
+        artist = request.form.get('artist')
+        genre = request.form.get('genre')
+        size = request.form.get('size')
+        condition = request.form.get('condition')
+        colour = request.form.get('colour')
+        price = request.form.get('price')
+        description = request.form.get('description')
+
+        # Insert record into Supabase
+        supabase.table('records').insert({
+            'albumname': albumname,
+            'artist': artist,
+            'genre': genre,
+            'size': size,
+            'condition': condition,
+            'colour': colour,
+            'price': price,
+            'description': description,
+            'ownerid': ownerid  # Attach the logged-in user's ID
+        }).execute()
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('records.html')
+
+
+
+@main.route('/transactions', methods=['GET', 'POST'])
+def handle_transactions():
+    if request.method == 'POST':
+        recordid = request.form.get('recordid')
+
+        # Delete the selected record from Supabase
+        supabase.table('records').delete().eq('recordid', recordid).execute()
+
+        return "Record gekocht!", 200  # Or redirect if needed
+
+    # Fetch all records for the dropdown
+    records = supabase.table('records').select('recordid, albumname, artist').execute().data
+
+    # Dynamically generate options for the dropdown
+    records_options = ''.join(
+        f'<option value="{record["recordid"]}">{record["albumname"]} - {record["artist"]}</option>'
+        for record in records
+    )
+
+    # Serve HTML with embedded options
+    with open('transactions.html') as f:
+        html = f.read()
+    return html.replace('{records_options}', records_options)
+
 
 @main.route('/logout', methods=['GET'])
 def logout():
