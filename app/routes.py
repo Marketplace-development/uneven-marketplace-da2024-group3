@@ -43,7 +43,7 @@ def register():
 
             # Store username in session and redirect to the dashboard
             session['username'] = username
-            return redirect(url_for('main.dashboard'))
+            return redirect(url_for('main.login'))
         except Exception as e:
             # Handle database errors or commit issues
             return render_template("register.html", errors="Er is een fout opgetreden bij registratie.")
@@ -130,13 +130,11 @@ def handle_transactions():
     )
 
     # Serve HTML with embedded options
-    with open('transactions.html') as f:
-        html = f.read()
-    return html.replace('{records_options}', records_options)
+    return render_template('transactions.html')
 
 
 @main.route('/logout', methods=['GET'])
 def logout():
     session.pop('username', None)  # Remove the username from the session
-    return redirect(url_for('main.login'))  # Redirect to login page
+    return redirect(url_for('main.index'))  # Redirect to login page
 
