@@ -11,6 +11,7 @@ class users(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)  # Email should also be unique
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Timestamp for when the user was created
     address = db.Column(db.String(255))  # Address of the user
+    telefoonnummer = db.Column(db.String(20), nullable=False)
     libraries = db.relationship('libraries', backref='user', lazy=True)
     records = db.relationship('records', backref='user', lazy=True)
 
@@ -41,6 +42,7 @@ class records(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)  
     library_records = db.relationship('libraryrecords', backref='record', lazy=True)
     transactions = db.relationship('transactions', backref='record', lazy=True)
+    Sellyesorno = db.Column(db.Boolean, default=False, nullable=False)
 
     def __repr__(self):
         return f'<Record {self.albumname}, ${self.price}>'
