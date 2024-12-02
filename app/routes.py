@@ -29,6 +29,7 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         address = request.form.get('address')  # Fetch the address from the form
+        telefoonnummer = request.form.get('telefoonnummer')
 
         # Check if the username already exists
         user = users.query.filter_by(username=username).first()
@@ -36,7 +37,7 @@ def register():
             return render_template("register.html", errors="Gebruiker al geregistreerd!")
 
         # Create a new user entry
-        new_user = users(username=username, email=email, address=address)
+        new_user = users(username=username, email=email, address=address, telefoonnummer=telefoonnummer)
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -89,6 +90,7 @@ def manage_records():
         size = request.form.get('size')
         condition = request.form.get('condition')
         colour = request.form.get('colour')
+        Sellyesorno = request.form.get('Sellyesorno')
         price = request.form.get('price')
         description = request.form.get('description')
 
@@ -100,6 +102,7 @@ def manage_records():
             'size': size,
             'condition': condition,
             'colour': colour,
+            'Sellyesorno': Sellyesorno,
             'price': price,
             'description': description,
             'ownerid': ownerid  # Attach the logged-in user's ID
