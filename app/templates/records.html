@@ -6,87 +6,115 @@
   <title>Voeg een Nieuwe Vinyl Listing Toe</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      color: #3d2b1f;
     }
 
-    /* Top Navigation Bar */
+    /* Top Bar */
     .top-bar {
       width: 100%;
-      background-color: #007bff;
+      background-color: #8c564b;
       color: white;
       padding: 10px 20px;
       display: flex;
-      justify-content: space-between; /* Space between the title and buttons */
+      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     .top-bar h1 {
       margin: 0;
-      font-size: 20px;
+      font-size: 24px;
+      font-family: 'Trebuchet MS', sans-serif;
     }
 
     .top-bar button {
-      padding: 5px 10px;
+      padding: 5px 15px;
       background-color: white;
-      color: #007bff;
+      color: #8c564b;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       font-size: 14px;
-      margin-left: 10px; /* Space between the buttons */
     }
 
     .top-bar button:hover {
-      background-color: #e0e0e0;
+      background-color: #fdd0b5;
     }
 
-    /* Form and page content styling */
+    /* Form Section */
     .form-container {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
-      margin: 20px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 90%;
+      margin-top: 20px;
+      text-align: center;
     }
 
     h1.page-title {
+      font-family: 'Georgia', serif;
       font-size: 28px;
-      margin: 20px 0;
-      text-align: center;
+      margin-bottom: 20px;
+      color: #5a3a28;
     }
 
     label {
       display: block;
       font-weight: bold;
       margin-top: 10px;
+      text-align: left;
     }
 
     input, select, textarea {
       width: 100%;
-      padding: 10px;
-      margin: 5px 0 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      font-size: 16px;
+      background-color: #f9f9f9;
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #8c564b;
+      background-color: #fff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(140, 86, 75, 0.6);
+    }
+
+    textarea {
+      height: 150px;  /* Make textarea taller */
+      resize: vertical;  /* Allow resizing vertically */
     }
 
     button {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
+      padding: 12px 20px;
+      background-color: #8c564b;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 10px;
       cursor: pointer;
       font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.3s;
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #fdd0b5;
+      transform: scale(1.05);
     }
 
     .message {
@@ -107,7 +135,8 @@
   </style>
 </head>
 <body>
-  <!-- Top Bar with title and only the "Back to Dashboard" button -->
+
+  <!-- Top Bar -->
   <div class="top-bar">
     <h1>Spinnback</h1>
     <div>
@@ -117,7 +146,7 @@
 
   <!-- Form Section -->
   <div class="form-container">
-    <h1>Voeg een Nieuwe Vinyl Listing Toe</h1>
+    <h1 class="page-title">Voeg een Nieuwe Vinyl Listing Toe</h1>
     <form action="/records" method="POST">
       <label for="albumname">Albumnaam</label>
       <input type="text" id="albumname" name="albumname" required>
@@ -165,10 +194,10 @@
       <input type="text" id="colour" name="colour" required>
 
       <label for="sellyesorno">Do you want to sell this record?</label>
-        <select id="sellyesorno" name="sellyesorno" required>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-        </select>
+      <select id="sellyesorno" name="sellyesorno" required>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
 
       <label for="price">Prijs (€)</label>
       <input type="number" id="price" name="price" step="0.01" min="0" required>
@@ -179,5 +208,6 @@
       <button type="submit">Toevoegen</button>
     </form>
   </div>
+
 </body>
 </html>
