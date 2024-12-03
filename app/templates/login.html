@@ -1,23 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Spinnback</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Form Styling */
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: #8c564b;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #8c564b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #fdd0b5;
+            transform: scale(1.05);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Back Link */
+        .back-link {
+            margin-top: 20px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #8c564b;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-    
-    <!-- Formulier -->
-    <form method="POST" action="/login">
-        <input type="text" name="username" placeholder="Username" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
 
-    <!-- Toon foutmelding indien aanwezig -->
-    {% if errors %}
-        <p style="color: red;">{{ errors }}</p>
-    {% endif %}
+    <!-- Login Form -->
+    <div class="login-container">
+        <h1>Login</h1>
 
-    <a href="/">Back to Home</a>
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="Username" required>
+            <button type="submit">Login</button>
+        </form>
+
+        
+        <a href="/" class="back-link">Back to Home</a>
+    </div>
+
 </body>
 </html>
+
