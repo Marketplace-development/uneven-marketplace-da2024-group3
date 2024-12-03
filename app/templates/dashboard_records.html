@@ -7,8 +7,8 @@
     <style>
         /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #f7d9c4, #f4b085);
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,18 +19,23 @@
         /* Top Navigation Bar */
         .top-bar {
             width: 100%;
-            background-color: #007bff;
+            background-color: #8c564b;
             color: white;
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
         }
 
         .top-bar h1 {
             margin: 0;
-            font-size: 20px;
+            font-size: 24px;
+            font-family: 'Trebuchet MS', sans-serif;
         }
 
         /* User Icon Styles */
@@ -45,7 +50,7 @@
             height: 40px;
             border-radius: 50%;
             background-color: white;
-            color: #007bff;
+            color: #8c564b;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -90,7 +95,11 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            margin-top: 100px; /* To give space for top bar */
             background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .button-container {
@@ -100,27 +109,41 @@
             width: 90%;
             max-width: 800px;
             margin: 20px auto;
+            gap: 15px;
         }
 
         .button-container button {
             flex: 1;
-            margin: 10px;
-            padding: 100px;
+            padding: 20px;
             font-size: 18px;
             font-weight: bold;
-            background-color: #007bff;
+            background-color: #8c564b;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         .button-container button:hover {
-            background-color: #0056b3;
+            background-color: #fdd0b5;
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            margin-top: 20px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #8c564b;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
+
     <!-- Top Bar -->
     <div class="top-bar">
         <h1>Spinnback</h1>
@@ -142,6 +165,7 @@
             <button onclick="location.href='/records'">Add/ Sell a record</button>
             <button onclick="location.href='/transactions'">Buy a record</button>
         </div>
+        <a href="/" class="back-link">Back to Home</a>
     </div>
 
     <script>
@@ -167,5 +191,6 @@
             window.location.href = '/logout'; // Redirect to logout route
         }
     </script>
+
 </body>
 </html>
