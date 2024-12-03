@@ -7,86 +7,142 @@
   <style>
     /* Global Styles */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      padding: 20px;
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
       margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
+      color: #3d2b1f;
     }
 
     /* Top Navigation Bar */
     .top-bar {
       width: 100%;
-      background-color: #007bff;
+      background-color: #8c564b;
       color: white;
       padding: 10px 20px;
       display: flex;
-      justify-content: space-between; /* Space between the title and buttons */
+      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     .top-bar h1 {
       margin: 0;
-      font-size: 20px;
+      font-size: 24px;
+      font-family: 'Trebuchet MS', sans-serif;
     }
 
     .top-bar button {
-      padding: 5px 10px;
-      background-color: white;
-      color: #007bff;
+      padding: 8px 12px;
+      background-color: #ffe5d9;
+      color: #8c564b;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
-      margin-left: 10px; /* Space between the buttons */
+      font-size: 16px;
+      font-weight: bold;
+      margin-left: 8px;
+      transition: background-color 0.3s;
     }
 
     .top-bar button:hover {
-      background-color: #e0e0e0;
+      background-color: #fdd0b5;
     }
 
     /* Listings Container */
     .listing-container {
       width: 90%;
-      max-width: 800px;
-      background-color: #ffffff;
+      max-width: 900px;
+      background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
       margin-top: 20px;
       text-align: center;
+      position: relative; /* For background vinyl positioning */
+      overflow: hidden; /* To ensure background images stay confined */
+    }
+
+    .listing-container::before {
+      content: "";
+      position: absolute;
+      top: 20px;
+      left: -50px;
+      width: 200px;
+      height: 200px;
+      background: url('https://www.example.com/vinyl1.png') no-repeat center;
+      background-size: contain;
+      opacity: 0.2;
+      transform: rotate(-15deg);
+    }
+
+    .listing-container::after {
+      content: "";
+      position: absolute;
+      bottom: -30px;
+      right: -50px;
+      width: 250px;
+      height: 250px;
+      background: url('https://www.example.com/vinyl2.png') no-repeat center;
+      background-size: contain;
+      opacity: 0.2;
+      transform: rotate(10deg);
+    }
+
+    .listing-container h1 {
+      font-family: 'Georgia', serif;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #5a3a28;
     }
 
     /* Individual Listing */
     .listing {
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background: #fff;
+      border: 2px solid #f4b085;
+      border-radius: 10px;
+      background: #ffe8dc;
       padding: 15px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       text-align: left;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      transition: transform 0.3s;
+    }
+
+    .listing:hover {
+      transform: scale(1.02);
     }
 
     .listing h3 {
       margin: 0;
-      font-size: 20px;
+      font-size: 22px;
+      color: #8c564b;
     }
 
     .listing p {
       margin: 5px 0;
+      font-size: 16px;
+      color: #3d2b1f;
+    }
+
+    /* Sort Dropdown */
+    .sort-dropdown {
+      margin-bottom: 20px;
+    }
+
+    .sort-dropdown select {
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
       font-size: 14px;
     }
 
+    /* Buy Button */
     .buy-button {
-      background-color: #007bff;
+      background-color: #8c564b;
       color: white;
       border: none;
       border-radius: 4px;
@@ -95,7 +151,7 @@
     }
 
     .buy-button:hover {
-      background-color: #0056b3;
+      background-color: #5e3d2f;
     }
   </style>
 </head>
@@ -112,12 +168,21 @@
   <!-- Listings Section -->
   <div class="listing-container">
     <h1>Koop een Vinyl</h1>
+    <div class="sort-dropdown">
+      <label for="sort">Sorteer op prijs:</label>
+      <select id="sort" onchange="sortListings(this.value)">
+        <option value="asc">Laag naar Hoog</option>
+        <option value="desc">Hoog naar Laag</option>
+      </select>
+    </div>
     <div id="listings-container">
       <p>Loading listings...</p>
     </div>
   </div>
 
   <script>
+    let allListings = []; // Store the fetched listings
+
     // Fetch listings from the backend and render them
     async function loadListings() {
       const container = document.getElementById('listings-container');
@@ -126,28 +191,9 @@
         const listings = await response.json();
 
         // Clear the loading message
-        container.innerHTML = '';
-
-        // Render each listing dynamically
-        if (listings.length > 0) {
-          listings.forEach(listing => {
-            const listingDiv = document.createElement('div');
-            listingDiv.className = 'listing';
-            listingDiv.innerHTML = `
-              <div>
-                <h3>${listing.albumname}</h3>
-                <p><strong>Artist:</strong> ${listing.artist}</p>
-                <p><strong>Genre:</strong> ${listing.genre}</p>
-                <p><strong>Size:</strong> ${listing.size}</p>
-                <p><strong>Condition:</strong> ${listing.condition}</p>
-                <p><strong>Colour:</strong> ${listing.colour}</p>
-                <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
-                <p><strong>Price:</strong> $${listing.price.toFixed(2)}</p>
-              </div>
-              <button class="buy-button" onclick="buyRecord('${listing.id}')">Kopen</button>
-            `;
-            container.appendChild(listingDiv);
-          });
+        if (response.status === 200) {
+          allListings = listings; // Save listings
+          renderListings(listings); // Render them initially
         } else {
           container.innerHTML = '<p>No listings available.</p>';
         }
@@ -157,10 +203,48 @@
       }
     }
 
-    // Function to handle record purchase (simplified)
+    // Render listings to the container
+    function renderListings(listings) {
+      const container = document.getElementById('listings-container');
+      container.innerHTML = ''; // Clear existing listings
+
+      if (listings.length > 0) {
+        listings.forEach(listing => {
+          const listingDiv = document.createElement('div');
+          listingDiv.className = 'listing';
+          listingDiv.innerHTML = `
+            <div>
+              <h3>${listing.albumname}</h3>
+              <p><strong>Artist:</strong> ${listing.artist}</p>
+              <p><strong>Genre:</strong> ${listing.genre}</p>
+              <p><strong>Size:</strong> ${listing.size}</p>
+              <p><strong>Condition:</strong> ${listing.condition}</p>
+              <p><strong>Colour:</strong> ${listing.colour}</p>
+              <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
+              <p><strong>Price:</strong> $${parseFloat(listing.price).toFixed(2)}</p>
+            </div>
+            <button class="buy-button" onclick="buyRecord('${listing.id}')">Kopen</button>
+          `;
+          container.appendChild(listingDiv);
+        });
+      } else {
+        container.innerHTML = '<p>No listings available.</p>';
+      }
+    }
+
+    // Sort listings and re-render them
+    function sortListings(order) {
+      const sortedListings = [...allListings].sort((a, b) => {
+        const priceA = parseFloat(a.price);
+        const priceB = parseFloat(b.price);
+        return order === 'asc' ? priceA - priceB : priceB - priceA;
+      });
+      renderListings(sortedListings);
+    }
+
+    // Handle record purchase
     function buyRecord(recordId) {
-      alert(`U heeft record met ID ${recordId} gekocht!`); // This would be replaced with a real purchase logic
-      // Redirect to a payment or confirmation page
+      alert(`U heeft record met ID ${recordId} gekocht!`); // Replace with actual purchase logic
     }
 
     // Load the listings when the page loads
