@@ -1,144 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spinnback - Home & Listings</title>
-    <style>
-        /* Global Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spinnback - Home & Listings</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      color: #3d2b1f;
+    }
 
-        /* Top Navigation Bar */
-        .top-bar {
-            width: 100%;
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+    /* Top Bar */
+    .top-bar {
+      width: 100%;
+      background-color: #8c564b;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
 
-        .top-bar h1 {
-            margin: 0;
-            font-size: 20px;
-        }
+    .top-bar h1 {
+      margin: 0;
+      font-size: 24px;
+      font-family: 'Trebuchet MS', sans-serif;
+    }
 
-        .top-bar button {
-            padding: 5px 10px;
-            background-color: white;
-            color: #007bff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+    .top-bar button {
+      padding: 5px 15px;
+      background-color: white;
+      color: #8c564b;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-        .top-bar button:hover {
-            background-color: #e0e0e0;
-        }
+    .top-bar button:hover {
+      background-color: #fdd0b5;
+    }
 
-        /* Listings Container */
-        .listing-container {
-            width: 90%;
-            max-width: 800px;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            text-align: center;
-        }
+    /* Listings Section */
+    .listing-container {
+      width: 90%;
+      max-width: 800px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
 
-        /* Individual Listing */
-        .listing {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #fff;
-            padding: 15px;
-            margin-bottom: 10px;
-            text-align: left;
-        }
+    h1.page-title {
+      font-family: 'Georgia', serif;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #5a3a28;
+    }
 
-        .listing h3 {
-            margin: 0;
-            font-size: 20px;
-        }
+    /* Individual Listing */
+    .listing {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 15px;
+      text-align: left;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-        .listing p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-    </style>
+    .listing h3 {
+      margin: 0;
+      font-size: 22px;
+      color: #8c564b;
+    }
+
+    .listing p {
+      margin: 8px 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .listing p strong {
+      color: #8c564b;
+    }
+
+    .listing-container p {
+      font-size: 16px;
+      color: #333;
+    }
+
+  </style>
 </head>
 <body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <h1>Spinnback</h1>
-        <div>
-            <button onclick="location.href='/login'">Log in</button>
-            <button onclick="location.href='/register'">Registreer</button>
-        </div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <h1>Spinnback</h1>
+    <div>
+      <button onclick="location.href='/login'">Log in</button>
+      <button onclick="location.href='/register'">Registreer</button>
     </div>
+  </div>
 
-    <!-- Listings Section -->
-    <div class="listing-container">
-        <h1>All Listings</h1>
-        <div id="listings-container">
-            <p>Loading listings...</p>
-        </div>
+  <!-- Listings Section -->
+  <div class="listing-container">
+    <h1 class="page-title">All Listings</h1>
+    <div id="listings-container">
+      <p>Loading listings...</p>
     </div>
+  </div>
 
-    <script>
-        // Fetch listings from the backend and render them
-        async function loadListings() {
-            const container = document.getElementById('listings-container');
-            try {
-                const response = await fetch('/get_records'); // Fetch data from the backend route
-                const listings = await response.json();
+  <script>
+    // Fetch listings from the backend and render them
+    async function loadListings() {
+      const container = document.getElementById('listings-container');
+      try {
+        const response = await fetch('/get_records'); // Fetch data from the backend route
+        const listings = await response.json();
 
-                // Clear the loading message
-                container.innerHTML = '';
+        // Clear the loading message
+        container.innerHTML = '';
 
-                // Render each listing dynamically
-                if (listings.length > 0) {
-                    listings.forEach(listing => {
-                        const listingDiv = document.createElement('div');
-                        listingDiv.className = 'listing';
-                        listingDiv.innerHTML = `
-                            <h3>${listing.albumname}</h3>
-                            <p><strong>Artist:</strong> ${listing.artist}</p>
-                            <p><strong>Genre:</strong> ${listing.genre}</p>
-                            <p><strong>Size:</strong> ${listing.size}</p>
-                            <p><strong>Condition:</strong> ${listing.condition}</p>
-                            <p><strong>Color:</strong> ${listing.colour}</p>
-                            <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
-                            <p><strong>Price:</strong> $${listing.price.toFixed(2)}</p>
-                        `;
-                        container.appendChild(listingDiv);
-                    });
-                } else {
-                    container.innerHTML = '<p>No listings available.</p>';
-                }
-            } catch (error) {
-                console.error('Error loading listings:', error);
-                container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
-            }
+        // Render each listing dynamically
+        if (listings.length > 0) {
+          listings.forEach(listing => {
+            const listingDiv = document.createElement('div');
+            listingDiv.className = 'listing';
+            listingDiv.innerHTML = `
+              <h3>${listing.albumname}</h3>
+              <p><strong>Artist:</strong> ${listing.artist}</p>
+              <p><strong>Genre:</strong> ${listing.genre}</p>
+              <p><strong>Size:</strong> ${listing.size}</p>
+              <p><strong>Condition:</strong> ${listing.condition}</p>
+              <p><strong>Color:</strong> ${listing.colour}</p>
+              <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
+              <p><strong>Price:</strong> $${listing.price.toFixed(2)}</p>
+            `;
+            container.appendChild(listingDiv);
+          });
+        } else {
+          container.innerHTML = '<p>No listings available.</p>';
         }
+      } catch (error) {
+        console.error('Error loading listings:', error);
+        container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
+      }
+    }
 
-        // Load the listings when the page loads
-        window.onload = loadListings;
-    </script>
+    // Load the listings when the page loads
+    window.onload = loadListings;
+  </script>
+
 </body>
 </html>
+
+
