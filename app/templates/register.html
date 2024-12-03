@@ -1,22 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            color: #3d2b1f;
+        }
+
+        /* Top Navigation Bar */
+        .top-bar {
+            width: 100%;
+            background-color: #8c564b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            font-size: 24px;
+            font-family: 'Trebuchet MS', sans-serif;
+        }
+
+        /* Register Form */
+        .form-container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;  /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-container h1 {
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #5a3a28;
+        }
+
+        /* Input Styles */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;  /* Rounded borders */
+            border: 2px solid #ccc;  /* Light gray border */
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease-in-out;  /* Smooth transition for focus */
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus {
+            border-color: #8c564b;  /* Darker border color on focus */
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(140, 86, 75, 0.6);  /* Focus shadow effect */
+        }
+
+        /* Button Styles */
+        button {
+            padding: 12px 20px;
+            background-color: #8c564b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #fdd0b5;
+            transform: scale(1.05);  /* Slight scale effect on hover */
+        }
+
+        /* Back Link */
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #8c564b;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Register</h1>
-    <form method="POST" action="/register">
-        <input type="text" name="username" placeholder="Username" required>
-        <br>
-        <input type="email" name="email" placeholder="Email" required>
-        <br>
-        <input type="text" name="address" placeholder="Address" required>
-        <br>
-        <input type="tel" name="telefoonnummer" placeholder="vb: 0470 88 67 34" required>
-        <br>
-        <button type="submit">Register</button>
-        
-    </form>
-    <a href="/">Back to Home</a>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>Spinnback</h1>
+        <div>
+            <button onclick="location.href='/login'">Log in</button>
+        </div>
+    </div>
+
+    <!-- Register Form Section -->
+    <div class="form-container">
+        <h1>Register</h1>
+        <form method="POST" action="/register">
+            <input type="text" name="username" placeholder="Username" required>
+            <br>
+            <input type="email" name="email" placeholder="Email" required>
+            <br>
+            <input type="text" name="address" placeholder="Address" required>
+            <br>
+            <input type="tel" name="telefoonnummer" placeholder="vb: 0470 88 67 34" required>
+            <br>
+            <button type="submit">Register</button>
+        </form>
+        <a href="/">Back to Home</a>
+    </div>
+
 </body>
 </html>
+
+
