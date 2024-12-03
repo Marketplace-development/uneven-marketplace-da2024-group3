@@ -53,6 +53,7 @@ class libraryrecords(db.Model):
     __tablename__ = 'library_records'
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), primary_key=True)
     libraryid = db.Column(db.Integer, db.ForeignKey('libraries.libraryid'), primary_key=True)
+    
 
 # Transactions model
 class transactions(db.Model):
