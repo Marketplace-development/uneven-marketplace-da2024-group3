@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for
-from .models import db, users, records, libraries, libraryrecords
+from .models import db, users, records
 import logging
 from . import supabase
 
@@ -141,26 +141,3 @@ def logout():
     session.pop('username', None)  # Remove the username from the session
     return redirect(url_for('main.index'))  # Redirect to login page
 
-@main.route('/library', methods=['GET'])
-def library_view():
-    return render_template('zoek.html')
-
-@main.route('/library/search', methods=['GET'])
-def search_library_view():
-    username = request.args.get('username')
-
-    # Zoek de gebruiker in de database
-    user = users.query.filter_by(username=username).first()
-    if not user:
-        return render_template('zoek.html', error="Gebruiker niet gevonden!")
-
-    # Haal de bibliotheekrecords op
-    library_records = (
-        db.session.query(records)
-        .join(libraryrecords, libraryrecords.recordid == records.recordid)
-        .join(libraries, libraries.libraryid == libraryrecords.libraryid)
-        .filter(libraries.userid == user.userid)
-        .all()
-    )
-
-    return render_template('library.html', username=username, library_records=library_records)
