@@ -96,8 +96,8 @@
     }
 
     textarea {
-      height: 150px;  /* Make textarea taller */
-      resize: vertical;  /* Allow resizing vertically */
+      height: 150px;
+      resize: vertical;
     }
 
     button {
@@ -117,19 +117,7 @@
       transform: scale(1.05);
     }
 
-    .message {
-      margin-top: 15px;
-      font-size: 14px;
-      color: green;
-      text-align: center;
-      display: none;
-    }
-
-    .error-message {
-      margin-top: 15px;
-      font-size: 14px;
-      color: red;
-      text-align: center;
+    .hidden {
       display: none;
     }
   </style>
@@ -195,12 +183,14 @@
 
       <label for="sellyesorno">Do you want to sell this record?</label>
       <select id="sellyesorno" name="sellyesorno" required>
+        <option value="false" selected>No</option>
         <option value="true">Yes</option>
-        <option value="false">No</option>
       </select>
 
-      <label for="price">Prijs (€)</label>
-      <input type="number" id="price" name="price" step="0.01" min="0" required>
+      <div id="price-container" class="hidden">
+        <label for="price">Prijs (€)</label>
+        <input type="number" id="price" name="price" step="0.01" min="0">
+      </div>
 
       <label for="description">Beschrijving</label>
       <textarea id="description" name="description"></textarea>
@@ -208,6 +198,22 @@
       <button type="submit">Toevoegen</button>
     </form>
   </div>
+
+  <script>
+    // Dynamisch tonen/verbergen van prijsveld
+    document.getElementById("sellyesorno").addEventListener("change", function() {
+      const priceContainer = document.getElementById("price-container");
+      const priceInput = document.getElementById("price");
+      if (this.value === "true") {
+        priceContainer.classList.remove("hidden");
+        priceInput.required = true;
+      } else {
+        priceContainer.classList.add("hidden");
+        priceInput.required = false;
+        priceInput.value = ""; // Reset prijsveld als No wordt geselecteerd
+      }
+    });
+  </script>
 
 </body>
 </html>
