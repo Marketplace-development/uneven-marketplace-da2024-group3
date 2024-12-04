@@ -88,6 +88,16 @@
             background-color: #f1f1f1;
         }
 
+        .username-display {
+            font-weight: bold;
+            color: #555;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+            cursor: default;
+        }
+
         /* Listings Container */
         .listing-container {
             flex: 1;
@@ -152,6 +162,8 @@
             <div class="user-icon-circle">M</div>
             <!-- Dropdown Menu -->
             <div id="userMenu" class="user-menu">
+                <!-- Gebruikersnaam -->
+                <div id="username-display" class="username-display">Loading...</div>
                 <a href="/library" class="user-menu-item">My Libraries</a>
                 <div class="user-menu-item" onclick="logout()">Log out</div>
             </div>
@@ -165,7 +177,6 @@
             <button onclick="location.href='/records'">Add/ Sell a record</button>
             <button onclick="location.href='/transactions'">Buy a record</button>
         </div>
-        <a href="/" class="back-link">Back to Home</a>
     </div>
 
     <script>
@@ -184,6 +195,30 @@
                 userMenu.classList.remove("active");
             }
         });
+
+        // Fetch username from the server
+        async function fetchUsername() {
+            try {
+                const response = await fetch('/get_username');
+                if (response.ok) {
+                    const data = await response.json();
+                    // Update the username display
+                    document.getElementById('username-display').innerText = data.username;
+
+                    // Set the first letter of the username as the icon
+                    const firstLetter = data.username.charAt(0).toUpperCase();
+                    document.querySelector(".user-icon-circle").innerText = firstLetter;
+                } else {
+                    document.getElementById('username-display').innerText = "Not logged in";
+                }
+            } catch (error) {
+                console.error('Error fetching username:', error);
+                document.getElementById('username-display').innerText = "Error fetching username";
+            }
+        }
+
+        // Fetch username on page load
+        window.onload = fetchUsername;
 
         // Logout function to show alert and redirect
         function logout() {
