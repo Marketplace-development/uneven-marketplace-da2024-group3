@@ -175,7 +175,7 @@ def delete_record(recordid):
     try:
         # Delete the record from Supabase
         supabase.table('records').delete().eq('recordid', recordid).execute()
-        return redirect(url_for('main.transactions'))  # Redirect to the transactions page
+        return render_template('transactions.html')  # Redirect to the transactions page
     except Exception as e:
         logging.error(f"Error deleting record: {e}")
         return "Fout bij het verwijderen van de plaat.", 500
