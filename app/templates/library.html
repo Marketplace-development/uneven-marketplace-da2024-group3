@@ -124,7 +124,14 @@
           <p><strong>Genre:</strong> {{ record['genre'] }}</p>
           <p><strong>Conditie:</strong> {{ record['condition'] }}</p>
           <p><strong>Kleur:</strong> {{ record['colour'] }}</p>
-          <p><strong>Prijs:</strong> €{{ "%.2f"|format(record['price']) }}</p>
+          <p><strong>Prijs:</strong> 
+            {% if record['price'] %}
+              €{{ "%.2f"|format(record['price']) }}
+            {% else %}
+              N.v.t.
+            {% endif %}
+          </p>
+          
           <p><strong>Status:</strong>
             {% if record['Sellyesorno'] %}
               <span style="color: green;">Te koop</span>
