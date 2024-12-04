@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voeg een Nieuwe Vinyl Listing Toe</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      color: #3d2b1f;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      width: 100%;
+      background-color: #8c564b;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .top-bar h1 {
+      margin: 0;
+      font-size: 24px;
+      font-family: 'Trebuchet MS', sans-serif;
+    }
+
+    .top-bar button {
+      padding: 5px 15px;
+      background-color: white;
+      color: #8c564b;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .top-bar button:hover {
+      background-color: #fdd0b5;
+    }
+
+    /* Form Section */
+    .form-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 90%;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h1.page-title {
+      font-family: 'Georgia', serif;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #5a3a28;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      font-size: 16px;
+      background-color: #f9f9f9;
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #8c564b;
+      background-color: #fff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(140, 86, 75, 0.6);
+    }
+
+    textarea {
+      height: 150px;  /* Make textarea taller */
+      resize: vertical;  /* Allow resizing vertically */
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    button:hover {
+      background-color: #fdd0b5;
+      transform: scale(1.05);
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: green;
+      text-align: center;
+      display: none;
+    }
+
+    .error-message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <h1>Spinnback</h1>
+    <div>
+      <button onclick="location.href='/dashboard'">Terug naar Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-container">
+    <h1 class="page-title">Voeg een Nieuwe Vinyl Listing Toe</h1>
+    <form action="/records" method="POST">
+      <label for="albumname">Albumnaam</label>
+      <input type="text" id="albumname" name="albumname" required>
+
+      <label for="artist">Artiest</label>
+      <input type="text" id="artist" name="artist" required>
+
+      <label for="genre">Genre</label>
+      <select id="genre" name="genre" required>
+        <option value="Pop">Pop</option>
+        <option value="Rock">Rock</option>
+        <option value="Jazz">Jazz</option>
+        <option value="Blues">Blues</option>
+        <option value="Hip-hop/Rap">Hip-hop/Rap</option>
+        <option value="Classical">Classical</option>
+        <option value="Electronic/Dance">Electronic/Dance</option>
+        <option value="Reggae">Reggae</option>
+        <option value="R&B/Soul">R&B/Soul</option>
+        <option value="Country">Country</option>
+        <option value="Folk">Folk</option>
+        <option value="Metal">Metal</option>
+        <option value="Latin">Latin</option>
+        <option value="Indie/Alternative">Indie/Alternative</option>
+        <option value="World Music">World Music</option>
+      </select>
+
+      <label for="size">Grootte van de Plaat</label>
+      <select id="size" name="size" required>
+        <option value='12"'>12-inch</option>
+        <option value='10"'>10-inch</option>
+        <option value='7"'>7-inch</option>
+      </select>
+
+      <label for="condition">Staat van de Plaat</label>
+      <select id="condition" name="condition" required>
+        <option value="M">M (Mint)</option>
+        <option value="NM">NM (Near Mint)</option>
+        <option value="VG+">VG+ (Very Good Plus)</option>
+        <option value="VG">VG (Very Good)</option>
+        <option value="G">G (Good)</option>
+        <option value="P">P (Poor)</option>
+      </select>
+
+      <label for="colour">Kleur</label>
+      <input type="text" id="colour" name="colour" required>
+
+      <form id="sell-form" method="POST">
+        <label for="Sellyesorno">Do you want to sell this record?</label>
+        <select id="Sellyesorno" name="Sellyesorno" required>
+          <option value="false" selected>No</option>
+          <option value="true">Yes</option>
+        </select>
+      
+        <div id="price-container" class="hidden">
+          <label for="price">Prijs (€)</label>
+          <input type="number" id="price" name="price" step="0.01" min="0">
+        </div>
+      
+        <button type="submit">Submit</button>
+      </form>
+      
+      <script>
+        const Sellyesorno = document.getElementById('Sellyesorno');
+        const priceContainer = document.getElementById('price-container');
+        const priceInput = document.getElementById('price');
+        const form = document.getElementById('sell-form');
+      
+        // Functie om het veld prijs te tonen/verbergen en verplicht/inactief te maken
+        function togglePriceField() {
+          if (Sellyesorno.value === 'true') {
+            priceContainer.classList.remove('hidden'); // Maak prijs zichtbaar
+            priceInput.required = true; // Maak prijs verplicht
+          } else {
+            priceContainer.classList.add('hidden'); // Verberg prijs
+            priceInput.required = false; // Maak prijs optioneel
+            priceInput.value = ''; // Leeg prijsveld als het verborgen is
+          }
+        }
+      
+        // Bijladen van toggle-functie en toevoegen van Event listener
+        togglePriceField();
+        Sellyesorno.addEventListener('change', togglePriceField);
+      
+        // Bij submit van formulier, zorg dat de waarde correct wordt verstuurd als boolean
+        form.addEventListener('submit', (e) => {
+          // Voorkom dat het formulier automatisch verstuurd wordt
+          e.preventDefault();
+      
+          // Converteer de waarde naar een boolean en maak een nieuw formulierdata-object aan
+          const formData = new FormData(form);
+          formData.set('Sellyesorno', Sellyesorno.value === 'true'); // Set boolean
+      
+          // Stuur de gegevens via een fetch-request naar de backend (Supabase)
+          fetch(form.action || '/', {
+            method: form.method,
+            body: JSON.stringify(Object.fromEntries(formData)),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                alert('Formulier succesvol verzonden!');
+              } else {
+                throw new Error('Fout bij het verzenden van formulier');
+              }
+            })
+            .catch((error) => {
+              console.error('Fout:', error);
+              alert('Er ging iets mis bij het verzenden van het formulier.');
+            });
+        });
+      </script>
+      
+      <style>
+        .hidden {
+          display: none;
+        }
+      </style>
+      <label for="description">Beschrijving</label>
+      <textarea id="description" name="description"></textarea>
+
+      <button type="submit">Toevoegen</button>
+    </form>
+  </div>
+
+</body>
+</html>
