@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for
 from .models import db, users, records, libraries, libraryrecords
 from . import supabase
+import logging
 
 main = Blueprint('main', __name__)
 
@@ -87,24 +88,31 @@ def manage_records():
         size = request.form.get('size')
         condition = request.form.get('condition')
         colour = request.form.get('colour')
-        Sellyesorno = request.form.get('Sellyesorno')
-        price = request.form.get('price')
+        Sellyesorno = request.form.get('Sellyesorno').lower() == 'true'  # Convert to boolean
+        price = request.form.get('price', type=float) if Sellyesorno else None  # Price only required if selling
         description = request.form.get('description')
 
-        # Insert record into Supabase
-        supabase.table('records').insert({
-            'albumname': albumname,
-            'artist': artist,
-            'genre': genre,
-            'size': size,
-            'condition': condition,
-            'colour': colour,
-            'Sellyesorno': Sellyesorno,
-            'price': price,
-            'description': description,
-            'ownerid': ownerid  # Attach the logged-in user's ID
-        }).execute()
-        return redirect(url_for('main.dashboard'))
+        # Create a new record
+        new_record = records(
+            albumname=albumname,
+            artist=artist,
+            genre=genre,
+            size=size,
+            condition=condition,
+            colour=colour,
+            Sellyesorno=Sellyesorno,
+            price=price,
+            description=description,
+            ownerid=ownerid
+        )
+
+        try:
+            db.session.add(new_record)
+            db.session.commit()
+            return redirect(url_for('main.dashboard'))
+        except Exception as e:
+            logging.error(f"Error saving record: {e}")
+            return "Error saving record", 500
 
     return render_template('records.html')
 
@@ -222,3 +230,4 @@ def search_library():
 
     # Render de bibliotheekpagina met de records
     return render_template('library.html', username=username, library_records=library_records)
+
