@@ -58,7 +58,6 @@ class transactions(db.Model):
     transactionid = db.Column(db.Integer, primary_key=True)
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), nullable=False)  # Link to Records
     buyerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
-    status = db.Column(db.String(100), nullable=False)  # Making status non-nullable
     reviews = db.relationship('reviews', backref='transaction', lazy=True)
 
     def __repr__(self):
