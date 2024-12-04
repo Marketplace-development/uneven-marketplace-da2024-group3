@@ -179,3 +179,12 @@ def delete_record(recordid):
     except Exception as e:
         logging.error(f"Error deleting record: {e}")
         return "Fout bij het verwijderen van de plaat.", 500
+
+@main.route('/get_username', methods=['GET'])
+def get_username():
+    # Controleer of een gebruiker is ingelogd
+    username = session.get('username')
+    if username:
+        return jsonify({"username": username}), 200
+    else:
+        return jsonify({"error": "Not logged in"}), 401
