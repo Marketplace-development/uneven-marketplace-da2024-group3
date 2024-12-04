@@ -35,7 +35,7 @@ class records(db.Model):
     condition = db.Column(db.String(100), nullable=False)
     colour = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(100), nullable=True)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Float, nullable=True)
     ownerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)  # Foreign key to Users
     created_at = db.Column(db.DateTime, default=datetime.now)  
     library_records = db.relationship('libraryrecords', backref='record', lazy=True)
