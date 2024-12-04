@@ -140,3 +140,26 @@ def logout():
     session.pop('username', None)  # Remove the username from the session
     return redirect(url_for('main.index'))  # Redirect to login page
 
+@main.route('/koop_1plaat/<int:recordid>', methods=['GET', 'POST'])
+def koop_1plaat(recordid):
+    if request.method == 'POST':
+        # Query record details from the database
+        record = records.query.get(recordid)
+        if not record:
+            return "Record not found", 404
+
+        # Render the template with the record details
+        return render_template('koop_1plaat.html', record=record)
+    else:
+        return render_template('koop_1plaat.html')
+    
+@main.route('/delete_record/<int:recordid>', methods=['POST'])
+def delete_record(recordid):
+    try:
+        # Delete the record from Supabase
+        supabase.table('records').delete().eq('recordid', recordid).execute()
+        return redirect(url_for('main.transactions'))  # Redirect to the transactions page
+    except Exception as e:
+        logging.error(f"Error deleting record: {e}")
+        return "Fout bij het verwijderen van de plaat.", 500
+
