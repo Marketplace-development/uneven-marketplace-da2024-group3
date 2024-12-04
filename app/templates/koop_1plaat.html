@@ -74,7 +74,7 @@
       <p><strong>Prijs:</strong> €{{ record.price }}</p>
     </div>
     <button class="button" onclick="location.href='/transactions'">Terug naar Transacties</button>
-    <form method="POST" action="/delete_record/{{ record.recordid }}" class="form">
+    <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form">
       <button type="submit" class="button delete-button">Kopen</button>
     </form>
   </div>
