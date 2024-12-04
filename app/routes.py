@@ -158,16 +158,44 @@ def koop_1plaat(recordid):
         return "Record not found", 404
 
     return render_template('koop_1plaat.html', record=record)
-    
-@main.route('/delete_record/<int:recordid>', methods=['POST'])
-def delete_record(recordid):
+
+from .models import transactions  
+@main.route('/create_transaction/<int:recordid>', methods=['POST'])
+def create_transaction(recordid):
     try:
-        # Delete the record from Supabase
-        supabase.table('records').delete().eq('recordid', recordid).execute()
-        return render_template('transactions.html')  # Redirect to the transactions page
+        buyer_id = session.get('userid')
+        if not buyer_id:
+            logging.error("Geen gebruiker ingelogd.")
+            return redirect(url_for('main.login'))
+
+        # Haal het record op
+        record = records.query.get(recordid)
+        if not record:
+            logging.error(f"Record met ID {recordid} niet gevonden.")
+            return "Record niet gevonden", 404
+
+        # Check of de koper de eigenaar van het record is
+        if record.ownerid == buyer_id:
+            logging.error("Je kunt je eigen plaat niet kopen.")
+            return "Je kunt je eigen plaat niet kopen", 400
+
+        # Maak de transactie
+        new_transaction = transactions(buyerid=buyer_id, recordid=recordid)
+        db.session.add(new_transaction)
+
+        # Update de ownerid van de record
+        record.ownerid = buyer_id
+        db.session.commit()
+        logging.info(f"Transactie succesvol toegevoegd voor record {recordid} door gebruiker {buyer_id}.")
+
+        return redirect(url_for('main.dashboard'))
+
     except Exception as e:
-        logging.error(f"Error deleting record: {e}")
-        return "Fout bij het verwijderen van de plaat.", 500
+        logging.error(f"Fout bij het verwerken van de aankoop: {e}")
+        db.session.rollback()
+        return "Fout bij het verwerken van de aankoop", 500
+
+
 
 @main.route('/get_username', methods=['GET'])
 def get_username():
@@ -230,4 +258,9 @@ def search_library():
 
     # Render de bibliotheekpagina met de records
     return render_template('library.html', username=username, library_records=library_records)
+
+
+
+
+
 
