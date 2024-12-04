@@ -207,7 +207,7 @@
     function renderListings(listings) {
       const container = document.getElementById('listings-container');
       container.innerHTML = ''; // Clear existing listings
-
+    
       if (listings.length > 0) {
         listings.forEach(listing => {
           const listingDiv = document.createElement('div');
@@ -223,7 +223,7 @@
               <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
               <p><strong>Price:</strong> $${parseFloat(listing.price).toFixed(2)}</p>
             </div>
-            <button class="buy-button" onclick="buyRecord('${listing.id}')">Kopen</button>
+            <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Kopen</button>
           `;
           container.appendChild(listingDiv);
         });
@@ -244,7 +244,7 @@
 
     // Handle record purchase
     function buyRecord(recordId) {
-      alert(`U heeft record met ID ${recordId} gekocht!`); // Replace with actual purchase logic
+      window.location.href = `/koop_1plaat/${recordId}`;
     }
 
     // Load the listings when the page loads

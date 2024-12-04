@@ -100,7 +100,6 @@
       font-size: 16px;
       color: #333;
     }
-
   </style>
 </head>
 <body>
@@ -128,6 +127,9 @@
       const container = document.getElementById('listings-container');
       try {
         const response = await fetch('/get_records'); // Fetch data from the backend route
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
         const listings = await response.json();
 
         // Clear the loading message
@@ -146,7 +148,7 @@
               <p><strong>Condition:</strong> ${listing.condition}</p>
               <p><strong>Color:</strong> ${listing.colour}</p>
               <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
-              <p><strong>Price:</strong> $${listing.price.toFixed(2)}</p>
+              <p><strong>Price:</strong> $${parseFloat(listing.price).toFixed(2)}</p>
             `;
             container.appendChild(listingDiv);
           });

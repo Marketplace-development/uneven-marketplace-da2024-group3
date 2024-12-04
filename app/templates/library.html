@@ -10,12 +10,43 @@
             font-family: 'Georgia', serif;
             background: linear-gradient(to bottom, #f7d9c4, #f4b085);
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
-        h1 {
-            color: #8c564b;
-            text-align: center;
+        /* Top-bar styling */
+        .top-bar {
+            background-color: #8c564b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .top-bar a {
+            text-decoration: none;
+            color: white;
+            background-color: #f4b085;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .top-bar a:hover {
+            background-color: #d2946d;
+        }
+
+        /* Body content styling */
+        .content {
+            padding: 20px;
         }
 
         ul {
@@ -52,24 +83,32 @@
 </head>
 
 <body>
-    <h1>Bibliotheek van {{ username }}</h1>
-    <ul>
-        {% if library_records %}
-            {% for record in library_records %}
-                <li>
-                    <strong>{{ record.albumname }}</strong> door {{ record.artist }}
-                    {% if record.Sellyesorno %}
-                        - Te koop voor €{{ record.price }}
-                    {% else %}
-                        - Niet te koop
-                    {% endif %}
-                </li>
-            {% endfor %}
-        {% else %}
-            <li>Geen records gevonden in de bibliotheek.</li>
-        {% endif %}
-    </ul>
-    <a href="/library" class="back-link">Zoek een andere gebruiker</a>
+    <!-- Top-bar -->
+    <div class="top-bar">
+        <h1>Bibliotheek van {{ username }}</h1>
+        <a href="/dashboard">Terug naar dashboard</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <ul>
+            {% if library_records %}
+                {% for record in library_records %}
+                    <li>
+                        <strong>{{ record.albumname }}</strong> door {{ record.artist }}
+                        {% if record.Sellyesorno %}
+                            - Te koop voor €{{ record.price }}
+                        {% else %}
+                            - Niet te koop
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>Geen records gevonden in de bibliotheek.</li>
+            {% endif %}
+        </ul>
+        <a href="/library" class="back-link">Zoek een andere gebruiker</a>
+    </div>
 </body>
 
 </html>

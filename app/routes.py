@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for
 from .models import db, users, records, libraries, libraryrecords
-import logging
 from . import supabase
 
 main = Blueprint('main', __name__)
@@ -17,11 +16,9 @@ def get_records():
             return jsonify(response.data), 200
         else:
             return jsonify({"message": "No records found"}), 404
-	
     except Exception as e:
         logging.error(f"Error fetching records: {e}")
         return jsonify({"error": "Unable to fetch records"}), 500
-
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -164,3 +161,21 @@ def search_library_view():
     )
 
     return render_template('library.html', username=username, library_records=library_records)
+
+@main.route('/koop_1plaat/<int:recordid>', methods=['GET'])
+def koop_1plaat(recordid):
+    record = records.query.get(recordid)
+    if not record:
+        return "Record not found", 404
+
+    return render_template('koop_1plaat.html', record=record)
+    
+@main.route('/delete_record/<int:recordid>', methods=['POST'])
+def delete_record(recordid):
+    try:
+        # Delete the record from Supabase
+        supabase.table('records').delete().eq('recordid', recordid).execute()
+        return render_template('transactions.html')  # Redirect to the transactions page
+    except Exception as e:
+        logging.error(f"Error deleting record: {e}")
+        return "Fout bij het verwijderen van de plaat.", 500
