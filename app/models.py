@@ -24,8 +24,6 @@ class libraries(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
     library_records = db.relationship('libraryrecords', backref='library', lazy=True)
 
-
-
 # Records model
 class records(db.Model):
     __tablename__ = 'records'
