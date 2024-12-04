@@ -160,7 +160,6 @@
               <p><strong>Color:</strong> ${listing.colour}</p>
               <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
               <p><strong>Price:</strong> €${parseFloat(listing.price).toFixed(2)}</p>
-              <button class="buy-button" onclick="location.href='/koop_1plaat/${listing.recordid}'">Kopen</button>
             `;
             container.appendChild(listingDiv);
           });
