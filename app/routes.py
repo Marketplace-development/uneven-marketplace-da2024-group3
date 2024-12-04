@@ -17,7 +17,6 @@ def get_records():
             return jsonify(response.data), 200
         else:
             return jsonify({"message": "No records found"}), 404
-	
     except Exception as e:
         logging.error(f"Error fetching records: {e}")
         return jsonify({"error": "Unable to fetch records"}), 500
