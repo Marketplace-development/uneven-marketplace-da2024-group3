@@ -142,25 +142,6 @@ def logout():
 def library_view():
     return render_template('zoek.html')
 
-@main.route('/library/search', methods=['GET'])
-def search_library_view():
-    username = request.args.get('username')
-
-    # Zoek de gebruiker in de database
-    user = users.query.filter_by(username=username).first()
-    if not user:
-        return render_template('zoek.html', error="Gebruiker niet gevonden!")
-
-    # Haal de bibliotheekrecords op
-    library_records = (
-        db.session.query(records)
-        .join(libraryrecords, libraryrecords.recordid == records.recordid)
-        .join(libraries, libraries.libraryid == libraryrecords.libraryid)
-        .filter(libraries.userid == user.userid)
-        .all()
-    )
-
-    return render_template('library.html', username=username, library_records=library_records)
 
 @main.route('/koop_1plaat/<int:recordid>', methods=['GET'])
 def koop_1plaat(recordid):
@@ -188,3 +169,56 @@ def get_username():
         return jsonify({"username": username}), 200
     else:
         return jsonify({"error": "Not logged in"}), 401
+
+@main.route('/my_library', methods=['GET'])
+def my_library():
+    # Haal de ingelogde gebruiker op
+    userid = session.get('userid')  # De unieke ID van de ingelogde gebruiker
+    if not userid:
+        return redirect(url_for('main.login'))  # Verwijs naar de loginpagina als de gebruiker niet is ingelogd
+
+    try:
+        # Haal alle records op die bij deze gebruiker horen
+        response = supabase.table('records').select('*').eq('ownerid', userid).execute()
+        if response.data:
+            records = response.data
+        else:
+            records = []
+    except Exception as e:
+        logging.error(f"Error fetching user records: {e}")
+        records = []
+
+    return render_template('my_library.html', records=records)
+
+@main.route('/library/search', methods=['GET'])
+def search_library():
+    # Haal de gebruikersnaam op uit de queryparameter
+    username = request.args.get('username')
+
+    if not username:
+        # Als er geen gebruikersnaam is opgegeven, laad de zoekpagina opnieuw met een foutmelding
+        return render_template('zoek.html', error="Vul een gebruikersnaam in.")
+
+    try:
+        # Zoek de gebruiker op basis van de opgegeven gebruikersnaam
+        user_response = supabase.table('users').select('userid').eq('username', username).single().execute()
+
+        if not user_response.data:
+            # Als de gebruiker niet bestaat
+            return render_template('zoek.html', error="Gebruiker niet gevonden.")
+
+        # Haal de userid op van de gevonden gebruiker
+        user_id = user_response.data['userid']
+
+        # Zoek records die aan deze gebruiker toebehoren
+        records_response = supabase.table('records').select('*').eq('ownerid', user_id).execute()
+
+        # Controleer of er records zijn gevonden
+        library_records = records_response.data if records_response.data else []
+
+    except Exception as e:
+        logging.error(f"Error fetching library records: {e}")
+        return render_template('zoek.html', error="Er is een fout opgetreden bij het ophalen van de bibliotheek.")
+
+    # Render de bibliotheekpagina met de records
+    return render_template('library.html', username=username, library_records=library_records)
