@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for
-from .models import db, users, records
-import logging
+from .models import db, users, records, libraries, libraryrecords
 from . import supabase
 
 main = Blueprint('main', __name__)
@@ -20,7 +19,6 @@ def get_records():
     except Exception as e:
         logging.error(f"Error fetching records: {e}")
         return jsonify({"error": "Unable to fetch records"}), 500
-
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -140,18 +138,37 @@ def logout():
     session.pop('username', None)  # Remove the username from the session
     return redirect(url_for('main.index'))  # Redirect to login page
 
-@main.route('/koop_1plaat/<int:recordid>', methods=['GET', 'POST'])
-def koop_1plaat(recordid):
-    if request.method == 'POST':
-        # Query record details from the database
-        record = records.query.get(recordid)
-        if not record:
-            return "Record not found", 404
+@main.route('/library', methods=['GET'])
+def library_view():
+    return render_template('zoek.html')
 
-        # Render the template with the record details
-        return render_template('koop_1plaat.html', record=record)
-    else:
-        return render_template('koop_1plaat.html')
+@main.route('/library/search', methods=['GET'])
+def search_library_view():
+    username = request.args.get('username')
+
+    # Zoek de gebruiker in de database
+    user = users.query.filter_by(username=username).first()
+    if not user:
+        return render_template('zoek.html', error="Gebruiker niet gevonden!")
+
+    # Haal de bibliotheekrecords op
+    library_records = (
+        db.session.query(records)
+        .join(libraryrecords, libraryrecords.recordid == records.recordid)
+        .join(libraries, libraries.libraryid == libraryrecords.libraryid)
+        .filter(libraries.userid == user.userid)
+        .all()
+    )
+
+    return render_template('library.html', username=username, library_records=library_records)
+
+@main.route('/koop_1plaat/<int:recordid>', methods=['GET'])
+def koop_1plaat(recordid):
+    record = records.query.get(recordid)
+    if not record:
+        return "Record not found", 404
+
+    return render_template('koop_1plaat.html', record=record)
     
 @main.route('/delete_record/<int:recordid>', methods=['POST'])
 def delete_record(recordid):
@@ -162,4 +179,3 @@ def delete_record(recordid):
     except Exception as e:
         logging.error(f"Error deleting record: {e}")
         return "Fout bij het verwijderen van de plaat.", 500
-
