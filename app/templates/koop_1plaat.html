@@ -59,10 +59,19 @@
       display: inline-block;
       margin-top: 20px;
     }
+    .alert {
+      padding: 15px;
+      background-color: #dff0d8;
+      color: #3c763d;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #d6e9c6;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <div id="success-message" class="alert" style="display: none;">Vinyl Successfully Purchased!</div>
     <h1>Details</h1>
     <div class="details">
       <p><strong>Albumname:</strong> {{ record.albumname }}</p>
@@ -74,9 +83,25 @@
       <p><strong>Price:</strong> €{{ record.price }}</p>
     </div>
     <button class="button" onclick="location.href='/transactions'">Go to Transactions</button>
-    <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form">
+    <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form" onsubmit="handleBuy(event)">
       <button type="submit" class="button delete-button">Buy</button>
     </form>
   </div>
+
+  <script>
+    function handleBuy(event) {
+      event.preventDefault(); // Voorkom directe formulierindiening
+      const successMessage = document.getElementById('success-message');
+      successMessage.style.display = 'block'; // Toon de succesmelding
+
+      // Wacht 2 seconden voordat je doorverwijst
+      setTimeout(() => {
+        event.target.submit(); // Verstuur het formulier
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
+
+
+
