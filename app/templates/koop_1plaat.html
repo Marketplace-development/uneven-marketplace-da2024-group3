@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koop een Plaat</title>
+  <title>Details</title>
   <style>
     body {
       font-family: 'Georgia', serif;
@@ -63,19 +63,19 @@
 </head>
 <body>
   <div class="container">
-    <h1>Koop een Plaat</h1>
+    <h1>Details</h1>
     <div class="details">
-      <p><strong>Albumnaam:</strong> {{ record.albumname }}</p>
-      <p><strong>Artiest:</strong> {{ record.artist }}</p>
+      <p><strong>Albumname:</strong> {{ record.albumname }}</p>
+      <p><strong>Artist:</strong> {{ record.artist }}</p>
       <p><strong>Genre:</strong> {{ record.genre }}</p>
-      <p><strong>Staat:</strong> {{ record.condition }}</p>
-      <p><strong>Kleur:</strong> {{ record.colour }}</p>
-      <p><strong>Beschrijving:</strong> {{ record.description }}</p>
-      <p><strong>Prijs:</strong> €{{ record.price }}</p>
+      <p><strong>State:</strong> {{ record.condition }}</p>
+      <p><strong>Color:</strong> {{ record.colour }}</p>
+      <p><strong>Description:</strong> {{ record.description }}</p>
+      <p><strong>Price:</strong> €{{ record.price }}</p>
     </div>
-    <button class="button" onclick="location.href='/transactions'">Terug naar Transacties</button>
+    <button class="button" onclick="location.href='/transactions'">Go to Transactions</button>
     <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form">
-      <button type="submit" class="button delete-button">Kopen</button>
+      <button type="submit" class="button delete-button">Buy</button>
     </form>
   </div>
 </body>
