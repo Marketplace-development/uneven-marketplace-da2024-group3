@@ -43,6 +43,7 @@
             position: relative;
             display: inline-block;
             cursor: pointer;
+            margin-right: 30px;
         }
 
         .user-icon-circle {
@@ -117,27 +118,59 @@
             justify-content: space-around;
             align-items: center;
             width: 90%;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 20px auto;
-            gap: 15px;
+            gap: 40px; /* Larger gap between buttons */
         }
 
         .button-container button {
             flex: 1;
-            padding: 20px;
-            font-size: 18px;
+            padding: 120px; /* Slightly wider buttons */
+            font-size: 28px; /* Bigger font size for visibility */
             font-weight: bold;
-            background-color: #8c564b;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px; /* Slightly rounder corners */
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: transform 0.3s;
+            position: relative;
+            height: 550px; /* Much taller button */
+            background-size: cover; /* Ensure the background image fits well */
+            background-position: center;
+        }
+
+        /* Button Specific Background Images */
+        .libraries-btn {
+            background: url('https://res.cloudinary.com/sagacity/image/upload/c_crop,h_4000,w_6000,x_0,y_0/c_limit,dpr_auto,f_auto,fl_lossy,q_80,w_1200/shutterstock_241614415_mzpuna.jpg') no-repeat center center;
+        }
+
+        .add-sell-btn {
+            background: url('https://i.pinimg.com/originals/61/2c/19/612c199c7538819c1bdb442595aa9190.jpg') no-repeat center center;
+        }
+
+        .buy-record-btn {
+            background: url('https://c8.alamy.com/comp/2EM6RFF/vinyl-records-store-vector-vintage-retro-poster-music-instruments-and-dj-musical-equipment-store-vinyl-record-lp-disks-modern-gramophone-phonograp-2EM6RFF.jpg') no-repeat center center;
+        }
+
+        .button-container button span {
+            position: relative;
+            z-index: 1; /* Ensure text appears above the background */
+        }
+
+        .button-container button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for text readability */
+            border-radius: 12px;
+            z-index: 0;
         }
 
         .button-container button:hover {
-            background-color: #fdd0b5;
-            transform: scale(1.05);
+            transform: scale(1.1); /* Slightly increase size on hover */
         }
 
         .back-link {
@@ -158,11 +191,8 @@
     <div class="top-bar">
         <h1>Spinnback</h1>
         <div class="user-icon">
-            <!-- User Icon Circle -->
             <div class="user-icon-circle">M</div>
-            <!-- Dropdown Menu -->
             <div id="userMenu" class="user-menu">
-                <!-- Gebruikersnaam -->
                 <div id="username-display" class="username-display">Loading...</div>
                 <a href="/my_library" class="user-menu-item">My Libraries</a>
                 <a href="/my_purchases" class="user-menu-item">My Purchases</a> 
@@ -174,39 +204,39 @@
     <!-- Listings Section -->
     <div class="listing-container">
         <div class="button-container">
-            <button onclick="location.href='/library'">Libraries</button>
-            <button onclick="location.href='/records'">Add/ Sell a record</button>
-            <button onclick="location.href='/transactions'">Buy a record</button>
+            <button class="libraries-btn" onclick="location.href='/library'">
+                <span>Libraries</span>
+            </button>
+            <button class="add-sell-btn" onclick="location.href='/records'">
+                <span>Add/ Sell a record</span>
+            </button>
+            <button class="buy-record-btn" onclick="location.href='/transactions'">
+                <span>Buy a record</span>
+            </button>
         </div>
     </div>
+    
 
     <script>
-        // Get the user icon and menu elements
         const userIconCircle = document.querySelector(".user-icon-circle");
         const userMenu = document.getElementById("userMenu");
 
-        // Toggle the dropdown menu visibility
         userIconCircle.addEventListener("click", () => {
             userMenu.classList.toggle("active");
         });
 
-        // Close the dropdown if clicked outside
         window.addEventListener("click", (e) => {
             if (!e.target.closest(".user-icon")) {
                 userMenu.classList.remove("active");
             }
         });
 
-        // Fetch username from the server
         async function fetchUsername() {
             try {
                 const response = await fetch('/get_username');
                 if (response.ok) {
                     const data = await response.json();
-                    // Update the username display
                     document.getElementById('username-display').innerText = data.username;
-
-                    // Set the first letter of the username as the icon
                     const firstLetter = data.username.charAt(0).toUpperCase();
                     document.querySelector(".user-icon-circle").innerText = firstLetter;
                 } else {
@@ -218,16 +248,13 @@
             }
         }
 
-        // Fetch username on page load
         window.onload = fetchUsername;
 
-        // Logout function to show alert and redirect
         function logout() {
             alert("You have been successfully logged out!");
-            window.location.href = '/logout'; // Redirect to logout route
+            window.location.href = '/logout';
         }
     </script>
 
 </body>
 </html>
-
