@@ -185,29 +185,23 @@
 
     // Fetch listings from the backend and render them
     async function loadListings() {
-  const container = document.getElementById('listings-container');
-  try {
-    const response = await fetch('/get_records'); // Fetch data from the backend route
-    const listings = await response.json();
+      const container = document.getElementById('listings-container');
+      try {
+        const response = await fetch('/get_records_sellyes'); // Fetch data from the backend route
+        const listings = await response.json();
 
-    // Filter listings where 'sellyesorno' is true
-    const availableListings = listings.filter(listing => listing.Sellyesorno === true );
-
-    // Clear the loading message
-    if (response.status === 200) {
-      if (availableListings.length > 0) {
-        renderListings(availableListings); // Render the filtered listings
-      } else {
-        container.innerHTML = '<p>No listings available for sale.</p>';
+        // Clear the loading message
+        if (response.status === 200) {
+          allListings = listings; // Save listings
+          renderListings(listings); // Render them initially
+        } else {
+          container.innerHTML = '<p>No listings available.</p>';
+        }
+      } catch (error) {
+        console.error('Error loading listings:', error);
+        container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
       }
-    } else {
-      container.innerHTML = '<p>No listings available.</p>';
     }
-  } catch (error) {
-    console.error('Error loading listings:', error);
-    container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
-  }
-}
 
     // Render listings to the container
     function renderListings(listings) {
