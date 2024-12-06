@@ -52,16 +52,23 @@ class libraryrecords(db.Model):
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), primary_key=True)
     libraryid = db.Column(db.Integer, db.ForeignKey('libraries.libraryid'), primary_key=True)
 
-# Transactions model
+
+
+from sqlalchemy.sql import func
+
 class transactions(db.Model):
     __tablename__ = 'transactions'
     transactionid = db.Column(db.Integer, primary_key=True)
-    recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), nullable=False)  # Link to Records
+    recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), nullable=False)
     buyerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
+    sellerid = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), nullable = False)  # Database vult deze in
     reviews = db.relationship('reviews', backref='transaction', lazy=True)
 
     def __repr__(self):
-        return f'transaction {self.transactionid}, status {self.status}'
+        return f'transaction {self.transactionid}'
+
+
 
 # Reviews model
 class reviews(db.Model):
@@ -73,3 +80,4 @@ class reviews(db.Model):
 
     def __repr__(self):
         return f'<review {self.reviewscore}, {self.reasoning}>'
+
