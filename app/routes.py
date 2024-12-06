@@ -21,6 +21,35 @@ def get_records():
         logging.error(f"Error fetching records: {e}")
         return jsonify({"error": "Unable to fetch records"}), 500
 
+@main.route('/get_records_sellyes', methods=['GET'])
+def get_records_sellyes():
+    try:
+        # Get the logged-in user's ID from the session
+        userid = session.get('userid')  
+
+        if not userid:
+            return jsonify({"error": "User not logged in"}), 401
+
+        # Fetch all records from Supabase
+        response = supabase.table('records').select('*').execute()
+
+        if not response.data:
+            return jsonify({"message": "No records found"}), 404
+
+        # Filter records where Sellyesorno is True and ownerid is not the logged-in user
+        filteredrecords = [
+            record for record in response.data 
+            if record.get('Sellyesorno') and record.get('ownerid') != userid
+        ]
+
+        if filteredrecords:
+            return jsonify(filteredrecords), 200
+        else:
+            return jsonify({"message": "No matching records found"}), 404
+    except Exception as e:
+        logging.error(f"Error fetching records: {e}")
+        return jsonify({"error": "Unable to fetch records"}), 500
+
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
