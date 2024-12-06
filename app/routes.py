@@ -202,6 +202,8 @@ def create_transaction(recordid):
         if not record:
             logging.error(f"Record met ID {recordid} niet gevonden.")
             return "Record niet gevonden", 404
+        
+        owner = record.ownerid
 
         # Check of de koper de eigenaar van het record is
         if record.ownerid == buyer_id:
@@ -209,7 +211,7 @@ def create_transaction(recordid):
             return "Je kunt je eigen plaat niet kopen", 400
 
         # Maak de transactie
-        new_transaction = transactions(buyerid=buyer_id, recordid=recordid)
+        new_transaction = transactions(sellerid=owner, buyerid=buyer_id, recordid=recordid)
         db.session.add(new_transaction)
 
         # Update de ownerid van de record
@@ -289,7 +291,70 @@ def search_library():
     return render_template('library.html', username=username, library_records=library_records)
 
 
+@main.route('/my_purchases', methods=['GET'])
+def get_my_purchases():
+    # Haal de ingelogde gebruiker op uit de sessie
+    logged_in_user_id = session.get('userid')
+
+    if not logged_in_user_id:
+        return "User not logged in", 401  # Geef een foutmelding als de gebruiker niet is ingelogd
+
+    # Query alle transacties waarbij de gebruiker de koper is
+    user_transactions = transactions.query.filter_by(buyerid=logged_in_user_id).all()
+
+    # Controleer of er transacties zijn gevonden
+    if not user_transactions:
+        return render_template('my_purchases.html', purchases=[])
+
+    # Haal de bijbehorende records op voor elke transactie
+    purchases_data = []
+    for transaction in user_transactions:
+        record = records.query.get(transaction.recordid)  # Haal het record op met de ID
+        if record:
+            purchases_data.append({
+                "transaction_id": transaction.transactionid,
+                "record_id": record.recordid,
+                "album_name": record.albumname,
+                "artist": record.artist,
+                "condition": record.condition,
+                "price": record.price,
+                "date": transaction.created_at  # Dit moet mogelijk aangepast worden naar een datumveld in "transactions"
+            })
+
+    # Render de HTML-template met de verzamelde gegevens
+    return render_template('my_purchases.html', purchases=purchases_data)
 
 
+@main.route('/my_sold_items', methods=['GET'])
+def get_my_sold_items():
+    # Haal de ingelogde gebruiker op uit de sessie
+    logged_in_user_id = session.get('userid')
 
+    if not logged_in_user_id:
+        return "User not logged in", 401  # Geef een foutmelding als de gebruiker niet is ingelogd
+
+    # Query alle transacties waarbij de gebruiker de koper is
+    user_transactions = transactions.query.filter_by(buyerid=logged_in_user_id).all()
+
+    # Controleer of er transacties zijn gevonden
+    if not user_transactions:
+        return render_template('my_purchases.html', purchases=[])
+
+    # Haal de bijbehorende records op voor elke transactie
+    purchases_data = []
+    for transaction in user_transactions:
+        record = records.query.get(transaction.recordid)  # Haal het record op met de ID
+        if record:
+            purchases_data.append({
+                "transaction_id": transaction.transactionid,
+                "record_id": record.recordid,
+                "album_name": record.albumname,
+                "artist": record.artist,
+                "condtion": record.condition,
+                "price": record.price,
+                "date": transaction.created_at  # Dit moet mogelijk aangepast worden naar een datumveld in "transactions"
+            })
+
+    # Render de HTML-template met de verzamelde gegevens
+    return render_template('my_purchases.html', purchases=purchases_data)
 
