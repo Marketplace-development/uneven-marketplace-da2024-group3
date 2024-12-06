@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Purchases</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdd0b5;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #8c564b;
+            color: white;
+            margin: 0;
+        }
+        .purchases-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .purchase-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .purchase-item:last-child {
+            border-bottom: none;
+        }
+        .purchase-item h2 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #8c564b;
+        }
+        .purchase-item p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .purchase-item strong {
+            color: #8c564b;
+        }
+        .back-button-container {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            text-align: right;
+            z-index: 1000;
+        }
+        .back-button-container .home-button,
+        .back-button-container .back-link {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #fdd0b5; /* Beige achtergrondkleur */
+            color: #8c564b; /* Donkerbruine tekstkleur */
+            text-decoration: none;
+            border: 1px solid #8c564b;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .back-button-container .home-button:hover,
+        .back-button-container .back-link:hover {
+            background-color: #8c564b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-button-container">
+        <!-- Knop rechtsboven -->
+        <a href="/dashboard" class="back-link">Back to Home</a>
+    </div>
+
+    <h1>My Purchases</h1>
+    <div class="purchases-container">
+        {% if purchases and purchases|length > 0 %}
+            {% for purchase in purchases %}
+            <div class="purchase-item">
+                <!-- Album name as a heading -->
+                <h2>{{ purchase.album_name }}</h2>
+                <!-- Other attributes displayed as a list -->
+                <p><strong>Transaction ID:</strong> {{ purchase.transaction_id }}</p>
+                <p><strong>Record ID:</strong> {{ purchase.record_id }}</p>
+                <p><strong>Album name:</strong> {{ purchase.album_name }}</p>
+                <p><strong>Artist:</strong> {{ purchase.artist }}</p>
+                <p><strong>Condition:</strong> {{ purchase.condition }}</p>
+                <p><strong>Price:</strong> €{{ purchase.price }}</p>
+                <p><strong>Date:</strong> {{ purchase.date }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No purchases found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
