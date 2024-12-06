@@ -135,42 +135,36 @@
   <script>
     // Fetch listings from the backend and render them
     async function loadListings() {
-      const container = document.getElementById('listings-container');
-      try {
-        const response = await fetch('/get_records'); // Fetch data from the backend route
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const listings = await response.json();
-
-        // Clear the loading message
-        container.innerHTML = '';
-
-        // Render each listing dynamically
-        if (listings.length > 0) {
-          listings.forEach(listing => {
-            const listingDiv = document.createElement('div');
-            listingDiv.className = 'listing';
-            listingDiv.innerHTML = `
-              <h3>${listing.albumname}</h3>
-              <p><strong>Artist:</strong> ${listing.artist}</p>
-              <p><strong>Genre:</strong> ${listing.genre}</p>
-              <p><strong>Size:</strong> ${listing.size}</p>
-              <p><strong>Condition:</strong> ${listing.condition}</p>
-              <p><strong>Color:</strong> ${listing.colour}</p>
-              <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
-              <p><strong>Price:</strong> €${parseFloat(listing.price).toFixed(2)}</p>
-            `;
-            container.appendChild(listingDiv);
-          });
-        } else {
-          container.innerHTML = '<p>No listings available.</p>';
-        }
-      } catch (error) {
-        console.error('Error loading listings:', error);
-        container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
-      }
+  const container = document.getElementById('listings-container');
+  try {
+    const response = await fetch('/get_records'); // Fetch data from the backend route
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
     }
+    const listings = await response.json();
+
+    // Clear the loading message
+    container.innerHTML = '';
+
+    // Render each listing dynamically
+    if (listings.length > 0) {
+      listings.forEach(listing => {
+        const listingDiv = document.createElement('div');
+        listingDiv.className = 'listing';
+        listingDiv.innerHTML = `
+          <h3>${listing.albumname}</h3>
+          <p><strong>Artist:</strong> ${listing.artist}</p>
+        `;
+        container.appendChild(listingDiv);
+      });
+    } else {
+      container.innerHTML = '<p>No listings available.</p>';
+    }
+  } catch (error) {
+    console.error('Error loading listings:', error);
+    container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
+  }
+}
 
     // Load the listings when the page loads
     window.onload = loadListings;
