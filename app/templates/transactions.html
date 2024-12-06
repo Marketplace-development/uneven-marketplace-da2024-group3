@@ -1,255 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koop een Vinyl</title>
-  <style>
-    /* Global Styles */
-    body {
-      font-family: 'Georgia', serif;
-      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      color: #3d2b1f;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinnback - Buy a Record</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fbe4d5;
+        }
 
-    /* Top Navigation Bar */
-    .top-bar {
-      width: 100%;
-      background-color: #8c564b;
-      color: white;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
+        .header, .filters-container, .listings-container {
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    .top-bar h1 {
-      margin: 0;
-      font-size: 24px;
-      font-family: 'Trebuchet MS', sans-serif;
-    }
+        .header {
+            background-color: #8b5d47;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
 
-    .top-bar button {
-      padding: 8px 12px;
-      background-color: #ffe5d9;
-      color: #8c564b;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      margin-left: 8px;
-      transition: background-color 0.3s;
-    }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
 
-    .top-bar button:hover {
-      background-color: #fdd0b5;
-    }
+        .header button {
+            background: white;
+            color: #8b5d47;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    /* Listings Container */
-    .listing-container {
-      width: 90%;
-      max-width: 900px;
-      background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-      margin-top: 20px;
-      text-align: center;
-      position: relative; /* For background vinyl positioning */
-      overflow: hidden; /* To ensure background images stay confined */
-    }
+        .header button:hover {
+            background: #d3d3d3;
+        }
 
-    .listing-container::before {
-      content: "";
-      position: absolute;
-      top: 20px;
-      left: -50px;
-      width: 200px;
-      height: 200px;
-      background: url('https://www.example.com/vinyl1.png') no-repeat center;
-      background-size: contain;
-      opacity: 0.2;
-      transform: rotate(-15deg);
-    }
+        .main-container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
 
-    .listing-container::after {
-      content: "";
-      position: absolute;
-      bottom: -30px;
-      right: -50px;
-      width: 250px;
-      height: 250px;
-      background: url('https://www.example.com/vinyl2.png') no-repeat center;
-      background-size: contain;
-      opacity: 0.2;
-      transform: rotate(10deg);
-    }
+        .filters-container {
+            flex: 1;
+            max-width: 300px;
+            background-color: #f8f8f8;
+            padding: 15px;
+        }
 
-    .listing-container h1 {
-      font-family: 'Georgia', serif;
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: #5a3a28;
-    }
+        .filters-container h3, .filters-container h4 {
+            margin: 10px 0;
+        }
 
-    /* Individual Listing */
-    .listing {
-      border: 2px solid #f4b085;
-      border-radius: 10px;
-      background: #ffe8dc;
-      padding: 15px;
-      margin-bottom: 15px;
-      text-align: left;
-      transition: transform 0.3s;
-    }
+        .filters-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-    .listing:hover {
-      transform: scale(1.02);
-    }
+        .filters-container li {
+            margin-bottom: 8px;
+        }
 
-    .listing h3 {
-      margin: 0;
-      font-size: 22px;
-      color: #8c564b;
-    }
+        .listings-container {
+            flex: 3;
+            background-color: #fff;
+            padding: 20px;
+        }
 
-    .listing p {
-      margin: 5px 0;
-      font-size: 16px;
-      color: #3d2b1f;
-    }
+        .listing {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #fde9e1;
+        }
 
-    /* Sort Dropdown */
-    .sort-dropdown {
-      margin-bottom: 20px;
-    }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
 
-    .sort-dropdown select {
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-    }
+        .controls input {
+            padding: 10px;
+            border: 1px solid #8b5d47;
+            border-radius: 5px;
+            color: #8b5d47;
+            width: 100%;
+        }
 
-    /* Buy Button */
-    .buy-button {
-      background-color: #8c564b;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 10px 15px;
-      cursor: pointer;
-    }
+        .buy-button {
+            background-color: #8c564b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
 
-    .buy-button:hover {
-      background-color: #5e3d2f;
-    }
-  </style>
+        .buy-button:hover {
+            background-color: #5e3d2f;
+        }
+
+        .price-slider-container {
+            margin-bottom: 15px;
+        }
+
+        .price-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 5px;
+            background: #8b5d47;
+            outline: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            background: #8b5d47;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .price-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #8b5d47;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .price-slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        .range-slider {
+            position: relative;
+            width: 100%;
+            height: 5px;
+            background: #8b5d47;  
+            border-radius: 5px;
+        }
+
+        .range-slider input[type="range"] {
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            z-index: 3;
+        }
+
+        .range-slider input[type="range"]::-webkit-slider-thumb {
+            pointer-events: all;
+            width: 8px;  
+            height: 8px; 
+            border-radius: 50%;
+            background: #8b5d47; 
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            position: relative;
+            top: 50%; 
+            margin-top: -4px; 
+        }
+
+        .range-slider input[type="range"]::-moz-range-thumb {
+            pointer-events: all;
+            width: 8px;  
+            height: 8px; 
+            border-radius: 50%;
+            background: #8b5d47; 
+            cursor: pointer;
+            position: relative;
+            top: 50%; 
+            margin-top: -4px; 
+        }
+
+
+        .range-slider .slider-track {
+            position: absolute;
+            height: 5px;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: transparent;
+            z-index: 1;
+        }
+
+        .range-slider .slider-track::before {
+            content: '';
+            position: absolute;
+            height: 5px;
+            top: 0;
+            background: #8b5d47; 
+            z-index: 2;
+            border-radius: 5px;
+        }
+
+    </style>
 </head>
 <body>
-
-  <!-- Top Bar with title and only the "Back to Dashboard" button -->
-  <div class="top-bar">
-    <h1>Spinnback</h1>
-    <div>
-      <button onclick="location.href='/dashboard'">Terug naar Dashboard</button>
+    <div class="header">
+        <h1>Spinnback</h1>
+        <button onclick="goToDashboard()">Go To Dashboard</button>
     </div>
-  </div>
 
-  <!-- Listings Section -->
-  <div class="listing-container">
-    <h1>Koop een Vinyl</h1>
-    <div class="sort-dropdown">
-      <label for="sort">Sorteer op prijs:</label>
-      <select id="sort" onchange="sortListings(this.value)">
-        <option value="asc">Laag naar Hoog</option>
-        <option value="desc">Hoog naar Laag</option>
-      </select>
-    </div>
-    <div id="listings-container">
-      <p>Loading listings...</p>
-    </div>
-  </div>
+    <div class="main-container">
+        <div class="filters-container">
+            <h3>Filters</h3>
+            <div class="price-slider-container">
+                <h4>Price:</h4>
+                <div class="range-slider">
+                    <input id="price-min-slider" type="range" min="0" max="200" value="0" step="1" oninput="updateRangeSlider()" />
+                    <input id="price-max-slider" type="range" min="0" max="200" value="200" step="1" oninput="updateRangeSlider()" />
+                    <div class="slider-track"></div>
+                </div>
+                <div class="price-slider-labels">
+                    <span id="price-min">€0</span>
+                    <span id="price-max">€200</span>
+                </div>
+            </div>                
+            <div id="genre-filters">
+                <h4>Genre:</h4>
+                <ul id="genre-filters">
+                    <li><input type="checkbox" value="Pop" onchange="applyFilters()"> Pop</li>
+                    <li><input type="checkbox" value="Rock" onchange="applyFilters()"> Rock</li>
+                    <li><input type="checkbox" value="Jazz" onchange="applyFilters()"> Jazz</li>
+                    <li><input type="checkbox" value="Blues" onchange="applyFilters()"> Blues</li>
+                    <li><input type="checkbox" value="Hip-hop/Rap" onchange="applyFilters()"> Hip-hop/Rap</li>
+                    <li><input type="checkbox" value="Classical" onchange="applyFilters()"> Classical</li>
+                    <li><input type="checkbox" value="Electronic/Dance" onchange="applyFilters()"> Electronic/Dance</li>
+                    <li><input type="checkbox" value="Reggae" onchange="applyFilters()"> Reggae</li>
+                    <li><input type="checkbox" value="R&B/Soul" onchange="applyFilters()"> R&B/Soul</li>
+                    <li><input type="checkbox" value="Country" onchange="applyFilters()"> Country</li>
+                    <li><input type="checkbox" value="Folk" onchange="applyFilters()"> Folk</li>
+                    <li><input type="checkbox" value="Metal" onchange="applyFilters()"> Metal</li>
+                    <li><input type="checkbox" value="Latin" onchange="applyFilters()"> Latin</li>
+                    <li><input type="checkbox" value="Indie/Alternative" onchange="applyFilters()"> Indie/Alternative</li>
+                    <li><input type="checkbox" value="World Music" onchange="applyFilters()"> World Music</li>
+                </ul>
 
-  <script>
-    let allListings = []; // Store the fetched listings
-
-    // Fetch listings from the backend and render them
-    async function loadListings() {
-      const container = document.getElementById('listings-container');
-      try {
-        const response = await fetch('/get_records_sellyes'); // Fetch data from the backend route
-        const listings = await response.json();
-
-        // Clear the loading message
-        if (response.status === 200) {
-          allListings = listings; // Save listings
-          renderListings(listings); // Render them initially
-        } else {
-          container.innerHTML = '<p>No listings available.</p>';
-        }
-      } catch (error) {
-        console.error('Error loading listings:', error);
-        container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
-      }
-    }
-
-    // Render listings to the container
-    function renderListings(listings) {
-      const container = document.getElementById('listings-container');
-      container.innerHTML = ''; // Clear existing listings
-
-      if (listings.length > 0) {
-        listings.forEach(listing => {
-          const listingDiv = document.createElement('div');
-          listingDiv.className = 'listing';
-          listingDiv.innerHTML = `
-            <div>
-              <h3>${listing.albumname}</h3>
-              <p><strong>Artist:</strong> ${listing.artist}</p>
-              <p><strong>Genre:</strong> ${listing.genre}</p>
-              <p><strong>Size:</strong> ${listing.size}</p>
-              <p><strong>Condition:</strong> ${listing.condition}</p>
-              <p><strong>Colour:</strong> ${listing.colour}</p>
-              <p><strong>Description:</strong> ${listing.description || 'No description provided.'}</p>
-              <p><strong>Price:</strong> $${parseFloat(listing.price).toFixed(2)}</p>
             </div>
-            <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Kopen</button>
-          `;
-          container.appendChild(listingDiv);
-        });
-      } else {
-        container.innerHTML = '<p>No listings available.</p>';
-      }
-    }
+            <div id="size-filters">
+                <h4>Size:</h4>
+                <ul>
+                    <li><input type="checkbox" value='12"' onchange="applyFilters()"> 12"</li>
+                    <li><input type="checkbox" value='10"' onchange="applyFilters()"> 10"</li>
+                    <li><input type="checkbox" value='7"' onchange="applyFilters()"> 7"</li>
+                </ul>
+            </div>
+            <div id="condition-filters">
+                <h4>State:</h4>
+                <ul>
+                    <li><input type="checkbox" value="M" onchange="applyFilters()"> M (Mint)</li>
+                    <li><input type="checkbox" value="NM" onchange="applyFilters()"> NM (Near Mint)</li>
+                    <li><input type="checkbox" value="VG+" onchange="applyFilters()"> VG+ (Very Good Plus)</li>
+                    <li><input type="checkbox" value="VG" onchange="applyFilters()"> VG (Very Good)</li>
+                    <li><input type="checkbox" value="G" onchange="applyFilters()"> G (Good)</li>
+                    <li><input type="checkbox" value="P" onchange="applyFilters()"> P (Poor)</li>
+                </ul>
+            </div>
+        </div>
 
-    // Sort listings and re-render them
-    function sortListings(order) {
-      const sortedListings = [...allListings].sort((a, b) => {
-        const priceA = parseFloat(a.price);
-        const priceB = parseFloat(b.price);
-        return order === 'asc' ? priceA - priceB : priceB - priceA;
-      });
-      renderListings(sortedListings);
-    }
 
-    // Handle record purchase
-    function buyRecord(recordid) {
-      window.location.href =`/koop_1plaat/${recordid}`;
-    }
+        <div class="listings-container">
+            <h1>Koop een Vinyl</h1>
+            <div class="controls">
+                <input type="text" id="search" placeholder="Search album or artist" onkeyup="searchListings()" />
+                <select id="sort" class="sort-dropdown" onchange="sortListings(this.value)">
+                    <option value="asc">Low to High</option>
+                    <option value="desc">High to Low</option>
+                </select>
+            </div>
+            
+            <div id="listings-container">
+                <p>Loading listings...</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        let allListings = [];
+        let filteredListings = [];
+        let maxPrice = 0;
 
-    // Load the listings when the page loads
-    window.onload = loadListings;
-  </script>
+        async function loadListings() {
+            const response = await fetch('/get_records_sellyes');
+            allListings = await response.json();
 
+            const maxPrice = Math.max(...allListings.map(listing => listing.price));
+            const minPrice = Math.min(...allListings.map(listing => listing.price));
+
+            const minSlider = document.getElementById('price-min-slider');
+            const maxSlider = document.getElementById('price-max-slider');
+
+            minSlider.max = maxPrice;
+            maxSlider.max = maxPrice;
+
+            minSlider.value = minPrice;
+            maxSlider.value = maxPrice;
+
+            document.getElementById('price-min').innerText = `€${minPrice}`;
+            document.getElementById('price-max').innerText = `€${maxPrice}`;
+
+            filteredListings = [...allListings];
+            renderListings(allListings);
+        }
+
+
+
+        function renderListings(listings) {
+            const container = document.getElementById('listings-container');
+            container.innerHTML = listings.length
+                ? listings.map(listing => `
+                    <div class="listing">
+                        <h2>${listing.albumname} - ${listing.artist}</h2>
+                        <p>Genre: ${listing.genre}</p>
+                        <p>Size: ${listing.size}</p>
+                        <p>State: ${listing.condition}</p>
+                        <p>Price: €${listing.price}</p>
+                        <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now</button>
+                    </div>
+                `).join('')
+                : '<p>No results found.</p>';
+        }       
+
+        function updateRangeSlider() {
+            const minSlider = document.getElementById('price-min-slider');
+            const maxSlider = document.getElementById('price-max-slider');
+            const minValue = parseFloat(minSlider.value);
+            const maxValue = parseFloat(maxSlider.value);
+            const sliderTrack = document.querySelector('.slider-track');
+
+    
+            if (minValue > maxValue - 1) {
+                minSlider.value = maxValue - 1;
+            }
+            if (maxValue < minValue + 1) {
+                maxSlider.value = minValue + 1;
+            }
+
+            document.getElementById('price-min').innerText = `€${minSlider.value}`;
+            document.getElementById('price-max').innerText = `€${maxSlider.value}`;
+
+            const minPercent = (minValue / maxSlider.max) * 100;
+            const maxPercent = (maxValue / maxSlider.max) * 100;
+
+            sliderTrack.style.background = `linear-gradient(to right, #8b5d47 ${minPercent}%, #8b5d47 ${maxPercent}%, #ddd ${maxPercent}%)`;
+            
+            applyFilters();
+        }
+
+
+
+        function applyFilters() {
+            const genres = getSelectedValues("genre-filters");
+            const sizes = getSelectedValues("size-filters");
+            const conditions = getSelectedValues("condition-filters");
+            const minPrice = parseFloat(document.getElementById('price-min-slider').value);
+            const maxPrice = parseFloat(document.getElementById('price-max-slider').value);
+
+    
+            filteredListings = allListings.filter(listing =>
+                (genres.length === 0 || genres.includes(listing.genre)) &&
+                (sizes.length === 0 || sizes.includes(listing.size)) &&
+                (conditions.length === 0 || conditions.includes(listing.condition)) &&
+                listing.price >= minPrice && listing.price <= maxPrice
+            );
+
+            renderListings(filteredListings);
+        }
+
+
+
+        function getSelectedValues(containerId) {
+            return Array.from(document.querySelectorAll(`#${containerId} input:checked`))
+                .map(input => input.value.trim()); 
+        }
+
+
+        function searchListings() {
+    
+            applyFilters();
+
+            const query = document.getElementById('search').value.toLowerCase();
+
+    
+            filteredListings = filteredListings.filter(listing =>
+                listing.albumname.toLowerCase().includes(query) || 
+                listing.artist.toLowerCase().includes(query)
+            );
+
+            renderListings(filteredListings);
+        }
+
+
+
+
+
+        function sortListings(order) {
+            filteredListings.sort((a, b) => order === 'asc' ? a.price - b.price : b.price - a.price);
+            renderListings(filteredListings);
+        }
+
+
+        function buyRecord(recordid) {
+            window.location.href = `/koop_1plaat/${recordid}`;
+        }
+
+        // (Other functions like applyFilters, searchListings, sortListings remain the same)
+
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+
+        loadListings();
+    </script>
 </body>
 </html>
