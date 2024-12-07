@@ -89,16 +89,26 @@
             color: white;
         }
 
-        /* Styling voor de flash message */
-        .flash-message {
-            background-color: #4ff436;  /* Rood voor waarschuwingen */
-            color: white;  /* Witte tekst op de rode achtergrond */
-            border: 1px solid #d32f2f;  /* Dieper rode rand */
+        .flash-message.success {
+            background-color: #4caf50; /* Groen voor succes */
+            color: white;
+            border: 1px solid #388e3c;
             padding: 15px;
-            margin: 20px 0;
             border-radius: 5px;
             text-align: center;
+            margin-bottom: 15px;
         }
+
+        .flash-message.error {
+            background-color: #f44336; /* Rood voor fouten */
+            color: white;
+            border: 1px solid #d32f2f;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
         
         
     </style>
@@ -114,13 +124,16 @@
     <!-- Flash message display -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flash-message" id="flashMessage">
+            <div id="flashMessage">
                 {% for category, message in messages %}
-                    <span>{{ message }}</span>
+                    <div class="flash-message {{ category }}">
+                        <span>{{ message }}</span>
+                    </div>
                 {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
+
 
     <div class="purchases-container">
         {% if purchases and purchases|length > 0 %}
@@ -147,18 +160,19 @@
     </div>
 
     <script>
-        // JavaScript om de flash message na 3 seconden te verwijderen
-        window.onload = function() {
-            const flashMessage = document.getElementById('flashMessage');
-            if (flashMessage) {
+        document.addEventListener("DOMContentLoaded", function() {
+            var flashMessages = document.querySelectorAll(".flash-message");
+            flashMessages.forEach(function(message) {
                 setTimeout(function() {
-                    flashMessage.style.display = 'none';
-                }, 3000); // Verberg de flash message na 3 seconden
-            }
-        };
+                    message.style.opacity = "0"; // Fade out effect
+                    setTimeout(function() {
+                        message.style.display = "none"; // Verberg volledig
+                    }, 1000); // Wacht op de overgang
+                }, 3000); // 3 seconden zichtbaar
+            });
+        });
     </script>
-</body>
-</html>
+    
 
 
 
