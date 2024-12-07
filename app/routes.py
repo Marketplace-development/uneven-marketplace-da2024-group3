@@ -395,7 +395,7 @@ def write_review(transaction_id):
 
     if existing_review:
         # Er is al een review, toon een melding en redirect naar 'my_purchases'
-        flash('A review has already been written for this purchase.', 'warning')
+        flash('A review has already been written for this purchase.', 'error')
         return redirect(url_for('main.return_my_purchases'))
     
     # Als er geen review is, toon dan de schrijf-review pagina
