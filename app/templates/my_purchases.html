@@ -27,24 +27,43 @@
             padding: 20px;
         }
         .purchase-item {
+            display: flex; /* Flexbox layout */
+            justify-content: space-between;
+            align-items: center;
             padding: 15px;
             border-bottom: 1px solid #eee;
         }
         .purchase-item:last-child {
             border-bottom: none;
         }
-        .purchase-item h2 {
+        .purchase-details {
+            max-width: 70%; /* Zorg dat de details niet te veel ruimte innemen */
+        }
+        .purchase-details h2 {
             font-size: 24px;
             margin: 0 0 10px 0;
             color: #8c564b;
         }
-        .purchase-item p {
+        .purchase-details p {
             margin: 5px 0;
             font-size: 14px;
             color: #333;
         }
-        .purchase-item strong {
+        .purchase-details strong {
             color: #8c564b;
+        }
+        .review-button {
+            background-color: #8c564b;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .review-button:hover {
+            background-color: #5c3a31;
         }
         .back-button-container {
             position: fixed;
@@ -57,8 +76,8 @@
         .back-button-container .back-link {
             display: inline-block;
             padding: 10px 15px;
-            background-color: #fdd0b5; /* Beige achtergrondkleur */
-            color: #8c564b; /* Donkerbruine tekstkleur */
+            background-color: #fdd0b5;
+            color: #8c564b;
             text-decoration: none;
             border: 1px solid #8c564b;
             border-radius: 5px;
@@ -69,6 +88,19 @@
             background-color: #8c564b;
             color: white;
         }
+
+        /* Styling voor de flash message */
+        .flash-message {
+            background-color: #4ff436;  /* Rood voor waarschuwingen */
+            color: white;  /* Witte tekst op de rode achtergrond */
+            border: 1px solid #d32f2f;  /* Dieper rode rand */
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        
     </style>
 </head>
 <body>
@@ -78,28 +110,58 @@
     </div>
 
     <h1>My Purchases</h1>
+
+    <!-- Flash message display -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-message" id="flashMessage">
+                {% for category, message in messages %}
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <div class="purchases-container">
         {% if purchases and purchases|length > 0 %}
             {% for purchase in purchases %}
             <div class="purchase-item">
-                <!-- Album name as a heading -->
-                <h2>{{ purchase.album_name }}</h2>
-                <!-- Other attributes displayed as a list -->
-                <p><strong>Transaction ID:</strong> {{ purchase.transaction_id }}</p>
-                <p><strong>Record ID:</strong> {{ purchase.record_id }}</p>
-                <p><strong>Album name:</strong> {{ purchase.album_name }}</p>
-                <p><strong>Artist:</strong> {{ purchase.artist }}</p>
-                <p><strong>Condition:</strong> {{ purchase.condition }}</p>
-                <p><strong>Price:</strong> €{{ purchase.price }}</p>
-                <p><strong>Date:</strong> {{ purchase.date }}</p>
+                <!-- Details van de aankoop -->
+                <div class="purchase-details">
+                    <h2>{{ purchase.album_name }}</h2>
+                    <p><strong>Transaction ID:</strong> {{ purchase.transaction_id }}</p>
+                    <p><strong>Record ID:</strong> {{ purchase.record_id }}</p>
+                    <p><strong>Album name:</strong> {{ purchase.album_name }}</p>
+                    <p><strong>Artist:</strong> {{ purchase.artist }}</p>
+                    <p><strong>Condition:</strong> {{ purchase.condition }}</p>
+                    <p><strong>Price:</strong> €{{ purchase.price }}</p>
+                    <p><strong>Date:</strong> {{ purchase.date }}</p>
+                </div>
+                <!-- Write Review-knop -->
+                <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
             </div>
             {% endfor %}
         {% else %}
             <p>No purchases found.</p>
         {% endif %}
     </div>
+
+    <script>
+        // JavaScript om de flash message na 3 seconden te verwijderen
+        window.onload = function() {
+            const flashMessage = document.getElementById('flashMessage');
+            if (flashMessage) {
+                setTimeout(function() {
+                    flashMessage.style.display = 'none';
+                }, 3000); // Verberg de flash message na 3 seconden
+            }
+        };
+    </script>
 </body>
 </html>
+
+
+
 
 
 
