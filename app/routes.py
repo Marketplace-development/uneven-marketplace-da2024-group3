@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for, flash
-from .models import db, users, records, libraries, libraryrecords
+from .models import db, users, records, libraries, libraryrecords, reviews
 from . import supabase
 import logging
 
@@ -292,18 +292,16 @@ def search_library():
 
 
 @main.route('/my_purchases', methods=['GET'])
-def get_my_purchases():
+def my_purchases():
     # Haal de ingelogde gebruiker op uit de sessie
     logged_in_user_id = session.get('userid')
-
-    if not logged_in_user_id:
-        return "User not logged in", 401  # Geef een foutmelding als de gebruiker niet is ingelogd
 
     # Query alle transacties waarbij de gebruiker de koper is
     user_transactions = transactions.query.filter_by(buyerid=logged_in_user_id).all()
 
     # Controleer of er transacties zijn gevonden
     if not user_transactions:
+        flash('You have no purchases yet.', 'error')
         return render_template('my_purchases.html', purchases=[])
 
     # Haal de bijbehorende records op voor elke transactie
@@ -318,16 +316,11 @@ def get_my_purchases():
                 "artist": record.artist,
                 "condition": record.condition,
                 "price": record.price,
-                "date": transaction.created_at  # Dit moet mogelijk aangepast worden naar een datumveld in "transactions"
+                "date": transaction.created_at  # Controleer of dit veld een datum bevat
             })
 
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_purchases.html', purchases=purchases_data)
-
-@main.route('/my_purchases')
-def return_my_purchases():
-    # code voor de pagina my_purchases
-    return render_template('my_purchases.html')
 
 
 
@@ -335,9 +328,6 @@ def return_my_purchases():
 def my_sold_records():
     # Haal de ingelogde gebruiker op uit de sessie
     logged_in_user_id = session.get('userid')
-
-    if not logged_in_user_id:
-        return "User not logged in", 401  # Geef een foutmelding als de gebruiker niet is ingelogd
 
     # Query alle transacties waarbij de gebruiker de verkoper is
     sold_transactions = transactions.query.filter_by(sellerid=logged_in_user_id).all()
@@ -364,13 +354,6 @@ def my_sold_records():
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_sold_records.html', sold_records=sold_records_data)
 
-
-@main.route('/my_sold_records')
-def return_my_sold_records():
-    # code voor de pagina my__sold_records
-    return render_template('my_sold_records.html')
-
-
 @main.route('/write_review/<int:transaction_id>')
 def write_review(transaction_id):
     # Controleer of er al een review is voor deze transaction_id
@@ -378,21 +361,26 @@ def write_review(transaction_id):
 
     if existing_review:
         # Er is al een review, toon een melding en redirect naar 'my_purchases'
-        flash('A review has already been written for this purchase.', 'warning')
-        return redirect(url_for('main.return_my_purchases'))
+        flash('You have already written a review for this purchase.', 'error')
+        return redirect(url_for('main.my_purchases'))
     
     # Als er geen review is, toon dan de schrijf-review pagina
     return render_template('write_review.html', transaction_id=transaction_id)
 
-from .models import reviews
+
 @main.route('/submit_review', methods=['POST'])
 def submit_review():
-    # Haal de gegevens van het formulier op
     transaction_id = request.form.get('transaction_id')
     review_score = request.form.get('review_score')
     reasoning = request.form.get('reasoning')
 
-    # Voeg de review toe aan de database
+    # Controleer of er al een review is
+    existing_review = reviews.query.filter_by(transactionid=transaction_id).first()
+    if existing_review:
+        flash('A review already exists for this transaction.', 'error')
+        return redirect(url_for('main.my_purchases'))
+
+    # Voeg de review toe
     new_review = reviews(
         transactionid=transaction_id,
         reviewscore=review_score,
@@ -401,12 +389,8 @@ def submit_review():
     db.session.add(new_review)
     db.session.commit()
 
-    # Flash message voor succesvolle inzending
     flash('Review successfully submitted!', 'success')
-
-    # Redirect naar een bevestigingspagina of terug naar de aankopen
-    return redirect(url_for('main.return_my_purchases'))
-
+    return redirect(url_for('main.my_purchases'))
 
 
 @main.route('/review/<int:transaction_id>')
@@ -416,8 +400,8 @@ def watch_review(transaction_id):
 
     if not existing_review:
         # Er is geen review
-        flash('There is no review (yet) for this transaction', 'warning')
-        return redirect(url_for('main.return_my_sold_records'))
+        flash('There is no review (yet) for this transaction', 'error')
+        return redirect(url_for('main.my_sold_records'))
     
     transaction = transactions.query.filter_by(transactionid=transaction_id).first()
     
