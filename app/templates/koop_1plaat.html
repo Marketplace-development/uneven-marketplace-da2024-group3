@@ -17,6 +17,29 @@
       min-height: 100vh;
       color: #3d2b1f;
     }
+    .top-right-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #5e3d2f;
+    }
+    .delete-button {
+      background-color: #ff4d4d;
+    }
+    .delete-button:hover {
+      background-color: #cc0000;
+    }
     .container {
       background-color: #fff;
       padding: 20px;
@@ -36,28 +59,18 @@
     .details p {
       margin: 5px 0;
     }
-    .button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #8c564b;
-      color: white;
-      border: none;
+    .rating-button {
+      margin-left: 10px;
+      background-color: white;
+      color: #5a3a28;
+      border: 2px solid #5a3a28;
+      padding: 5px 10px;
       border-radius: 5px;
-      font-size: 16px;
       cursor: pointer;
+      font-size: 14px;
     }
-    .button:hover {
-      background-color: #5e3d2f;
-    }
-    .delete-button {
-      background-color: #ff4d4d;
-    }
-    .delete-button:hover {
-      background-color: #cc0000;
-    }
-    .form {
-      display: inline-block;
-      margin-top: 20px;
+    .rating-button:hover {
+      background-color: #f4e9e2;
     }
     .alert {
       padding: 15px;
@@ -67,9 +80,19 @@
       margin-bottom: 15px;
       border: 1px solid #d6e9c6;
     }
+    .form {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
+  <!-- Top Right Button -->
+  <div class="top-right-button">
+    <button class="button" onclick="location.href='/transactions'">Buy other Record</button>
+  </div>
+
   <div class="container">
     <div id="success-message" class="alert" style="display: none;">Vinyl Successfully Purchased!</div>
     <h1>Details</h1>
@@ -81,8 +104,15 @@
       <p><strong>Color:</strong> {{ record.colour }}</p>
       <p><strong>Description:</strong> {{ record.description }}</p>
       <p><strong>Price:</strong> €{{ record.price }}</p>
+      <p>
+        <strong>Seller:</strong> {{ seller_username }}
+        <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
+          View Seller Rating
+        </button>
+      </p>
     </div>
-    <button class="button" onclick="location.href='/transactions'">Go to Transactions</button>
+
+    <!-- Buy Button -->
     <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form" onsubmit="handleBuy(event)">
       <button type="submit" class="button delete-button">Buy</button>
     </form>
@@ -90,18 +120,21 @@
 
   <script>
     function handleBuy(event) {
-      event.preventDefault(); // Voorkom directe formulierindiening
+      event.preventDefault(); // Prevent direct form submission
       const successMessage = document.getElementById('success-message');
-      successMessage.style.display = 'block'; // Toon de succesmelding
+      successMessage.style.display = 'block'; // Show the success message
 
-      // Wacht 2 seconden voordat je doorverwijst
+      // Wait 2 seconds before redirecting
       setTimeout(() => {
-        event.target.submit(); // Verstuur het formulier
+        event.target.submit(); // Submit the form
       }, 1000);
     }
   </script>
 </body>
 </html>
+
+
+
 
 
 
