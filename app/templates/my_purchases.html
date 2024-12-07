@@ -109,8 +109,18 @@
             margin-bottom: 15px;
         }
 
-        
-        
+        /* Zoekbalk stijl */
+        .search-bar {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 5px;
+            border: 1px solid #8c564b;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -134,45 +144,55 @@
         {% endif %}
     {% endwith %}
 
+    <!-- Zoekbalk -->
+    <input type="text" id="search" class="search-bar" placeholder="Zoek album of artiest" onkeyup="searchPurchases()" />
 
     <div class="purchases-container">
         {% if purchases and purchases|length > 0 %}
-            {% for purchase in purchases %}
-            <div class="purchase-item">
-                <!-- Details van de aankoop -->
-                <div class="purchase-details">
-                    <h2>{{ purchase.album_name }}</h2>
-                    <p><strong>Transaction ID:</strong> {{ purchase.transaction_id }}</p>
-                    <p><strong>Record ID:</strong> {{ purchase.record_id }}</p>
-                    <p><strong>Album name:</strong> {{ purchase.album_name }}</p>
-                    <p><strong>Artist:</strong> {{ purchase.artist }}</p>
-                    <p><strong>Condition:</strong> {{ purchase.condition }}</p>
-                    <p><strong>Price:</strong> €{{ purchase.price }}</p>
-                    <p><strong>Date:</strong> {{ purchase.date }}</p>
+            <div id="purchases-list">
+                {% for purchase in purchases %}
+                <div class="purchase-item" data-album="{{ purchase.album_name }}" data-artist="{{ purchase.artist }}">
+                    <!-- Details van de aankoop -->
+                    <div class="purchase-details">
+                        <h2>{{ purchase.album_name }}</h2>
+                        <p><strong>Transaction ID:</strong> {{ purchase.transaction_id }}</p>
+                        <p><strong>Record ID:</strong> {{ purchase.record_id }}</p>
+                        <p><strong>Album name:</strong> {{ purchase.album_name }}</p>
+                        <p><strong>Artist:</strong> {{ purchase.artist }}</p>
+                        <p><strong>Condition:</strong> {{ purchase.condition }}</p>
+                        <p><strong>Price:</strong> €{{ purchase.price }}</p>
+                        <p><strong>Date:</strong> {{ purchase.date }}</p>
+                    </div>
+                    <!-- Write Review-knop -->
+                    <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
                 </div>
-                <!-- Write Review-knop -->
-                <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
+                {% endfor %}
             </div>
-            {% endfor %}
         {% else %}
             <p>No purchases found.</p>
         {% endif %}
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var flashMessages = document.querySelectorAll(".flash-message");
-            flashMessages.forEach(function(message) {
-                setTimeout(function() {
-                    message.style.opacity = "0"; // Fade out effect
-                    setTimeout(function() {
-                        message.style.display = "none"; // Verberg volledig
-                    }, 1000); // Wacht op de overgang
-                }, 3000); // 3 seconden zichtbaar
+        // Functie voor het filteren van aankopen op albumnaam of artiest
+        function searchPurchases() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const purchases = document.querySelectorAll('.purchase-item');
+            
+            purchases.forEach(purchase => {
+                const albumName = purchase.getAttribute('data-album').toLowerCase();
+                const artistName = purchase.getAttribute('data-artist').toLowerCase();
+                
+                if (albumName.includes(query) || artistName.includes(query)) {
+                    purchase.style.display = 'flex'; // Toon als het matcht
+                } else {
+                    purchase.style.display = 'none'; // Verberg als het niet matcht
+                }
             });
-        });
+        }
     </script>
-    
+</body>
+</html>
 
 
 
