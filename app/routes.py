@@ -268,37 +268,45 @@ def my_library():
 
 @main.route('/library/search', methods=['GET'])
 def search_library():
-    # Haal de gebruikersnaam op uit de queryparameter
-    username = request.args.get('username')
+    username_query = request.args.get('username', '')
 
-    if not username:
-        # Als er geen gebruikersnaam is opgegeven, laad de zoekpagina opnieuw met een foutmelding
-        return render_template('zoek.html', error="Vul een gebruikersnaam in.")
+    try:
+        # Zoek gebruikers op met een gedeeltelijke overeenkomst
+        users_response = supabase.table('users').select('username').ilike('username', f'%{username_query}%').execute()
 
+        if not users_response.data:
+            return render_template('library.html', users=[])
+
+        users = [{'username': user['username']} for user in users_response.data]
+
+        return render_template('library.html', users=users)
+
+    except Exception as e:
+        logging.error(f"Error fetching user libraries: {e}")
+        return render_template('library.html', users=[], error="An error occurred while searching.")
+
+
+@main.route('/library/<username>', methods=['GET'])
+def user_library(username):
     try:
         # Zoek de gebruiker op basis van de opgegeven gebruikersnaam
         user_response = supabase.table('users').select('userid').eq('username', username).single().execute()
 
         if not user_response.data:
-            # Als de gebruiker niet bestaat
-            return render_template('zoek.html', error="Gebruiker niet gevonden.")
+            return render_template('library.html', library_records=[], username=None, error="User not found.")
 
-        # Haal de userid op van de gevonden gebruiker
+        # Haal de userid van de gevonden gebruiker op
         user_id = user_response.data['userid']
 
         # Zoek records die aan deze gebruiker toebehoren
         records_response = supabase.table('records').select('*').eq('ownerid', user_id).execute()
-
-        # Controleer of er records zijn gevonden
         library_records = records_response.data if records_response.data else []
 
     except Exception as e:
-        logging.error(f"Error fetching library records: {e}")
-        return render_template('zoek.html', error="Er is een fout opgetreden bij het ophalen van de bibliotheek.")
+        logging.error(f"Error fetching library for user {username}: {e}")
+        return render_template('library.html', library_records=[], username=None, error="An error occurred.")
 
-    # Render de bibliotheekpagina met de records
     return render_template('library.html', username=username, library_records=library_records)
-
 
 @main.route('/my_purchases', methods=['GET'])
 def get_my_purchases():
