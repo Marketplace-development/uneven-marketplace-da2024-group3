@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review for Transaction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdd0b5;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #8c564b;
+            color: white;
+            margin: 0;
+        }
+        .review-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .review-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;  /* Aligns items to the left and right */
+            align-items: center; /* Vertically centers the items */
+        }
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        .review-item h2 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #8c564b;
+        }
+        .review-item p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .review-item strong {
+            color: #8c564b;
+        }
+        .back-button-container {
+            display: flex;
+            justify-content: flex-end; /* Position items to the right */
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+        }
+        .back-button-container .back-link,
+        .back-button-container .back-sold-records {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #fdd0b5;
+            color: #8c564b;
+            text-decoration: none;
+            border: 1px solid #8c564b;
+            border-radius: 5px;
+            margin-left: 10px; /* Adds space between the buttons */
+        }
+        .back-button-container .back-link:hover,
+        .back-button-container .back-sold-records:hover {
+            background-color: #8c564b;
+            color: white;
+        }
+        .back-sold-records {
+            margin-left: 10px; /* Ensures space between the two buttons */
+        }
+    </style>
+</head>
+<body>
+    <div class="back-button-container">
+        <a href="/dashboard" class="back-link">Back to Home</a>
+        <a href="/my_sold_records" class="back-sold-records">Back to My Sold Records</a>
+    </div>
+
+    <h1>Review for Transaction {{ transaction.transactionid }}</h1>
+    <div class="review-container">
+        <div class="review-item">
+            <h2>Review Score: {{ review.reviewscore }}</h2>
+        </div>
+        <p><strong>Reasoning:</strong> {{ review.reasoning }}</p>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
