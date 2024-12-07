@@ -182,11 +182,20 @@ def library_view():
 
 @main.route('/koop_1plaat/<int:recordid>', methods=['GET'])
 def koop_1plaat(recordid):
+    # Fetch the record
     record = records.query.get(recordid)
     if not record:
         return "Record not found", 404
 
-    return render_template('koop_1plaat.html', record=record)
+    # Fetch the seller (user) details based on the ownerid
+    seller = users.query.get(record.ownerid)
+    if not seller:
+        return "Seller not found", 404
+
+    # Pass the seller's username to the template
+    return render_template('koop_1plaat.html', record=record, seller_username=seller.username)
+
+
 
 from .models import transactions  
 @main.route('/create_transaction/<int:recordid>', methods=['POST'])
@@ -451,3 +460,37 @@ def my_rating():
 
 if __name__ == '__main__':
     main.run(debug=True)
+
+
+
+
+from flask import request
+
+@main.route('/view_seller_rating/<int:seller_id>')
+def view_seller_rating(seller_id):
+    # Get the `recordid` from the query parameter
+    recordid = request.args.get('recordid')
+
+    # Query to find all reviews for the given seller
+    seller_reviews = (
+        db.session.query(reviews)
+        .join(transactions)
+        .filter(transactions.sellerid == seller_id)
+        .all()
+    )
+
+    # Calculate the average review score for the seller
+    average_score = (
+        db.session.query(func.avg(reviews.reviewscore))
+        .join(transactions)
+        .filter(transactions.sellerid == seller_id)
+        .scalar()
+    )
+
+    return render_template(
+        'view_seller_rating.html',
+        reviews=seller_reviews,
+        average_score=average_score,
+        recordid=recordid,  # Pass the recordid to the template
+    )
+
