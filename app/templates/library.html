@@ -99,6 +99,19 @@
       background-color: #f4b085;
       transform: scale(1.05);
     }
+
+    /* Zoekbalk stijl */
+    .search-bar {
+      margin-bottom: 20px;
+      padding: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+      display: block;
+      border-radius: 5px;
+      border: 1px solid #8c564b;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -129,34 +142,60 @@
     <!-- Bibliotheek van specifieke gebruiker -->
     <div class="libraries">
       <h2>Library of {{ username }}</h2>
+
+      <!-- Zoekbalk -->
+      <input type="text" id="search" class="search-bar" placeholder="Search by album or artist" onkeyup="searchRecords()" />
+
       {% if library_records %}
-        {% for record in library_records %}
-          <div class="listing">
-            <h3>{{ record['albumname'] }}</h3>
-            <p><strong>Artist:</strong> {{ record['artist'] }}</p>
-            <p><strong>Genre:</strong> {{ record['genre'] }}</p>
-            <p><strong>Condition:</strong> {{ record['condition'] }}</p>
-            <p><strong>Color:</strong> {{ record['colour'] }}</p>
-            <p><strong>Price:</strong> 
-              {% if record['price'] %}
-                €{{ "%.2f"|format(record['price']) }}
-              {% else %}
-                N/A
-              {% endif %}
-            </p>
-            <p><strong>Status:</strong>
-              {% if record['Sellyesorno'] %}
-                <span style="color: green;">For Sale</span>
-              {% else %}
-                <span style="color: red;">Not for Sale</span>
-              {% endif %}
-            </p>
-          </div>
-        {% endfor %}
+        <div id="library-records">
+          {% for record in library_records %}
+            <div class="listing" data-album="{{ record['albumname'] }}" data-artist="{{ record['artist'] }}">
+              <h3>{{ record['albumname'] }}</h3>
+              <p><strong>Artist:</strong> {{ record['artist'] }}</p>
+              <p><strong>Genre:</strong> {{ record['genre'] }}</p>
+              <p><strong>Condition:</strong> {{ record['condition'] }}</p>
+              <p><strong>Color:</strong> {{ record['colour'] }}</p>
+              <p><strong>Price:</strong> 
+                {% if record['price'] %}
+                  €{{ "%.2f"|format(record['price']) }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </p>
+              <p><strong>Status:</strong>
+                {% if record['Sellyesorno'] %}
+                  <span style="color: green;">For Sale</span>
+                {% else %}
+                  <span style="color: red;">Not for Sale</span>
+                {% endif %}
+              </p>
+            </div>
+          {% endfor %}
+        </div>
       {% else %}
         <p>No records found for {{ username }}.</p>
       {% endif %}
     </div>
   {% endif %}
+
+  <script>
+    // Functie voor het filteren van bibliotheekrecords op albumnaam of artiest
+    function searchRecords() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const records = document.querySelectorAll('.listing');
+      
+      records.forEach(record => {
+        const albumName = record.getAttribute('data-album').toLowerCase();
+        const artistName = record.getAttribute('data-artist').toLowerCase();
+        
+        if (albumName.includes(query) || artistName.includes(query)) {
+          record.style.display = 'block'; // Toon als het matcht
+        } else {
+          record.style.display = 'none'; // Verberg als het niet matcht
+        }
+      });
+    }
+  </script>
 </body>
 </html>
+
