@@ -491,3 +491,36 @@ def view_seller_rating(seller_id):
         recordid=recordid,  # Pass the recordid to the template
     )
 
+@main.route('/edit_1plaat/<int:record_id>', methods=['GET', 'POST'])
+def edit_1plaat(record_id):
+    # Ensure user is logged in
+    ownerid = session.get('userid')
+    if not ownerid:
+        return "User not logged in", 401
+
+    # Fetch the record
+    record = records.query.filter_by(recordid=record_id, ownerid=ownerid).first()
+    if not record:
+        return "Record not found or access denied", 404
+
+    if request.method == 'POST':
+        # Update the record with form data
+        record.albumname = request.form.get('albumname', record.albumname)
+        record.artist = request.form.get('artist', record.artist)
+        record.genre = request.form.get('genre', record.genre)
+        record.size = request.form.get('size', record.size)
+        record.condition = request.form.get('condition', record.condition)
+        record.colour = request.form.get('colour', record.colour)
+        record.Sellyesorno = request.form.get('Sellyesorno').lower() == 'true'
+        record.price = request.form.get('price', type=float) if record.Sellyesorno else None
+        record.description = request.form.get('description', record.description)
+
+        try:
+            db.session.commit()
+            return redirect(url_for('main.dashboard'))
+        except Exception as e:
+            logging.error(f"Error updating record: {e}")
+            return "Error updating record", 500
+
+    # Render the edit form with pre-filled data
+    return render_template('edit_1plaat.html', record=record)
