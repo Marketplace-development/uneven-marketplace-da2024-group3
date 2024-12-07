@@ -97,6 +97,19 @@
             opacity: 1;
             transition: opacity 1s ease-out;  /* Smooth transition for fade out */
         }
+
+        /* Zoekbalk stijl */
+        .search-bar {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 5px;
+            border: 1px solid #8c564b;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -118,45 +131,54 @@
         {% endif %}
     {% endwith %}
 
+    <!-- Zoekbalk -->
+    <input type="text" id="search" class="search-bar" placeholder="Zoek album of artiest" onkeyup="searchRecords()" />
+
     <div class="records-container">
         {% if sold_records and sold_records|length > 0 %}
-            {% for record in sold_records %}
-            <div class="record-item">
-                <div class="record-details">
-                    <h2>{{ record.album_name }}</h2>
-                    <p><strong>Transaction ID:</strong> {{ record.transaction_id }}</p>
-                    <p><strong>Record ID:</strong> {{ record.record_id }}</p>
-                    <p><strong>Album name:</strong> {{ record.album_name }}</p>
-                    <p><strong>Artist:</strong> {{ record.artist }}</p>
-                    <p><strong>Condition:</strong> {{ record.condition }}</p>
-                    <p><strong>Price:</strong> €{{ record.price }}</p>
-                    <p><strong>Date Sold:</strong> {{ record.date_sold }}</p>
+            <div id="records-list">
+                {% for record in sold_records %}
+                <div class="record-item" data-album="{{ record.album_name }}" data-artist="{{ record.artist }}">
+                    <div class="record-details">
+                        <h2>{{ record.album_name }}</h2>
+                        <p><strong>Transaction ID:</strong> {{ record.transaction_id }}</p>
+                        <p><strong>Record ID:</strong> {{ record.record_id }}</p>
+                        <p><strong>Album name:</strong> {{ record.album_name }}</p>
+                        <p><strong>Artist:</strong> {{ record.artist }}</p>
+                        <p><strong>Condition:</strong> {{ record.condition }}</p>
+                        <p><strong>Price:</strong> €{{ record.price }}</p>
+                        <p><strong>Date Sold:</strong> {{ record.date_sold }}</p>
+                    </div>
+                    <a href="/review/{{ record.transaction_id }}" class="watch-review-button">View Received Review</a>
                 </div>
-                <a href="/review/{{ record.transaction_id }}" class="watch-review-button">View Received Review</a>
+                {% endfor %}
             </div>
-            {% endfor %}
         {% else %}
             <p>No sold records found.</p>
         {% endif %}
     </div>
 
     <script>
-        // Check if there are flash messages
-        document.addEventListener("DOMContentLoaded", function() {
-            var flashMessages = document.querySelectorAll(".flash-message");
-            flashMessages.forEach(function(message) {
-                // Remove the message after 3 seconds
-                setTimeout(function() {
-                    message.style.opacity = "0";  // Fade out
-                    setTimeout(function() {
-                        message.style.display = "none";  // Completely hide the message
-                    }, 1000);  // Wait 1 second for the opacity transition
-                }, 3000);  // Wait 3 seconds before disappearing
+        // Functie voor het filteren van verkochte records op albumnaam of artiest
+        function searchRecords() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const records = document.querySelectorAll('.record-item');
+            
+            records.forEach(record => {
+                const albumName = record.getAttribute('data-album').toLowerCase();
+                const artistName = record.getAttribute('data-artist').toLowerCase();
+                
+                if (albumName.includes(query) || artistName.includes(query)) {
+                    record.style.display = 'flex'; // Toon als het matcht
+                } else {
+                    record.style.display = 'none'; // Verberg als het niet matcht
+                }
             });
-        });
+        }
     </script>
 </body>
 </html>
+
 
 
 
