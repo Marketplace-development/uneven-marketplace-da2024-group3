@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sold Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdd0b5;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #8c564b;
+            color: white;
+            margin: 0;
+        }
+        .records-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .record-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between; /* Ensures button and info align side by side */
+            align-items: center; /* Centers content vertically */
+        }
+        .record-item:last-child {
+            border-bottom: none;
+        }
+        .record-item h2 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #8c564b;
+        }
+        .record-item p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .record-item strong {
+            color: #8c564b;
+        }
+        .back-button-container {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            text-align: right;
+            z-index: 1000;
+        }
+        .back-button-container .home-button,
+        .back-button-container .back-link {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #fdd0b5;
+            color: #8c564b;
+            text-decoration: none;
+            border: 1px solid #8c564b;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .back-button-container .home-button:hover,
+        .back-button-container .back-link:hover {
+            background-color: #8c564b;
+            color: white;
+        }
+        .watch-review-button {
+            background-color: #8c564b;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        .watch-review-button:hover {
+            background-color: #6f4b40;
+        }
+
+        /* Update flash message style */
+        .flash-message {
+            background-color: #f44336;  /* Red background for warning */
+            color: white;  /* White text */
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 1s ease-out;  /* Smooth transition for fade out */
+        }
+    </style>
+</head>
+<body>
+    <div class="back-button-container">
+        <!-- Button at the top right -->
+        <a href="/dashboard" class="back-link">Back to Home</a>
+    </div>
+
+    <h1>My Sold Records</h1>
+
+    <!-- Display flash messages here -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-message">
+                {% for category, message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="records-container">
+        {% if sold_records and sold_records|length > 0 %}
+            {% for record in sold_records %}
+            <div class="record-item">
+                <div class="record-details">
+                    <h2>{{ record.album_name }}</h2>
+                    <p><strong>Transaction ID:</strong> {{ record.transaction_id }}</p>
+                    <p><strong>Record ID:</strong> {{ record.record_id }}</p>
+                    <p><strong>Album name:</strong> {{ record.album_name }}</p>
+                    <p><strong>Artist:</strong> {{ record.artist }}</p>
+                    <p><strong>Condition:</strong> {{ record.condition }}</p>
+                    <p><strong>Price:</strong> €{{ record.price }}</p>
+                    <p><strong>Date Sold:</strong> {{ record.date_sold }}</p>
+                </div>
+                <a href="/review/{{ record.transaction_id }}" class="watch-review-button">View Review</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No sold records found.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Check if there are flash messages
+        document.addEventListener("DOMContentLoaded", function() {
+            var flashMessages = document.querySelectorAll(".flash-message");
+            flashMessages.forEach(function(message) {
+                // Remove the message after 3 seconds
+                setTimeout(function() {
+                    message.style.opacity = "0";  // Fade out
+                    setTimeout(function() {
+                        message.style.display = "none";  // Completely hide the message
+                    }, 1000);  // Wait 1 second for the opacity transition
+                }, 3000);  // Wait 3 seconds before disappearing
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
