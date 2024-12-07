@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for, flash
-from .models import db, users, records, libraries, libraryrecords, reviews
+from .models import db, users, records, libraries, libraryrecords, reviews, transactions
+from sqlalchemy import func
 from . import supabase
 import logging
 
@@ -86,7 +87,7 @@ def login():
         # Check if the username exists in the database
         user = users.query.filter_by(username=username).first()
         if not user:
-            return render_template("login.html", errors="Gebruiker niet gevonden!")  # User not found
+            return render_template("register.html", errors="Gebruiker niet gevonden!")  # User not found
 
         # Store username in session and redirect to the dashboard
         session['username'] = username
@@ -195,9 +196,6 @@ def koop_1plaat(recordid):
     # Pass the seller's username to the template
     return render_template('koop_1plaat.html', record=record, seller_username=seller.username)
 
-
-
-from .models import transactions  
 @main.route('/create_transaction/<int:recordid>', methods=['POST'])
 def create_transaction(recordid):
     try:
@@ -234,8 +232,6 @@ def create_transaction(recordid):
         logging.error(f"Fout bij het verwerken van de aankoop: {e}")
         db.session.rollback()
         return "Fout bij het verwerken van de aankoop", 500
-
-
 
 @main.route('/get_username', methods=['GET'])
 def get_username():
@@ -401,7 +397,6 @@ def write_review(transaction_id):
     # Als er geen review is, toon dan de schrijf-review pagina
     return render_template('write_review.html', transaction_id=transaction_id)
 
-from .models import reviews
 @main.route('/submit_review', methods=['POST'])
 def submit_review():
     # Haal de gegevens van het formulier op
@@ -448,7 +443,6 @@ def watch_review(transaction_id):
     return render_template('watch_review.html', transaction=transaction, review=review)
 
 
-from sqlalchemy import func
 @main.route('/my_rating')
 def my_rating():
     # Ensure the user is logged in
@@ -468,11 +462,6 @@ def my_rating():
 
 if __name__ == '__main__':
     main.run(debug=True)
-
-
-
-
-from flask import request
 
 @main.route('/view_seller_rating/<int:seller_id>')
 def view_seller_rating(seller_id):
