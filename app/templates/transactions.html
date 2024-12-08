@@ -88,7 +88,7 @@
         .controls {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .controls input {
@@ -215,7 +215,27 @@
             z-index: 2;
             border-radius: 5px;
         }
+        #recommendations-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #fde9e1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
+        #recommendations-container h2 {
+            margin: 0 0 10px 0;
+            color: #8b5d47;
+        }
+
+        #recommendations .recommendation {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fde9e1;
+        }
     </style>
 </head>
 <body>
@@ -283,7 +303,7 @@
 
 
         <div class="listings-container">
-            <h1>Koop een Vinyl</h1>
+            <h1>Buy a record</h1>
             <div class="controls">
                 <input type="text" id="search" placeholder="Search album or artist" onkeyup="searchListings()" />
                 <select id="sort" class="sort-dropdown" onchange="sortListings(this.value)">
@@ -291,6 +311,12 @@
                     <option value="desc">High to Low</option>
                 </select>
             </div>
+            <div id="recommendations-container">
+                <h2>Recommended for You</h2>
+                <div id="recommendations">
+                    <p>Loading recommendations...</p>
+                </div>
+            </div>            
             
             <div id="listings-container">
                 <p>Loading listings...</p>
@@ -300,6 +326,8 @@
     <script>
         let allListings = [];
         let filteredListings = [];
+        let allRecommendations = [];
+        let filteredRecommendations = [];
         let maxPrice = 0;
 
         async function loadListings() {
@@ -335,7 +363,7 @@
                         <h2>${listing.albumname} - ${listing.artist}</h2>
                         <p>Genre: ${listing.genre}</p>
                         <p>Size: ${listing.size}</p>
-                        <p>State: ${listing.condition}</p>
+                        <p>Condition: ${listing.condition}</p>
                         <p>Price: €${listing.price}</p>
                         <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now</button>
                     </div>
@@ -378,7 +406,7 @@
             const minPrice = parseFloat(document.getElementById('price-min-slider').value);
             const maxPrice = parseFloat(document.getElementById('price-max-slider').value);
 
-    
+            // Filter reguliere listings
             filteredListings = allListings.filter(listing =>
                 (genres.length === 0 || genres.includes(listing.genre)) &&
                 (sizes.length === 0 || sizes.includes(listing.size)) &&
@@ -386,8 +414,17 @@
                 listing.price >= minPrice && listing.price <= maxPrice
             );
 
+            // Filter recommendations
+            filteredRecommendations = allRecommendations.filter(recommendation =>
+                (genres.length === 0 || genres.includes(recommendation.genre)) &&
+                (conditions.length === 0 || conditions.includes(recommendation.condition)) &&
+                recommendation.price >= minPrice && recommendation.price <= maxPrice
+            );
+
             renderListings(filteredListings);
+            renderRecommendations(filteredRecommendations);
         }
+
 
 
 
@@ -398,18 +435,22 @@
 
 
         function searchListings() {
-    
-            applyFilters();
-
             const query = document.getElementById('search').value.toLowerCase();
 
-    
-            filteredListings = filteredListings.filter(listing =>
+            // Filter reguliere listings
+            filteredListings = allListings.filter(listing =>
                 listing.albumname.toLowerCase().includes(query) || 
                 listing.artist.toLowerCase().includes(query)
             );
 
+            // Filter recommendations
+            filteredRecommendations = allRecommendations.filter(recommendation =>
+                recommendation.albumname.toLowerCase().includes(query) || 
+                recommendation.artist.toLowerCase().includes(query)
+            );
+
             renderListings(filteredListings);
+            renderRecommendations(filteredRecommendations);
         }
 
 
@@ -425,6 +466,39 @@
         function buyRecord(recordid) {
             window.location.href = `/koop_1plaat/${recordid}`;
         }
+        async function loadRecommendations() {
+            const response = await fetch('/get_recommendations');
+            const recommendationsContainer = document.getElementById('recommendations');
+
+            if (response.ok) {
+                allRecommendations = await response.json();
+                filteredRecommendations = [...allRecommendations]; // Initiële waarde is alle aanbevelingen
+                renderRecommendations(filteredRecommendations);
+            } else {
+                recommendationsContainer.innerHTML = '<p>Failed to load recommendations.</p>';
+            }
+        }
+        function renderRecommendations(recommendations) {
+            const recommendationsContainer = document.getElementById('recommendations');
+            recommendationsContainer.innerHTML = recommendations.length
+                ? recommendations.map(rec => `
+                    <div class="recommendation">
+                        <h3>${rec.albumname} - ${rec.artist}</h3>
+                        <p>Genre: ${rec.genre}</p>
+                        <p>Size: ${rec.size}</p>
+                        <p>Condition: ${rec.condition}</p>
+                        <p>Price: €${rec.price}</p>
+                        <button class="buy-button" onclick="buyRecord('${rec.recordid}')">Buy Now</button>
+                    </div>
+                `).join('')
+                : '<p>No recommendations available.</p>';
+        }
+
+
+
+        // Laad aanbevelingen bij het laden van de pagina
+        loadRecommendations();
+
 
         // (Other functions like applyFilters, searchListings, sortListings remain the same)
 
