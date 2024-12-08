@@ -113,25 +113,13 @@
     </div>
 
     <!-- Buy Button -->
-    <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form" onsubmit="handleBuy(event)">
+    <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form">
       <button type="submit" class="button delete-button">Buy</button>
     </form>
-  </div>
-
-  <script>
-    function handleBuy(event) {
-      event.preventDefault(); // Prevent direct form submission
-      const successMessage = document.getElementById('success-message');
-      successMessage.style.display = 'block'; // Show the success message
-
-      // Wait 2 seconds before redirecting
-      setTimeout(() => {
-        event.target.submit(); // Submit the form
-      }, 1000);
-    }
-  </script>
-</body>
+  
+  </body>
 </html>
+
 
 
 
