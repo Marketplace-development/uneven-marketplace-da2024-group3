@@ -98,17 +98,36 @@
             transition: opacity 1s ease-out;  /* Smooth transition for fade out */
         }
 
-        /* Zoekbalk stijl */
+        /* Zoekbalk en knop naast elkaar */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px; /* Voeg marge boven de zoekbalk en knop toe */
+        }
+
         .search-bar {
-            margin-bottom: 20px;
             padding: 10px;
             width: 100%;
             max-width: 400px;
-            margin: 20px auto;
-            display: block;
             border-radius: 5px;
             border: 1px solid #8c564b;
             font-size: 16px;
+            margin-right: 10px; /* Ruimte tussen zoekbalk en knop */
+        }
+
+        .search-button {
+            padding: 10px 15px;
+            background-color: #8c564b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #6f4b40;
         }
     </style>
 </head>
@@ -131,8 +150,11 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Zoekbalk -->
-    <input type="text" id="search" class="search-bar" placeholder="Zoek album of artiest" onkeyup="searchRecords()" />
+    <!-- Zoekbalk en knop naast elkaar -->
+    <div class="search-container">
+        <input type="text" id="search" class="search-bar" placeholder="Zoek album of artiest" onkeyup="searchRecords()" />
+        <button class="search-button" onclick="searchRecords()">Search</button>
+    </div>
 
     <div class="records-container">
         {% if sold_records and sold_records|length > 0 %}
@@ -178,10 +200,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
