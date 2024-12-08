@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for, flash, current_app
-from .models import db, users, records, libraries, libraryrecords, reviews, transactions
+from .models import db, users, records, libraries, libraryrecords, reviews, transactions, favorites
 from sqlalchemy import func
 from . import supabase
 import logging
@@ -663,3 +663,82 @@ def get_recommendations():
     except Exception as e:
         logging.error(f"Error fetching recommendations: {e}")
         return jsonify({"error": "Unable to fetch recommendations"}), 500
+
+@main.route('/update_favorite_status', methods=['POST'])
+def update_favorite_status():
+    if 'userid' not in session:
+        return jsonify({"error": "User not logged in"}), 401
+
+    data = request.get_json()
+    userid = session['userid']
+    recordid = data.get('recordid')
+    is_favorite = data.get('isFavorite')
+
+    if not recordid:
+        return jsonify({"error": "Record ID is required"}), 400
+
+    try:
+        # Controleer of de favoriet al bestaat
+        favorite = favorites.query.filter_by(userid=userid, recordid=recordid).first()
+
+        if is_favorite:
+            # Voeg toe als het nog niet bestaat
+            if not favorite:
+                new_favorite = favorites(userid=userid, recordid=recordid)
+                db.session.add(new_favorite)
+        else:
+            # Verwijder als het bestaat
+            if favorite:
+                db.session.delete(favorite)
+
+        db.session.commit()
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        logging.error(f"Error updating favorite status: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
+    
+@main.route('/my_favorites', methods=['GET'])
+def my_favorites():
+    if 'userid' not in session:
+        return redirect(url_for('login'))  # Redirect als de gebruiker niet is ingelogd
+
+    userid = session['userid']
+
+    try:
+        # Haal de favorietenrecords op met een join tussen favorites en records
+        query = (
+            supabase
+            .from_('favorites')
+            .select('recordid, records(*)')
+            .eq('userid', userid)
+            .execute()
+        )
+
+        # Haal de records op uit de response
+        favorite_records = []
+        for item in query.data:
+            if item.get('records'):
+                favorite_records.append(item['records'])
+
+        return render_template('my_favorites.html', records=favorite_records)
+
+    except Exception as e:
+        print(f"Error fetching favorites: {e}")
+        return render_template('my_favorites.html', records=[], error="Error fetching favorites")
+
+@main.route('/get_favorites', methods=['GET'])
+def get_favorites():
+    if 'userid' not in session:
+        return jsonify({"error": "User not logged in"}), 401
+
+    userid = session['userid']
+
+    try:
+        # Haal de favorieten op voor de ingelogde gebruiker
+        favorites_list = favorites.query.filter_by(userid=userid).all()
+        favorite_record_ids = [favorite.recordid for favorite in favorites_list]
+
+        return jsonify(favorite_record_ids), 200
+    except Exception as e:
+        logging.error(f"Error fetching favorites: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
