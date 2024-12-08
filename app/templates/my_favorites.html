@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Favorites</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      color: #3d2b1f;
+    }
+
+    /* Top Navigation Bar */
+    .top-bar {
+      width: 100%;
+      background-color: #8c564b;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .top-bar h1 {
+      margin: 0;
+      font-size: 24px;
+      font-family: 'Trebuchet MS', sans-serif;
+    }
+
+    .top-bar button {
+      padding: 8px 12px;
+      background-color: #ffe5d9;
+      color: #8c564b;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-left: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .top-bar button:hover {
+      background-color: #fdd0b5;
+    }
+
+    /* Listings Container */
+    .listing-container {
+      width: 90%;
+      max-width: 900px;
+      background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      margin-top: 20px;
+      text-align: center;
+      position: relative; /* For background vinyl positioning */
+      overflow: hidden; /* To ensure background images stay confined */
+    }
+
+    .listing-container h1 {
+      font-family: 'Georgia', serif;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #5a3a28;
+    }
+
+    /* Individual Listing */
+    .listing {
+      border: 2px solid #f4b085;
+      border-radius: 10px;
+      background: #ffe8dc;
+      padding: 15px;
+      margin-bottom: 15px;
+      text-align: left;
+      transition: transform 0.3s;
+    }
+
+    .listing:hover {
+      transform: scale(1.02);
+    }
+
+    .listing h3 {
+      margin: 0;
+      font-size: 22px;
+      color: #8c564b;
+    }
+
+    .listing p {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #3d2b1f;
+    }
+
+    /* Search Bar */
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
+      font-size: 16px;
+      border: 2px solid #8c564b;
+      border-radius: 5px;
+    }
+
+    .search-button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      font-size: 16px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-button:hover {
+      background-color: #f4b085;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar with title and back button -->
+  <div class="top-bar">
+    <h1>Spinnback - My Favorites</h1>
+    <div>
+      <button onclick="location.href='/dashboard'">Go to Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Listings Section -->
+  <div class="listing-container">
+    <h1>My Favorites</h1>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchListings()">
+      <button class="search-button">Search</button>
+    </div>
+
+    {% if records %}
+      <div id="listings-container">
+        {% for record in records %}
+          <div class="listing" data-albumname="{{ record['albumname'] }}" data-artist="{{ record['artist'] }}">
+            <h3>{{ record['albumname'] }}</h3>
+            <p><strong>Artist:</strong> {{ record['artist'] }}</p>
+            <p><strong>Genre:</strong> {{ record['genre'] }}</p>
+            <p><strong>Size:</strong> {{ record['size'] }}</p>
+            <p><strong>Condition:</strong> {{ record['condition'] }}</p>
+            <p><strong>Colour:</strong> {{ record['colour'] }}</p>
+            <p><strong>Description:</strong> {{ record['description'] }}</p>
+            <p><strong>Price:</strong> ${{ record['price'] }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No favorites yet.</p>
+    {% endif %}
+  </div>
+
+  <script>
+    // JavaScript to filter listings based on search input
+    function searchListings() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const listings = document.querySelectorAll('.listing');
+      
+      listings.forEach(listing => {
+        const albumName = listing.getAttribute('data-albumname').toLowerCase();
+        const artistName = listing.getAttribute('data-artist').toLowerCase();
+        
+        if (albumName.includes(query) || artistName.includes(query)) {
+          listing.style.display = 'block'; // Show matching record
+        } else {
+          listing.style.display = 'none'; // Hide non-matching record
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
