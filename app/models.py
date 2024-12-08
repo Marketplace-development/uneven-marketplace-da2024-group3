@@ -82,3 +82,7 @@ class reviews(db.Model):
     def __repr__(self):
         return f'<review {self.reviewscore}, {self.reasoning}>'
 
+class favorites(db.Model):
+    _tablename_ = 'favorites'
+    userid = db.Column(db.Integer, db.ForeignKey('users.userid'), primary_key=True, nullable=False)
+    recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), primary_key=True, nullable=False)
