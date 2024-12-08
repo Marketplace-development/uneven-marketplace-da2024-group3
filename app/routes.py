@@ -1,10 +1,19 @@
-from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for, flash
+from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for, flash, current_app
 from .models import db, users, records, libraries, libraryrecords, reviews, transactions
 from sqlalchemy import func
 from . import supabase
 import logging
+from werkzeug.utils import secure_filename
+import uuid
+import os
+
 
 main = Blueprint('main', __name__)
+
+def generate_unique_filename(filename):
+    extension = os.path.splitext(filename)[1]
+    unique_name = str(uuid.uuid4()) + extension  # Voeg een unieke UUID toe
+    return unique_name
 
 @main.route('/')
 def index():
@@ -103,6 +112,8 @@ def dashboard():
         return redirect(url_for('main.login'))  # Redirect to login if no user is logged in
     return render_template('dashboard_records.html')
 
+
+
 @main.route('/records', methods=['GET', 'POST'])
 def manage_records():
     if request.method == 'POST':
@@ -122,7 +133,26 @@ def manage_records():
         price = request.form.get('price', type=float) if Sellyesorno else None  # Price only required if selling
         description = request.form.get('description')
 
-        # Create a new record
+        # Verwerk de afbeelding
+        image = request.files.get('image')
+        if image:
+            print(f"Bestand ontvangen: {image.filename}")  # Log om te controleren
+        else:
+            print("Geen bestand ontvangen")
+        image_url = None
+        if image:
+            # Maak een veilige bestandsnaam
+            filename = f"{uuid.uuid4().hex}_{secure_filename(image.filename)}"
+            # Upload het bestand naar Supabase
+            bucket = supabase.storage.from_('images')
+            file_path = f"records/{filename}"
+            file_content = image.read()
+            upload_response = bucket.upload(file_path, file_content)
+            image_url = f"https://your-supabase-url.supabase.co/storage/v1/object/public/images/{file_path}"
+
+
+
+        # Maak een nieuw record aan
         new_record = records(
             albumname=albumname,
             artist=artist,
@@ -133,7 +163,8 @@ def manage_records():
             Sellyesorno=Sellyesorno,
             price=price,
             description=description,
-            ownerid=ownerid
+            ownerid=ownerid,
+            image=image_url  # Bewaar de URL van de afbeelding
         )
 
         try:
@@ -145,6 +176,8 @@ def manage_records():
             return "Error saving record", 500
 
     return render_template('records.html')
+
+
 
 
 
@@ -209,29 +242,34 @@ def create_transaction(recordid):
         if not record:
             logging.error(f"Record met ID {recordid} niet gevonden.")
             return "Record niet gevonden", 404
-        
-        owner = record.ownerid
 
         # Check of de koper de eigenaar van het record is
         if record.ownerid == buyer_id:
             logging.error("Je kunt je eigen plaat niet kopen.")
             return "Je kunt je eigen plaat niet kopen", 400
 
+        owner = record.ownerid
+
         # Maak de transactie
         new_transaction = transactions(sellerid=owner, buyerid=buyer_id, recordid=recordid)
         db.session.add(new_transaction)
 
-        # Update de ownerid van de record
-        record.ownerid = buyer_id
+        # Update de record
+        record.ownerid = buyer_id  # Verander de eigenaar
+        record.Sellyesorno = False  # Stel Sellyesorno in op False
+        record.price = None  # Verwijder de prijs
         db.session.commit()
+
         logging.info(f"Transactie succesvol toegevoegd voor record {recordid} door gebruiker {buyer_id}.")
 
-        return redirect(url_for('main.dashboard'))
+        # Redirect naar de edit_after_purchase pagina
+        return render_template('edit_after_purchase.html', record=record)
+
 
     except Exception as e:
-        logging.error(f"Fout bij het verwerken van de aankoop: {e}")
-        db.session.rollback()
-        return "Fout bij het verwerken van de aankoop", 500
+        logging.error(f"Fout bij transactie: {e}")
+        return "Er is een fout opgetreden", 500
+
 
 @main.route('/get_username', methods=['GET'])
 def get_username():
@@ -324,6 +362,7 @@ def get_my_purchases():
     for transaction in user_transactions:
         record = records.query.get(transaction.recordid)  # Haal het record op met de ID
         if record:
+            image_url = record.image.replace("your-supabase-url", "ydlbtcbabebtcajmvoyl") if record.image else None
             purchases_data.append({
                 "transaction_id": transaction.transactionid,
                 "record_id": record.recordid,
@@ -331,7 +370,8 @@ def get_my_purchases():
                 "artist": record.artist,
                 "condition": record.condition,
                 "price": record.price,
-                "date": transaction.created_at  # Dit moet mogelijk aangepast worden naar een datumveld in "transactions"
+                "date": transaction.created_at,  # Dit moet mogelijk aangepast worden naar een datumveld in "transactions"
+                "image_url": image_url
             })
 
     # Render de HTML-template met de verzamelde gegevens
@@ -524,3 +564,37 @@ def edit_1plaat(record_id):
 
     # Render the edit form with pre-filled data
     return render_template('edit_1plaat.html', record=record)
+
+
+@main.route('/edit_after_purchase/<int:recordid>', methods=['GET', 'POST'])
+def edit_after_purchase(recordid):
+    record = records.query.get(recordid)
+    if not record:
+        return "Record not found", 404
+
+    # Verkrijg de beslissing van de gebruiker
+    decision = request.form.get('decision')
+    
+    # Als de gebruiker heeft gekozen om te verkopen
+    if decision == 'sell':
+        price = request.form.get('price')
+        if price:
+            price = float(price)
+            record.Sellyesorno = True
+            record.price = price
+        else:
+            return "Price is required when selling.", 400
+    
+    # Als de gebruiker heeft gekozen om het record te bewaren, doe dan niets
+    elif decision == 'keep':
+        pass
+
+    # Sla de wijzigingen op
+    db.session.commit()
+
+    # Correcte redirect naar dashboard of een andere bestemming
+    return redirect(url_for('main.dashboard'))  # Of andere bestemming
+
+
+
+
