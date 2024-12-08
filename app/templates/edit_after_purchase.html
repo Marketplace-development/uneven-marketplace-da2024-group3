@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit After Purchase</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #3d2b1f;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+    .success-message {
+      padding: 15px;
+      background-color: #dff0d8;
+      color: #3c763d;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #d6e9c6;
+    }
+    .form-group {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #5e3d2f;
+    }
+    .price-input {
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-message">
+          Congrats! Purchase of your brand new record confirmed.
+        </div>
+        
+        <h2>Keep or Sell?</h2>
+        <form method="POST" action="/edit_after_purchase/{{ record.recordid }}">
+          <div class="form-group">
+            <label for="decision">Do you want to sell this record, or keep it in your collection?</label>
+            <select id="decision" name="decision" required onchange="togglePriceField()">
+              <option value="">-- Select an option --</option>
+              <option value="sell">I want to sell the record</option>
+              <option value="keep">I want to keep the record in my collection</option>
+            </select>
+          </div>
+    
+          <div class="form-group price-input" id="price-field">
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price" placeholder="Enter your price" min="0" step="0.01">
+          </div>
+    
+          <button type="submit" class="button">Confirm</button>
+        </form>
+      </div>
+    
+      <script>
+        function togglePriceField() {
+          const decision = document.getElementById('decision').value;
+          const priceField = document.getElementById('price-field');
+          
+          if (decision === 'sell') {
+            priceField.style.display = 'block';
+          } else {
+            priceField.style.display = 'none';
+          }
+        }
+      </script>
+    </body>
+    </html>
