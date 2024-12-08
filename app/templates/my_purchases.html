@@ -27,17 +27,18 @@
             padding: 20px;
         }
         .purchase-item {
-            display: flex; /* Flexbox layout */
+            display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px;
             border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
         }
         .purchase-item:last-child {
             border-bottom: none;
         }
         .purchase-details {
-            max-width: 70%; /* Zorg dat de details niet te veel ruimte innemen */
+            max-width: 60%;
         }
         .purchase-details h2 {
             font-size: 24px;
@@ -52,6 +53,12 @@
         .purchase-details strong {
             color: #8c564b;
         }
+        .purchase-image {
+            max-width: 30%;
+            max-height: 150px;
+            object-fit: contain;
+            margin-left: 20px;
+        }
         .review-button {
             background-color: #8c564b;
             color: white;
@@ -61,6 +68,9 @@
             cursor: pointer;
             text-decoration: none;
             font-size: 14px;
+            display: block;
+            text-align: center;
+            margin: 20px auto 0;
         }
         .review-button:hover {
             background-color: #5c3a31;
@@ -72,79 +82,43 @@
             text-align: right;
             z-index: 1000;
         }
-        .back-button-container .home-button,
         .back-button-container .back-link {
-            display: inline-block;
+            background-color: #fdd0b5; /* Beige achtergrond */
+            color: #8c564b; /* Bruine tekst */
             padding: 10px 15px;
-            background-color: #fdd0b5;
-            color: #8c564b;
+            border-radius: 5px;
             text-decoration: none;
-            border: 1px solid #8c564b;
-            border-radius: 5px;
-            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid #8c564b; /* Optionele bruine rand */
         }
-        .back-button-container .home-button:hover,
+        
         .back-button-container .back-link:hover {
-            background-color: #8c564b;
-            color: white;
+            background-color: #8c564b; /* Donkerder bruine achtergrond bij hover */
+            color: white; /* Witte tekst bij hover */
         }
-
-        .flash-message.success {
-            background-color: #4caf50; /* Groen voor succes */
-            color: white;
-            border: 1px solid #388e3c;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .flash-message.error {
-            background-color: #f44336; /* Rood voor fouten */
-            color: white;
-            border: 1px solid #d32f2f;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        /* Zoekbalk stijl */
+        
         .search-bar {
-            margin-bottom: 20px;
-            padding: 10px;
+            display: block;
+            margin: 20px auto 20px;
             width: 100%;
             max-width: 400px;
-            margin: 20px auto;
-            display: block;
-            border-radius: 5px;
-            border: 1px solid #8c564b;
+            padding: 10px;
             font-size: 16px;
+            border: 1px solid #8c564b;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
+    <!-- Back button rechtsboven -->
     <div class="back-button-container">
-        <!-- Knop rechtsboven -->
         <a href="/dashboard" class="back-link">Back to Home</a>
     </div>
 
     <h1>My Purchases</h1>
 
-    <!-- Flash message display -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div id="flashMessage">
-                {% for category, message in messages %}
-                    <div class="flash-message {{ category }}">
-                        <span>{{ message }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    <!-- Zoekbalk -->
+    <!-- Zoekbalk gecentreerd -->
     <input type="text" id="search" class="search-bar" placeholder="Zoek album of artiest" onkeyup="searchPurchases()" />
 
     <div class="purchases-container">
@@ -163,9 +137,13 @@
                         <p><strong>Price:</strong> €{{ purchase.price }}</p>
                         <p><strong>Date:</strong> {{ purchase.date }}</p>
                     </div>
-                    <!-- Write Review-knop -->
-                    <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
+                    {% if purchase.image_url %}
+                    <!-- Voeg de afbeelding toe als er een image_url is -->
+                    <img src="{{ purchase.image_url }}" alt="{{ purchase.album_name }}" class="purchase-image">
+                    {% endif %}
                 </div>
+                <!-- Write Review-knop -->
+                <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
                 {% endfor %}
             </div>
         {% else %}
@@ -193,6 +171,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
