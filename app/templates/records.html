@@ -17,7 +17,6 @@
       min-height: 100vh;
       color: #3d2b1f;
     }
-
     /* Top Bar */
     .top-bar {
       width: 100%;
@@ -147,7 +146,7 @@
   <!-- Form Section -->
   <div class="form-container">
     <h1 class="page-title">Voeg een Nieuwe Vinyl Listing Toe</h1>
-    <form action="/records" method="POST">
+    <form action="/records" method="POST" enctype="multipart/form-data">
       <label for="albumname">Albumnaam</label>
       <input type="text" id="albumname" name="albumname" required>
 
@@ -206,6 +205,10 @@
       
       <label for="description">Beschrijving</label>
       <textarea id="description" name="description"></textarea>
+
+      <label for="image">Afbeelding</label>
+      <input type="file" id="image" name="image" accept="image/png, image/jpeg, image/jpg" required>
+
       
       <button type="submit">Toevoegen</button>
     </form>
