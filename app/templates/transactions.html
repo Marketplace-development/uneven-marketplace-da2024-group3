@@ -78,11 +78,12 @@
         }
 
         .listing {
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            position: relative; 
             padding: 15px;
             margin-bottom: 10px;
             background-color: #fde9e1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
         .controls {
@@ -235,7 +236,41 @@
             padding: 10px;
             border-radius: 5px;
             background-color: #fde9e1;
+            position: relative; /* Voor absolute positionering van de ster */
         }
+
+        #recommendations .favorite-button {
+            position: absolute;
+            top: 10px;    /* Afstand vanaf de bovenkant */
+            right: 10px;  /* Afstand vanaf de rechterkant */
+            background: none;
+            border: none;
+            color: #ccc;  /* Neutrale kleur voor inactieve ster */
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        #recommendations .favorite-button.active {
+            color: #ffc107; /* Gekleurde ster voor actieve favorieten */
+        }
+
+        .favorite-button {
+            position: absolute;
+            top: 10px;    /* Afstand vanaf de bovenkant */
+            right: 10px;  /* Afstand vanaf de rechterkant */
+            background: none;
+            border: none;
+            color: #ccc;  /* Neutrale kleur voor inactieve ster */
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .favorite-button.active {
+            color: #ffc107; /* Gekleurde ster voor actieve favorieten */
+        }
+
     </style>
 </head>
 <body>
@@ -329,6 +364,19 @@
         let allRecommendations = [];
         let filteredRecommendations = [];
         let maxPrice = 0;
+        let favoriteIds = new Set();
+
+        async function updateFavoriteStatus(recordId, isFavorite) {
+            const response = await fetch('/update_favorite_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recordid: recordId, isFavorite })
+            });
+
+            if (!response.ok) {
+                console.error('Failed to update favorite status.');
+            }
+        }
 
         async function loadListings() {
             const response = await fetch('/get_records_sellyes');
@@ -356,20 +404,37 @@
 
 
         function renderListings(listings) {
-            const container = document.getElementById('listings-container');
-            container.innerHTML = listings.length
-                ? listings.map(listing => `
-                    <div class="listing">
-                        <h2>${listing.albumname} - ${listing.artist}</h2>
-                        <p>Genre: ${listing.genre}</p>
-                        <p>Size: ${listing.size}</p>
-                        <p>Condition: ${listing.condition}</p>
-                        <p>Price: €${listing.price}</p>
-                        <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now</button>
-                    </div>
-                `).join('')
-                : '<p>No results found.</p>';
-        }       
+        const container = document.getElementById('listings-container');
+        container.innerHTML = listings.length
+            ? listings.map(listing => `
+                <div class="listing">
+                    <h2>${listing.albumname} - ${listing.artist}</h2>
+                    <p>Genre: ${listing.genre}</p>
+                    <p>Price: €${listing.price}</p>
+                    <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now</button>
+                    <button 
+                        class="favorite-button ${listing.isFavorite ? 'active' : ''}" 
+                        onclick="toggleFavorite('${listing.recordid}', this)">
+                        ☆
+                    </button>
+                </div>
+            `).join('')
+            : '<p>No results found.</p>';
+        }
+
+        function toggleFavorite(recordId, buttonElement) {
+            const isFavorite = !buttonElement.classList.contains('active');
+            buttonElement.classList.toggle('active');
+            buttonElement.textContent = isFavorite ? '★' : '☆';
+
+            updateFavoriteStatus(recordId, isFavorite);
+
+            if (isFavorite) {
+                favoriteIds.add(recordId);
+            } else {
+                favoriteIds.delete(recordId);
+            }
+        }
 
         function updateRangeSlider() {
             const minSlider = document.getElementById('price-min-slider');
@@ -485,15 +550,47 @@
                     <div class="recommendation">
                         <h3>${rec.albumname} - ${rec.artist}</h3>
                         <p>Genre: ${rec.genre}</p>
-                        <p>Size: ${rec.size}</p>
-                        <p>Condition: ${rec.condition}</p>
                         <p>Price: €${rec.price}</p>
                         <button class="buy-button" onclick="buyRecord('${rec.recordid}')">Buy Now</button>
+                        <button 
+                            class="favorite-button ${favoriteIds.has(rec.recordid) ? 'active' : ''}" 
+                            onclick="toggleFavorite('${rec.recordid}', this)">
+                            ☆
+                        </button>
                     </div>
                 `).join('')
                 : '<p>No recommendations available.</p>';
         }
 
+
+        async function loadFavorites() {
+            const response = await fetch('/get_favorites');
+            if (response.ok) {
+                const data = await response.json();
+                favoriteIds = new Set(data); // Opslaan van favoriete record-ID's
+            } else {
+                console.error('Failed to load favorites');
+            }
+        }
+
+        async function renderPage() {
+            await loadFavorites(); // Laad favorieten eerst
+            renderListings(allListings.map(listing => ({
+                ...listing,
+                isFavorite: favoriteIds.has(listing.recordid)
+            })));
+            renderRecommendations(allRecommendations.map(rec => ({
+                ...rec,
+                isFavorite: favoriteIds.has(rec.recordid)
+            })));
+        }
+
+
+        window.onload = async function() {
+            await loadListings();         // Haal de listings op
+            await loadRecommendations();  // Haal de recommendations op
+            await renderPage();           // Render listings en recommendations
+        };
 
 
         // Laad aanbevelingen bij het laden van de pagina
