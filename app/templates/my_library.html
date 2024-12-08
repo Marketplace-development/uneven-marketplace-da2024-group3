@@ -168,6 +168,7 @@
             <p><strong>Colour:</strong> {{ record['colour'] }}</p>
             <p><strong>Description:</strong> {{ record['description'] }}</p>
             <p><strong>Price:</strong> ${{ record['price'] }}</p>
+            <button class="edit-button" onclick="location.href='/edit_1plaat/{{ record.recordid }}'">Edit</button>
           </div>
         {% endfor %}
       </div>
