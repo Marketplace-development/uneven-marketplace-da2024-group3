@@ -97,16 +97,36 @@
             background-color: #8c564b; /* Donkerder bruine achtergrond bij hover */
             color: white; /* Witte tekst bij hover */
         }
-        
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px; /* Voeg marge boven de zoekbalk en knop toe */
+        }
+
         .search-bar {
-            display: block;
-            margin: 20px auto 20px;
+            padding: 10px;
             width: 100%;
             max-width: 400px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #8c564b;
             border-radius: 5px;
+            border: 1px solid #8c564b;
+            font-size: 16px;
+            margin-right: 10px; /* Ruimte tussen zoekbalk en knop */
+        }
+
+        .search-button {
+            padding: 10px 15px;
+            background-color: #8c564b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #6f4b40;
         }
     </style>
 </head>
@@ -118,8 +138,11 @@
 
     <h1>My Purchases</h1>
 
-    <!-- Zoekbalk gecentreerd -->
-    <input type="text" id="search" class="search-bar" placeholder="Zoek album of artiest" onkeyup="searchPurchases()" />
+    <!-- Zoekbalk en knop naast elkaar -->
+    <div class="search-container">
+        <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchPurchases()" />
+        <button class="search-button" onclick="searchPurchases()">Search</button>
+    </div>
 
     <div class="purchases-container">
         {% if purchases and purchases|length > 0 %}
@@ -171,6 +194,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
