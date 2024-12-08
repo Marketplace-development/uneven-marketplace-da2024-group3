@@ -19,6 +19,13 @@
             color: #3d2b1f;
         }
 
+        /* Stijl voor de foutmelding */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
         /* Top Navigation Bar */
         .top-bar {
             width: 100%;
@@ -33,8 +40,29 @@
 
         .top-bar h1 {
             margin: 0;
+            margin-left: 40px;
             font-size: 24px;
             font-family: 'Trebuchet MS', sans-serif;
+        }
+
+        .top-bar button {
+            background-color: #fcfcfc; /* Beige achtergrond */
+            color: #8c564b; /* Bruine tekst */
+            border: 2px solid #8c564b; /* Bruine rand */
+            border-radius: 8px;
+            padding: 5px 15px; /* Ruimte rond de tekst */
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap; /* Zorgt ervoor dat tekst op één lijn blijft */
+            margin-right: 40px; /* Rechtermarge voor uitlijning */
+            width: auto; /* Breedte past zich aan inhoud aan */
+            transition: background-color 0.3s, transform 0.3s;
+        }
+    
+        .top-bar button:hover {
+            background-color: #fdd0b5;
+            transform: scale(1.05);
         }
 
         /* Register Form */
@@ -43,8 +71,8 @@
             max-width: 500px;
             background-color: #fff;
             padding: 30px;
-            border-radius: 12px;  /* Rounded corners */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             margin-top: 20px;
             text-align: center;
         }
@@ -56,32 +84,43 @@
             color: #5a3a28;
         }
 
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centrerende uitlijning */
+            width: 100%;
+        }
+
         /* Input Styles */
         input[type="text"],
         input[type="email"],
         input[type="tel"] {
-            width: 100%;
+            width: 90%; /* Zorgt ervoor dat het mooi binnen het kader blijft */
             padding: 12px;
             margin: 10px 0;
-            border-radius: 10px;  /* Rounded borders */
-            border: 2px solid #ccc;  /* Light gray border */
+            border-radius: 10px; /* Rounded borders */
+            border: 2px solid #ccc; /* Light gray border */
             font-size: 16px;
             background-color: #f9f9f9;
-            transition: all 0.3s ease-in-out;  /* Smooth transition for focus */
+            text-align: center; /* Centreer tekst binnen de invoervelden */
+            box-sizing: border-box; /* Zorg dat padding geen breedte toevoegt */
+            transition: all 0.3s ease-in-out; /* Smooth transition for focus */
         }
 
         input[type="text"]:focus,
         input[type="email"]:focus,
         input[type="tel"]:focus {
-            border-color: #8c564b;  /* Darker border color on focus */
+            border-color: #8c564b; /* Darker border color on focus */
             background-color: #fff;
             outline: none;
-            box-shadow: 0 0 5px rgba(140, 86, 75, 0.6);  /* Focus shadow effect */
+            box-shadow: 0 0 5px rgba(140, 86, 75, 0.6); /* Focus shadow effect */
         }
 
         /* Button Styles */
         button {
-            padding: 12px 20px;
+            width: 90%; /* Match de breedte van de inputvelden */
+            padding: 12px;
             background-color: #8c564b;
             color: white;
             border: none;
@@ -94,10 +133,16 @@
 
         button:hover {
             background-color: #fdd0b5;
-            transform: scale(1.05);  /* Slight scale effect on hover */
+            transform: scale(1.05); /* Slight scale effect on hover */
         }
 
         /* Back Link */
+
+        p {
+            display: inline;
+            margin: 0;
+        }
+
         a {
             display: block;
             margin-top: 20px;
@@ -117,29 +162,37 @@
     <!-- Top Bar -->
     <div class="top-bar">
         <h1>Spinnback</h1>
-        <div>
-            <button onclick="location.href='/login'">Log in</button>
-        </div>
+        <button onclick="location.href='/overview_records'">Back to Home</button>
     </div>
 
     <!-- Register Form Section -->
     <div class="form-container">
         <h1>Register</h1>
+        <p style="display: inline; margin: 0;">Already have an account? Click </p><a href="/to_login" style="color: black; text-decoration: none; display: inline;">here</a>.
+
+        
+        <!-- Error Messages -->
+        {% if errors %}
+            <div class="error-message">
+                {% for error in errors %}
+                    <p>{{ error }}</p>  <!-- Toon elke foutmelding apart -->
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Form -->
         <form method="POST" action="/register">
             <input type="text" name="username" placeholder="Username" required>
-            <br>
             <input type="email" name="email" placeholder="Email" required>
-            <br>
             <input type="text" name="address" placeholder="Address" required>
-            <br>
             <input type="tel" name="telefoonnummer" placeholder="vb: +32470 88 67 34" required>
-            <br>
             <button type="submit">Register</button>
         </form>
-        <a href="/">Back to Home</a>
     </div>
 
 </body>
 </html>
+
+
 
 
