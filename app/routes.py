@@ -598,3 +598,67 @@ def edit_after_purchase(recordid):
 
 
 
+@main.route('/get_recommendations', methods=['GET'])
+def get_recommendations():
+    try:
+        # Haal de ingelogde gebruiker op
+        userid = session.get('userid')
+        if not userid:
+            return jsonify({"error": "User not logged in"}), 401
+
+        # Haal eerdere aankopen van de gebruiker op
+        user_transactions = transactions.query.filter_by(buyerid=userid).all()
+        if not user_transactions:
+            return jsonify({"message": "No purchases found"}), 404
+
+        # Verzamel genres, conditions en prijzen van eerdere aankopen
+        purchased_records = [records.query.get(transaction.recordid) for transaction in user_transactions if records.query.get(transaction.recordid)]
+        genres = set(record.genre for record in purchased_records)
+        conditions = set(record.condition for record in purchased_records)
+        prices = [record.price for record in purchased_records if record.price]
+
+        if not prices:
+            return jsonify({"message": "No price data available for recommendations"}), 404
+
+        avg_price = sum(prices) / len(prices)
+        price_range = (max(prices) - min(prices)) * 0.5  # 50% van het prijsbereik
+
+        # Haal beschikbare records op
+        available_records = records.query.filter(records.Sellyesorno == True, records.ownerid != userid).all()
+
+        # Filter op aanbevelingen (met dynamische prijsrange)
+        recommendations = [
+            record for record in available_records
+            if (record.genre in genres or  # Match op genre
+                record.condition in conditions) and  # Of match op conditie
+               abs(record.price - avg_price) <= price_range  # Dynamische prijstolerantie
+        ]
+
+        # Sorteer aanbevelingen op overeenkomsten met genres en condities
+        recommendations.sort(
+            key=lambda record: (
+                (record.genre in genres) +  # Meer punten voor overeenkomend genre
+                (record.condition in conditions)  # Meer punten voor overeenkomende conditie
+            ),
+            reverse=True
+        )
+
+        # Beperk tot 3 aanbevelingen
+        recommendations = recommendations[:3]
+
+        # Formatteer als JSON
+        return jsonify([
+            {
+                "recordid": record.recordid,
+                "albumname": record.albumname,
+                "artist": record.artist,
+                "genre": record.genre,
+                "condition": record.condition,
+                "price": record.price
+            }
+            for record in recommendations
+        ]), 200
+
+    except Exception as e:
+        logging.error(f"Error fetching recommendations: {e}")
+        return jsonify({"error": "Unable to fetch recommendations"}), 500
