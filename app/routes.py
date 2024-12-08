@@ -652,6 +652,7 @@ def get_recommendations():
                 "recordid": record.recordid,
                 "albumname": record.albumname,
                 "artist": record.artist,
+                "size" : record.size,
                 "genre": record.genre,
                 "condition": record.condition,
                 "price": record.price
