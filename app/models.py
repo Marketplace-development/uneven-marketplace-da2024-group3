@@ -41,6 +41,7 @@ class records(db.Model):
     library_records = db.relationship('libraryrecords', backref='record', lazy=True)
     transactions = db.relationship('transactions', backref='record', lazy=True)
     Sellyesorno = db.Column(db.Boolean, default=False, nullable=False)
+    image = db.Column(db.String(1000), nullable=True)
 
     def __repr__(self):
         return f'<Record {self.albumname}, ${self.price}>'
