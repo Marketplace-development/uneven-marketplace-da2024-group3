@@ -101,6 +101,39 @@
       font-size: 16px;
       color: #3d2b1f;
     }
+
+    /* Search Bar */
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
+      font-size: 16px;
+      border: 2px solid #8c564b;
+      border-radius: 5px;
+    }
+
+    .search-button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      font-size: 16px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-button:hover {
+      background-color: #f4b085;
+    }
+
   </style>
 </head>
 <body>
@@ -117,8 +150,11 @@
   <div class="listing-container">
     <h1>My Library</h1>
 
-    <!-- Search Bar -->
-    <input type="text" id="search" placeholder="Search album or artist" onkeyup="searchListings()" style="padding: 10px; margin-bottom: 20px; width: 100%; max-width: 400px;">
+    <!-- Search Bar with button next to it -->
+    <div class="search-container">
+      <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchListings()">
+      <button class="search-button">Search</button>
+    </div>
 
     {% if records %}
       <div id="listings-container">
@@ -132,9 +168,7 @@
             <p><strong>Colour:</strong> {{ record['colour'] }}</p>
             <p><strong>Description:</strong> {{ record['description'] }}</p>
             <p><strong>Price:</strong> ${{ record['price'] }}</p>
-            <button class="edit-button" onclick="location.href='/edit_1plaat/{{ record.recordid }}'">Edit</button>
           </div>
-
         {% endfor %}
       </div>
     {% else %}
@@ -160,5 +194,7 @@
       });
     }
   </script>
+
 </body>
 </html>
+
