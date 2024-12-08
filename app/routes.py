@@ -19,6 +19,19 @@ def generate_unique_filename(filename):
 def index():
     return render_template('overview_records.html')
 
+@main.route('/overview_records', methods=['GET'])
+def overview_records():
+    return render_template('overview_records.html')
+
+@main.route('/to_login')
+def to_login():
+    return render_template('login.html')
+
+@main.route('/to_register')
+def to_register():
+    return render_template('register.html')
+
+
 @main.route('/get_records', methods=['GET'])
 def get_records():
     try:
@@ -65,45 +78,57 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
-        address = request.form.get('address')  # Fetch the address from the form
+        address = request.form.get('address')
         telefoonnummer = request.form.get('telefoonnummer')
 
-        # Check if the username already exists
-        user = users.query.filter_by(username=username).first()
-        if user:
-            return render_template("register.html", errors="Gebruiker al geregistreerd!")
+        errors = []
 
-        # Create a new user entry
+        # Controleer of de gebruikersnaam al bestaat
+        if users.query.filter_by(username=username).first():
+            errors.append("Username already exists, please choose another option.")
+
+        # Controleer of het e-mailadres al bestaat
+        if users.query.filter_by(email=email).first():
+            errors.append("There is already an existing account for this email address.")
+
+        # Als er fouten zijn, toon ze
+        if errors:
+            return render_template("register.html", errors=errors)
+
+        # Maak een nieuwe gebruiker aan
         new_user = users(username=username, email=email, address=address, telefoonnummer=telefoonnummer)
         try:
             db.session.add(new_user)
             db.session.commit()
+            session['username'] = username  # Sla de gebruikersnaam op in de sessie
 
-            # Store username in session and redirect to the dashboard
-            session['username'] = username
-            return redirect(url_for('main.login'))
+            flash("Welcome! You've registered your Spinnback account. You can now login with your username.", "success")
+            return redirect(url_for('main.login'))  # Verwijs naar de loginpagina
         except Exception as e:
-            # Handle database errors or commit issues
-            return render_template("register.html", errors="Er is een fout opgetreden bij registratie.")
-    return render_template('register.html')
+            return render_template("register.html", errors=[f"Fout bij registratie: {str(e)}"])
+
+    return render_template("register.html")
+
 
     
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')  # Fetch the username from the form
+        username = request.form.get('username')  # Haal de gebruikersnaam uit het formulier
 
-        # Check if the username exists in the database
+        # Controleer of de gebruikersnaam bestaat in de database
         user = users.query.filter_by(username=username).first()
         if not user:
-            return render_template("register.html", errors="Gebruiker niet gevonden!")  # User not found
+            # Stuur door naar de registratiepagina met een foutmelding
+            return render_template("register.html", errors="Username not found. Register your account first please.")  # Foutmelding als gebruiker niet bestaat
 
-        # Store username in session and redirect to the dashboard
+        # Sla de gebruikersnaam en userid op in de sessie en stuur door naar het dashboard
         session['username'] = username
         session['userid'] = user.userid
         return redirect(url_for('main.dashboard'))
 
-    return render_template('login.html')  # Render login page for GET requests
+    return render_template('login.html')  # Render de loginpagina voor GET verzoeken
+
 
 @main.route('/dashboard', methods=['GET'])
 def dashboard():
@@ -148,7 +173,7 @@ def manage_records():
             file_path = f"records/{filename}"
             file_content = image.read()
             upload_response = bucket.upload(file_path, file_content)
-            image_url = f"https://your-supabase-url.supabase.co/storage/v1/object/public/images/{file_path}"
+            image_url = f"https://ydlbtcbabebtcajmvoyl.supabase.co/storage/v1/object/public/images/{file_path}"
 
 
 
@@ -362,7 +387,7 @@ def get_my_purchases():
     for transaction in user_transactions:
         record = records.query.get(transaction.recordid)  # Haal het record op met de ID
         if record:
-            image_url = record.image.replace("your-supabase-url", "ydlbtcbabebtcajmvoyl") if record.image else None
+            image_url = record.image if record.image else None
             purchases_data.append({
                 "transaction_id": transaction.transactionid,
                 "record_id": record.recordid,
