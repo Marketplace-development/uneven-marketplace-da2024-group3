@@ -751,7 +751,7 @@ def my_favorites():
         query = (
             supabase
             .from_('favorites')
-            .select('recordid, records(*)')
+            .select('recordid, records(recordid, albumname, artist, genre, size, condition, colour, description, price, image)')
             .eq('userid', userid)
             .execute()
         )
@@ -767,6 +767,7 @@ def my_favorites():
     except Exception as e:
         print(f"Error fetching favorites: {e}")
         return render_template('my_favorites.html', records=[], error="Error fetching favorites")
+
 
 @main.route('/get_favorites', methods=['GET'])
 def get_favorites():
