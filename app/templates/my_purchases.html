@@ -18,6 +18,25 @@
             color: white;
             margin: 0;
         }
+        .flash-message {
+            padding: 15px;
+            margin: 0 auto 20px auto; /* Plaatsing direct onder de top bar */
+            max-width: 800px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #8c564b; /* Witte tekst om goed af te steken tegen het bruine achtergrond */
+            background-color: #ffffffee; /* Bruine achtergrondkleur */
+            border: 1px solid #8c564b; /* Zelfde kleur voor de rand */
+            position: absolute; /* Maak de flash-melding absoluut */
+            top: 80px; /* Zorg ervoor dat het onder de top bar komt */
+            left: 50%;
+            transform: translateX(-50%); /* Centreer de flash-melding horizontaal */
+            display: none; /* Begin verborgen */
+        }
+        
+        
         .purchases-container {
             max-width: 800px;
             margin: 20px auto;
@@ -41,14 +60,17 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .purchase-details-info {
             max-width: 60%;
         }
+
         .purchase-details-info h2 {
             font-size: 24px;
             margin: 0 0 10px 0;
             color: #8c564b;
         }
+
         .purchase-details-info p {
             margin: 5px 0;
             font-size: 14px;
@@ -63,6 +85,7 @@
             object-fit: contain;
             margin-left: 20px;
         }
+
         .review-button {
             background-color: #8c564b;
             color: white;
@@ -106,7 +129,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 30px; /* Voeg marge boven de zoekbalk en knop toe */
+            margin-top: 30px;
             gap: 10px;
         }
 
@@ -130,12 +153,25 @@
     </style>
 </head>
 <body>
+    <!-- Flash Message -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <!-- Back button rechtsboven -->
     <div class="back-button-container">
         <a href="/dashboard" class="back-link">Back to Home</a>
     </div>
 
     <h1>My Purchases</h1>
+
+
 
     <!-- Zoekbalk en sorteeropties -->
     <div class="search-container">
@@ -180,6 +216,29 @@
     </div>
 
     <script>
+        // Zorg ervoor dat de flash-melding verschijnt en verdwijnt na 3 seconden
+        document.addEventListener('DOMContentLoaded', () => {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            const searchContainer = document.querySelector('.search-container');
+            
+            flashMessages.forEach(flashMessage => {
+                if (flashMessage.style.display !== 'none') {
+                    // Als de flashmelding zichtbaar is, verschuif de zoekbalk
+                    searchContainer.style.marginTop = '80px'; // Pas dit aan afhankelijk van de grootte van de flash-melding
+                } else {
+                    // Reset de marge als de flashmelding verborgen is
+                    searchContainer.style.marginTop = '30px';
+                }
+                
+                flashMessage.style.display = 'block'; // Toon de melding
+                setTimeout(() => {
+                    flashMessage.style.display = 'none'; // Verberg na 3 seconden
+                    searchContainer.style.marginTop = '30px'; // Reset de marge na het verbergen van de melding
+                }, 3000);
+            });
+        });
+        
+
         // Functie voor het filteren van aankopen op albumnaam of artiest
         function searchPurchases() {
             const query = document.getElementById('search').value.toLowerCase();
@@ -222,6 +281,7 @@
     </script>
 </body>
 </html>
+
 
 
 
