@@ -689,16 +689,17 @@ def get_recommendations():
         # Beperk tot 3 aanbevelingen
         recommendations = recommendations[:3]
 
-        # Formatteer als JSON
+        # Formatteer als JSON, inclusief afbeelding
         return jsonify([
             {
                 "recordid": record.recordid,
                 "albumname": record.albumname,
                 "artist": record.artist,
-                "size" : record.size,
+                "size": record.size,
                 "genre": record.genre,
                 "condition": record.condition,
-                "price": record.price
+                "price": record.price,
+                "image": record.image  # Zorg dat dit veld bestaat in de `records`-tabel
             }
             for record in recommendations
         ]), 200
