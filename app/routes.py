@@ -743,31 +743,31 @@ def update_favorite_status():
 @main.route('/my_favorites', methods=['GET'])
 def my_favorites():
     if 'userid' not in session:
-        return redirect(url_for('login'))  # Redirect als de gebruiker niet is ingelogd
+        return redirect(url_for('main.to_login'))  # Redirect als de gebruiker niet is ingelogd
 
     userid = session['userid']
 
     try:
-        # Haal de favorietenrecords op met een join tussen favorites en records
+        # Query om alleen favorieten met een prijs en Sellyesorno=True op te halen
         query = (
             supabase
             .from_('favorites')
-            .select('recordid, records(recordid, albumname, artist, genre, size, condition, colour, description, price, image)')
+            .select('recordid, records(*)')
             .eq('userid', userid)
             .execute()
         )
 
-        # Haal de records op uit de response
-        favorite_records = []
-        for item in query.data:
-            if item.get('records'):
-                favorite_records.append(item['records'])
+        # Filter records met een prijs en Sellyesorno=True
+        favorite_records = [
+            item['records'] for item in query.data 
+            if item.get('records') and item['records'].get('price') and item['records'].get('Sellyesorno')
+        ]
 
         return render_template('my_favorites.html', records=favorite_records)
-
     except Exception as e:
         print(f"Error fetching favorites: {e}")
         return render_template('my_favorites.html', records=[], error="Error fetching favorites")
+
 
 
 @main.route('/get_favorites', methods=['GET'])
