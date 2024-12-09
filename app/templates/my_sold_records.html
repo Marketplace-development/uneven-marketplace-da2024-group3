@@ -26,28 +26,58 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
-        .record-item {
+        .purchase-item {
+            display: flex;
+            flex-direction: column;
             padding: 15px;
             border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between; /* Ensures button and info align side by side */
-            align-items: center; /* Centers content vertically */
+            margin-bottom: 15px;
         }
-        .record-item:last-child {
+        .purchase-item:last-child {
             border-bottom: none;
         }
-        .record-item h2 {
+        .purchase-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .purchase-details-info {
+            max-width: 60%;
+        }
+        .purchase-details-info h2 {
             font-size: 24px;
             margin: 0 0 10px 0;
             color: #8c564b;
         }
-        .record-item p {
+        .purchase-details-info p {
             margin: 5px 0;
             font-size: 14px;
             color: #333;
         }
-        .record-item strong {
+        .purchase-details-info strong {
             color: #8c564b;
+        }
+        .purchase-image {
+            max-width: 30%;
+            max-height: 150px;
+            object-fit: contain;
+            margin-left: 20px;
+        }
+        .review-button {
+            background-color: #8c564b;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            text-align: center;
+            margin: 15px 0 0;
+        }
+        .review-button:hover {
+            background-color: #5c3a31;
         }
         .back-button-container {
             position: fixed;
@@ -56,56 +86,27 @@
             text-align: right;
             z-index: 1000;
         }
-        .back-button-container .home-button,
         .back-button-container .back-link {
-            display: inline-block;
-            padding: 10px 15px;
             background-color: #fdd0b5;
             color: #8c564b;
-            text-decoration: none;
-            border: 1px solid #8c564b;
+            padding: 10px 15px;
             border-radius: 5px;
-            margin-bottom: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid #8c564b;
         }
-        .back-button-container .home-button:hover,
         .back-button-container .back-link:hover {
             background-color: #8c564b;
             color: white;
         }
-        .watch-review-button {
-            background-color: #8c564b;
-            color: white;
-            padding: 8px 12px;
-            text-decoration: none;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-        }
-        .watch-review-button:hover {
-            background-color: #6f4b40;
-        }
-
-        /* Update flash message style */
-        .flash-message {
-            background-color: #f44336;  /* Red background for warning */
-            color: white;  /* White text */
-            padding: 10px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: center;
-            opacity: 1;
-            transition: opacity 1s ease-out;  /* Smooth transition for fade out */
-        }
-
-        /* Zoekbalk en knop naast elkaar */
         .search-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 30px; /* Voeg marge boven de zoekbalk en knop toe */
+            margin-top: 30px;
+            gap: 10px;
         }
-
         .search-bar {
             padding: 10px;
             width: 100%;
@@ -113,33 +114,32 @@
             border-radius: 5px;
             border: 1px solid #8c564b;
             font-size: 16px;
-            margin-right: 10px; /* Ruimte tussen zoekbalk en knop */
         }
-
-        .search-button {
-            padding: 10px 15px;
-            background-color: #8c564b;
-            color: white;
-            border: none;
+        /* Styling for flash message */
+        .flash-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            text-align: center;
+            margin: 20px auto;
             border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
+            max-width: 80%;
         }
-
-        .search-button:hover {
-            background-color: #6f4b40;
+        /* Add a margin-top to the search container when flash message is shown */
+        .search-container.with-flash {
+            margin-top: 60px; /* Adjust this value as necessary */
         }
     </style>
 </head>
 <body>
+    <!-- Back button rechtsboven -->
     <div class="back-button-container">
-        <!-- Button at the top right -->
         <a href="/dashboard" class="back-link">Back to Home</a>
     </div>
 
     <h1>My Sold Records</h1>
 
-    <!-- Display flash messages here -->
+    <!-- Flash message block -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flash-message">
@@ -150,28 +150,35 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Zoekbalk en knop naast elkaar -->
+    <!-- Zoekbalk -->
     <div class="search-container">
-        <input type="text" id="search" class="search-bar" placeholder="Zoek album of artiest" onkeyup="searchRecords()" />
-        <button class="search-button" onclick="searchRecords()">Search</button>
+        <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchRecords()" />
     </div>
 
     <div class="records-container">
         {% if sold_records and sold_records|length > 0 %}
             <div id="records-list">
                 {% for record in sold_records %}
-                <div class="record-item" data-album="{{ record.album_name }}" data-artist="{{ record.artist }}">
-                    <div class="record-details">
-                        <h2>{{ record.album_name }}</h2>
-                        <p><strong>Transaction ID:</strong> {{ record.transaction_id }}</p>
-                        <p><strong>Record ID:</strong> {{ record.record_id }}</p>
-                        <p><strong>Album name:</strong> {{ record.album_name }}</p>
-                        <p><strong>Artist:</strong> {{ record.artist }}</p>
-                        <p><strong>Condition:</strong> {{ record.condition }}</p>
-                        <p><strong>Price:</strong> €{{ record.price }}</p>
-                        <p><strong>Date Sold:</strong> {{ record.date_sold }}</p>
+                <div class="purchase-item" data-album="{{ record.album_name }}" data-artist="{{ record.artist }}">
+                    <!-- Details van de transactie -->
+                    <div class="purchase-details">
+                        <div class="purchase-details-info">
+                            <h2>{{ record.album_name }}</h2>
+                            <p><strong>Transaction ID:</strong> {{ record.transaction_id }}</p>
+                            <p><strong>Record ID:</strong> {{ record.record_id }}</p>
+                            <p><strong>Album name:</strong> {{ record.album_name }}</p>
+                            <p><strong>Artist:</strong> {{ record.artist }}</p>
+                            <p><strong>Condition:</strong> {{ record.condition }}</p>
+                            <p><strong>Price:</strong> €{{ record.price }}</p>
+                            <p><strong>Date Sold:</strong> {{ record.date_sold }}</p>
+                        </div>
+                        {% if record.image_url %}
+                        <!-- Voeg de afbeelding toe als er een image_url is -->
+                        <img src="{{ record.image_url }}" alt="{{ record.album_name }}" class="purchase-image">
+                        {% endif %}
                     </div>
-                    <a href="/review/{{ record.transaction_id }}" class="watch-review-button">View Received Review</a>
+                    <!-- View Received Review-knop -->
+                    <a href="/review/{{ record.transaction_id }}" class="review-button">View Received Review</a>
                 </div>
                 {% endfor %}
             </div>
@@ -181,10 +188,10 @@
     </div>
 
     <script>
-        // Functie voor het filteren van verkochte records op albumnaam of artiest
+        // Functie voor het filteren van records op albumnaam of artiest
         function searchRecords() {
             const query = document.getElementById('search').value.toLowerCase();
-            const records = document.querySelectorAll('.record-item');
+            const records = document.querySelectorAll('.purchase-item');
             
             records.forEach(record => {
                 const albumName = record.getAttribute('data-album').toLowerCase();
@@ -197,6 +204,18 @@
                 }
             });
         }
+
+        
+        // Functie om de flashmelding automatisch te laten verdwijnen na 2.5 seconden
+        window.onload = function() {
+            const flashMessage = document.querySelector('.flash-message');
+            if (flashMessage) {
+                setTimeout(function() {
+                    flashMessage.style.display = 'none';
+                }, 2500); // 2.5 seconden
+            }
+        };       
     </script>
 </body>
 </html>
+
