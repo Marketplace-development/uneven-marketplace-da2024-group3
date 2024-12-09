@@ -1,3 +1,4 @@
+HTML TRANSACTIONS
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,12 +12,12 @@
             padding: 0;
             background-color: #fbe4d5;
         }
-
+    
         .header, .filters-container, .listings-container {
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
+    
         .header {
             background-color: #8b5d47;
             color: white;
@@ -25,12 +26,12 @@
             align-items: center;
             padding: 10px 20px;
         }
-
+    
         .header h1 {
             margin: 0;
             font-size: 24px;
         }
-
+    
         .header button {
             background: white;
             color: #8b5d47;
@@ -39,59 +40,74 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
+    
         .header button:hover {
             background: #d3d3d3;
         }
-
+    
         .main-container {
             display: flex;
             gap: 20px;
             padding: 20px;
         }
-
+    
         .filters-container {
             flex: 1;
             max-width: 300px;
             background-color: #f8f8f8;
             padding: 15px;
         }
-
+    
         .filters-container h3, .filters-container h4 {
             margin: 10px 0;
         }
-
+    
         .filters-container ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-
+    
         .filters-container li {
             margin-bottom: 8px;
         }
-
+    
         .listings-container {
             flex: 3;
             background-color: #fff;
             padding: 20px;
         }
-
+    
+        /* Nieuwe CSS voor de grid van #listings-container */
+        #listings-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 gelijke kolommen */
+            gap: 20px; /* Ruimte tussen items */
+        }
+    
+        #listings-container .listing {
+            background-color: #fde9e1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center; /* Optioneel: nette uitlijning */
+        }
+    
         .listing {
-            position: relative; 
+            position: relative;
             padding: 15px;
             margin-bottom: 10px;
             background-color: #fde9e1;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-
+    
         .controls {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
         }
-
+    
         .controls input {
             padding: 10px;
             border: 1px solid #8b5d47;
@@ -99,7 +115,7 @@
             color: #8b5d47;
             width: 100%;
         }
-
+    
         .buy-button {
             background-color: #8c564b;
             color: white;
@@ -108,7 +124,7 @@
             padding: 10px 15px;
             cursor: pointer;
         }
-
+    
         .buy-button:hover {
             background-color: #5e3d2f;
         }
@@ -254,6 +270,26 @@
         #recommendations .favorite-button.active {
             color: #ffc107; /* Gekleurde ster voor actieve favorieten */
         }
+
+        .recommendation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fde9e1;
+        }
+        
+        .recommendation img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 5px;
+            object-fit: cover; /* Zorgt dat de afbeelding goed past */
+            margin-left: 10px;
+        }
+        
 
         .favorite-button {
             position: absolute;
@@ -404,23 +440,25 @@
 
 
         function renderListings(listings) {
-        const container = document.getElementById('listings-container');
-        container.innerHTML = listings.length
-            ? listings.map(listing => `
-                <div class="listing">
-                    <h2>${listing.albumname} - ${listing.artist}</h2>
-                    <p>Genre: ${listing.genre}</p>
-                    <p>Price: €${listing.price}</p>
-                    <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now</button>
-                    <button 
-                        class="favorite-button ${listing.isFavorite ? 'active' : ''}" 
-                        onclick="toggleFavorite('${listing.recordid}', this)">
-                        ☆
-                    </button>
-                </div>
-            `).join('')
-            : '<p>No results found.</p>';
+            const container = document.getElementById('listings-container');
+            container.innerHTML = listings.length
+                ? listings.map(listing => `
+                    <div class="listing">
+                        <img src="${listing.image}" alt="${listing.albumname} cover" style="width:100px; height:auto; border-radius:5px; margin-bottom:10px;">
+                        <h2>${listing.albumname} - ${listing.artist}</h2>
+                        <p>Genre: ${listing.genre}</p>
+                        <p>Price: €${listing.price}</p>
+                        <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now</button>
+                        <button 
+                            class="favorite-button ${listing.isFavorite ? 'active' : ''}" 
+                            onclick="toggleFavorite('${listing.recordid}', this)">
+                            ☆
+                        </button>
+                    </div>
+                `).join('')
+                : '<p>No results found.</p>';
         }
+        
 
         function toggleFavorite(recordId, buttonElement) {
             const isFavorite = !buttonElement.classList.contains('active');
@@ -534,33 +572,40 @@
         async function loadRecommendations() {
             const response = await fetch('/get_recommendations');
             const recommendationsContainer = document.getElementById('recommendations');
-
+        
             if (response.ok) {
                 allRecommendations = await response.json();
-                filteredRecommendations = [...allRecommendations]; // Initiële waarde is alle aanbevelingen
+                console.log(allRecommendations); // Controleer de structuur van de data
+                filteredRecommendations = [...allRecommendations]; 
                 renderRecommendations(filteredRecommendations);
             } else {
                 recommendationsContainer.innerHTML = '<p>Failed to load recommendations.</p>';
             }
         }
+        
         function renderRecommendations(recommendations) {
             const recommendationsContainer = document.getElementById('recommendations');
             recommendationsContainer.innerHTML = recommendations.length
                 ? recommendations.map(rec => `
                     <div class="recommendation">
-                        <h3>${rec.albumname} - ${rec.artist}</h3>
-                        <p>Genre: ${rec.genre}</p>
-                        <p>Price: €${rec.price}</p>
-                        <button class="buy-button" onclick="buyRecord('${rec.recordid}')">Buy Now</button>
-                        <button 
-                            class="favorite-button ${favoriteIds.has(rec.recordid) ? 'active' : ''}" 
-                            onclick="toggleFavorite('${rec.recordid}', this)">
-                            ☆
-                        </button>
+                        <div>
+                            <h3>${rec.albumname} - ${rec.artist}</h3>
+                            <p>Genre: ${rec.genre}</p>
+                            <p>Price: €${rec.price}</p>
+                            <button class="buy-button" onclick="buyRecord('${rec.recordid}')">Buy Now</button>
+                            <button 
+                                class="favorite-button ${favoriteIds.has(rec.recordid) ? 'active' : ''}" 
+                                onclick="toggleFavorite('${rec.recordid}', this)">
+                                ☆
+                            </button>
+                        </div>
+                        <img src="${rec.image}" alt="${rec.albumname} cover">
                     </div>
                 `).join('')
                 : '<p>No recommendations available.</p>';
         }
+        
+        
 
 
         async function loadFavorites() {
@@ -607,3 +652,4 @@
     </script>
 </body>
 </html>
+
