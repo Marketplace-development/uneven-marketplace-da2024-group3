@@ -775,3 +775,34 @@ def get_favorites():
     except Exception as e:
         logging.error(f"Error fetching favorites: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
+    
+@main.route('/my_profile', methods=['GET', 'POST'])
+def my_profile():
+    userid = session.get('userid')
+    if not userid:
+        return redirect(url_for('main.to_login'))
+
+    user = users.query.get(userid)
+    if not user:
+        return "User not found", 404
+
+    if request.method == 'POST':
+        user.email = request.form.get('email', user.email)
+        user.address = request.form.get('address', user.address)
+        user.telefoonnummer = request.form.get('phone', user.telefoonnummer)
+
+        try:
+            db.session.commit()
+            
+            # Update session values
+            session['email'] = user.email
+            session['address'] = user.address
+            session['telefoonnummer'] = user.telefoonnummer
+            
+            flash("Profile updated successfully.", "success")
+            return redirect(url_for('main.my_profile'))
+        except Exception as e:
+            logging.error(f"Error updating profile: {e}")
+            return "Error updating profile", 500
+
+    return render_template('my_profile.html', user=user)
