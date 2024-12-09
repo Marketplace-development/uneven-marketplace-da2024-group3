@@ -28,8 +28,7 @@
         }
         .purchase-item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             padding: 15px;
             border-bottom: 1px solid #eee;
             margin-bottom: 15px;
@@ -38,19 +37,24 @@
             border-bottom: none;
         }
         .purchase-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .purchase-details-info {
             max-width: 60%;
         }
-        .purchase-details h2 {
+        .purchase-details-info h2 {
             font-size: 24px;
             margin: 0 0 10px 0;
             color: #8c564b;
         }
-        .purchase-details p {
+        .purchase-details-info p {
             margin: 5px 0;
             font-size: 14px;
             color: #333;
         }
-        .purchase-details strong {
+        .purchase-details-info strong {
             color: #8c564b;
         }
         .purchase-image {
@@ -70,7 +74,7 @@
             font-size: 14px;
             display: block;
             text-align: center;
-            margin: 20px auto 0;
+            margin: 15px 0 0;
         }
         .review-button:hover {
             background-color: #5c3a31;
@@ -103,6 +107,7 @@
             justify-content: center;
             align-items: center;
             margin-top: 30px; /* Voeg marge boven de zoekbalk en knop toe */
+            gap: 10px;
         }
 
         .search-bar {
@@ -112,21 +117,15 @@
             border-radius: 5px;
             border: 1px solid #8c564b;
             font-size: 16px;
-            margin-right: 10px; /* Ruimte tussen zoekbalk en knop */
         }
 
-        .search-button {
-            padding: 10px 15px;
-            background-color: #8c564b;
-            color: white;
-            border: none;
+        .dropdown {
+            padding: 10px;
+            border: 1px solid #8c564b;
             border-radius: 5px;
+            background-color: white;
             font-size: 16px;
             cursor: pointer;
-        }
-
-        .search-button:hover {
-            background-color: #6f4b40;
         }
     </style>
 </head>
@@ -138,35 +137,41 @@
 
     <h1>My Purchases</h1>
 
-    <!-- Zoekbalk en knop naast elkaar -->
+    <!-- Zoekbalk en sorteeropties -->
     <div class="search-container">
         <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchPurchases()" />
-        <button class="search-button" onclick="searchPurchases()">Search</button>
+        <select class="dropdown" id="sort-dropdown" onchange="sortPurchases()">
+            <option value="">Sort by</option>
+            <option value="newest">Newest to Oldest</option>
+            <option value="oldest">Oldest to Newest</option>
+        </select>
     </div>
 
     <div class="purchases-container">
         {% if purchases and purchases|length > 0 %}
             <div id="purchases-list">
                 {% for purchase in purchases %}
-                <div class="purchase-item" data-album="{{ purchase.album_name }}" data-artist="{{ purchase.artist }}">
+                <div class="purchase-item" data-album="{{ purchase.album_name }}" data-artist="{{ purchase.artist }}" data-date="{{ purchase.date }}">
                     <!-- Details van de aankoop -->
                     <div class="purchase-details">
-                        <h2>{{ purchase.album_name }}</h2>
-                        <p><strong>Transaction ID:</strong> {{ purchase.transaction_id }}</p>
-                        <p><strong>Record ID:</strong> {{ purchase.record_id }}</p>
-                        <p><strong>Album name:</strong> {{ purchase.album_name }}</p>
-                        <p><strong>Artist:</strong> {{ purchase.artist }}</p>
-                        <p><strong>Condition:</strong> {{ purchase.condition }}</p>
-                        <p><strong>Price:</strong> €{{ purchase.price }}</p>
-                        <p><strong>Date:</strong> {{ purchase.date }}</p>
+                        <div class="purchase-details-info">
+                            <h2>{{ purchase.album_name }}</h2>
+                            <p><strong>Transaction ID:</strong> {{ purchase.transaction_id }}</p>
+                            <p><strong>Record ID:</strong> {{ purchase.record_id }}</p>
+                            <p><strong>Album name:</strong> {{ purchase.album_name }}</p>
+                            <p><strong>Artist:</strong> {{ purchase.artist }}</p>
+                            <p><strong>Condition:</strong> {{ purchase.condition }}</p>
+                            <p><strong>Price:</strong> €{{ purchase.price }}</p>
+                            <p><strong>Date:</strong> {{ purchase.date }}</p>
+                        </div>
+                        {% if purchase.image_url %}
+                        <!-- Voeg de afbeelding toe als er een image_url is -->
+                        <img src="{{ purchase.image_url }}" alt="{{ purchase.album_name }}" class="purchase-image">
+                        {% endif %}
                     </div>
-                    {% if purchase.image_url %}
-                    <!-- Voeg de afbeelding toe als er een image_url is -->
-                    <img src="{{ purchase.image_url }}" alt="{{ purchase.album_name }}" class="purchase-image">
-                    {% endif %}
+                    <!-- Write Review-knop -->
+                    <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
                 </div>
-                <!-- Write Review-knop -->
-                <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
                 {% endfor %}
             </div>
         {% else %}
@@ -190,6 +195,29 @@
                     purchase.style.display = 'none'; // Verberg als het niet matcht
                 }
             });
+        }
+
+        // Functie voor het sorteren van aankopen
+        function sortPurchases() {
+            const dropdown = document.getElementById('sort-dropdown');
+            const sortType = dropdown.value;
+            const purchasesList = document.getElementById('purchases-list');
+            const purchases = Array.from(purchasesList.querySelectorAll('.purchase-item'));
+
+            purchases.sort((a, b) => {
+                const dateA = new Date(a.getAttribute('data-date'));
+                const dateB = new Date(b.getAttribute('data-date'));
+
+                if (sortType === "newest") {
+                    return dateB - dateA; // Nieuwste eerst
+                } else if (sortType === "oldest") {
+                    return dateA - dateB; // Oudste eerst
+                } else {
+                    return 0; // Geen sortering
+                }
+            });
+
+            purchases.forEach(purchase => purchasesList.appendChild(purchase));
         }
     </script>
 </body>
