@@ -111,9 +111,36 @@
     button:hover {
       background-color: #f4b085;
     }
+    .flash-message {
+        padding: 15px;
+        margin: 0 auto 20px auto; /* Plaatsing direct onder de top bar */
+        max-width: 800px;
+        text-align: center;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #8c564b; /* Witte tekst om goed af te steken tegen het bruine achtergrond */
+        background-color: #ffffffee; /* Bruine achtergrondkleur */
+        border: 1px solid #8c564b; /* Zelfde kleur voor de rand */
+        position: absolute; /* Maak de flash-melding absoluut */
+        top: 80px; /* Zorg ervoor dat het onder de top bar komt */
+        left: 50%;
+        transform: translateX(-50%); /* Centreer de flash-melding horizontaal */
+        display: none; /* Begin verborgen */
+    }
   </style>
 </head>
 <body>
+    <!-- Flash Message -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
   <div class="top-bar">
     <h1>Spinnback - My Profile</h1>
     <div>
@@ -146,5 +173,17 @@
       <button type="submit">Save Changes</button>
     </form>
   </div>
+<script>
+    window.addEventListener('load', () => {
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(msg => {
+            msg.style.display = 'block'; // Maak zichtbaar
+            setTimeout(() => {
+                msg.style.display = 'none'; // Verberg na 5 seconden
+            }, 5000); // 5000 milliseconden = 5 seconden
+        });
+    });
+</script>
+
 </body>
 </html>
