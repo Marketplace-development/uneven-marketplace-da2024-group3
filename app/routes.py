@@ -429,6 +429,7 @@ def my_sold_records():
     for transaction in sold_transactions:
         record = records.query.get(transaction.recordid)  # Haal het record op met de ID
         if record:
+            image_url = record.image if record.image else None  # Haal afbeelding op als deze bestaat
             sold_records_data.append({
                 "transaction_id": transaction.transactionid,
                 "record_id": record.recordid,
@@ -436,11 +437,13 @@ def my_sold_records():
                 "artist": record.artist,
                 "condition": record.condition,
                 "price": record.price,
-                "date_sold": transaction.created_at  # Datum van de transactie
+                "date_sold": transaction.created_at,  # Datum van de transactie
+                "image_url": image_url  # Voeg de afbeelding toe
             })
 
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_sold_records.html', sold_records=sold_records_data)
+
 
 
 @main.route('/my_sold_records')
