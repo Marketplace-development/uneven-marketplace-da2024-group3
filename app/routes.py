@@ -257,43 +257,53 @@ def koop_1plaat(recordid):
 @main.route('/create_transaction/<int:recordid>', methods=['POST'])
 def create_transaction(recordid):
     try:
+        # Controleer of de gebruiker is ingelogd
         buyer_id = session.get('userid')
         if not buyer_id:
-            logging.error("Geen gebruiker ingelogd.")
+            flash("You must be logged in to purchase a record.", "error")
             return redirect(url_for('main.login'))
 
         # Haal het record op
         record = records.query.get(recordid)
         if not record:
-            logging.error(f"Record met ID {recordid} niet gevonden.")
-            return "Record niet gevonden", 404
+            flash("Record not found.", "error")
+            return redirect(url_for('main.dashboard'))
 
-        # Check of de koper de eigenaar van het record is
+        # Controleer of de koper de eigenaar is
         if record.ownerid == buyer_id:
-            logging.error("Je kunt je eigen plaat niet kopen.")
-            return "Je kunt je eigen plaat niet kopen", 400
+            flash("You cannot buy your own record.", "error")
+            return redirect(url_for('main.dashboard'))
 
-        owner = record.ownerid
+        # Controleer of het record te koop is
+        if not record.Sellyesorno:
+            flash("This record is not for sale.", "error")
+            return redirect(url_for('main.dashboard'))
 
-        # Maak de transactie
-        new_transaction = transactions(sellerid=owner, buyerid=buyer_id, recordid=recordid)
+        # Maak een nieuwe transactie
+        new_transaction = transactions(
+            sellerid=record.ownerid,
+            buyerid=buyer_id,
+            recordid=recordid,
+            purchaseprice=record.price  # Sla de huidige prijs van het record op
+        )
         db.session.add(new_transaction)
 
-        # Update de record
-        record.ownerid = buyer_id  # Verander de eigenaar
-        record.Sellyesorno = False  # Stel Sellyesorno in op False
-        record.price = None  # Verwijder de prijs
+        # Update het record
+        record.ownerid = buyer_id  # Verander de eigenaar naar de koper
+        record.Sellyesorno = False  # Zet het record niet meer te koop
+        record.price = None  # Verwijder de prijs van het record
+
+        # Commit de wijzigingen naar de database
         db.session.commit()
 
-        logging.info(f"Transactie succesvol toegevoegd voor record {recordid} door gebruiker {buyer_id}.")
-
-        # Redirect naar de edit_after_purchase pagina
+        flash("Transaction created successfully!", "success")
         return render_template('edit_after_purchase.html', record=record)
 
-
     except Exception as e:
-        logging.error(f"Fout bij transactie: {e}")
-        return "Er is een fout opgetreden", 500
+        db.session.rollback()  # Rol wijzigingen terug bij een fout
+        logging.error(f"Error creating transaction: {e}")
+        flash("An error occurred while creating the transaction.", "error")
+        return redirect(url_for('main.dashboard'))
 
 
 @main.route('/get_username', methods=['GET'])
@@ -399,7 +409,7 @@ def get_my_purchases():
                 "album_name": record.albumname,
                 "artist": record.artist,
                 "condition": record.condition,
-                "price": record.price,
+                "purchase_price": transaction.purchaseprice,
                 "date": transaction.created_at,  # Dit moet mogelijk aangepast worden naar een datumveld in "transactions"
                 "image_url": image_url
             })
@@ -441,7 +451,7 @@ def my_sold_records():
                 "album_name": record.albumname,
                 "artist": record.artist,
                 "condition": record.condition,
-                "price": record.price,
+                "price": transaction.purchaseprice,
                 "date_sold": transaction.created_at,  # Datum van de transactie
                 "image_url": image_url  # Voeg de afbeelding toe
             })
@@ -806,3 +816,5 @@ def my_profile():
             return "Error updating profile", 500
 
     return render_template('my_profile.html', user=user)
+
+#beter werkt dit
