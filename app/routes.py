@@ -652,45 +652,77 @@ def get_recommendations():
         if not userid:
             return jsonify({"error": "User not logged in"}), 401
 
-        # Haal eerdere aankopen van de gebruiker op
+        # Haal eerdere aankopen en favorieten op
         user_transactions = transactions.query.filter_by(buyerid=userid).all()
-        if not user_transactions:
-            return jsonify({"message": "No purchases found"}), 404
+        favorites_list = favorites.query.filter_by(userid=userid).all()
 
-        # Verzamel genres, conditions en prijzen van eerdere aankopen
+        if not user_transactions and not favorites_list:
+            return jsonify({"message": "No purchases or favorites found"}), 404
+
+        # Verzamel genres, artiesten en prijzen uit aankopen
         purchased_records = [records.query.get(transaction.recordid) for transaction in user_transactions if records.query.get(transaction.recordid)]
-        genres = set(record.genre for record in purchased_records)
-        conditions = set(record.condition for record in purchased_records)
-        prices = [record.price for record in purchased_records if record.price]
+        purchased_genres = [record.genre for record in purchased_records]
+        purchased_artists = [record.artist for record in purchased_records]
+        purchased_prices = [record.price for record in purchased_records if record.price]
 
-        if not prices:
-            return jsonify({"message": "No price data available for recommendations"}), 404
+        # Verzamel genres en artiesten uit favorieten
+        favorite_record_ids = [favorite.recordid for favorite in favorites_list]
+        favorite_records = [records.query.get(record_id) for record_id in favorite_record_ids if records.query.get(record_id)]
+        favorite_genres = [record.genre for record in favorite_records]
+        favorite_artists = [record.artist for record in favorite_records]
 
-        avg_price = sum(prices) / len(prices)
-        price_range = (max(prices) - min(prices)) * 0.5  # 50% van het prijsbereik
+        # Combineer genres en artiesten uit aankopen en favorieten
+        all_genres = purchased_genres + favorite_genres
+        all_artists = purchased_artists + favorite_artists
+
+        # Bepaal de populairste genres en artiesten
+        from collections import Counter
+        genre_counts = Counter(all_genres)
+        artist_counts = Counter(all_artists)
+
+        # Selecteer genres op basis van relatieve frequentie
+        total_genres = sum(genre_counts.values())
+        genre_weights = {genre: count / total_genres for genre, count in genre_counts.items()}
+        sorted_genres = sorted(genre_weights.keys(), key=lambda g: genre_weights[g], reverse=True)
+
+        # Selecteer artiesten op basis van frequentie
+        sorted_artists = [artist for artist, count in artist_counts.most_common()]
+
+        # Bepaal de prijslimiet
+        max_price = max(purchased_prices) if purchased_prices else 0
+        price_limit = max_price * 1.5
 
         # Haal beschikbare records op
         available_records = records.query.filter(records.Sellyesorno == True, records.ownerid != userid).all()
 
-        # Filter op aanbevelingen (met dynamische prijsrange)
-        recommendations = [
+        # Filter beschikbare records op genres, artiesten en prijs
+        filtered_recommendations = [
             record for record in available_records
-            if (record.genre in genres or  # Match op genre
-                record.condition in conditions) and  # Of match op conditie
-               abs(record.price - avg_price) <= price_range  # Dynamische prijstolerantie
+            if (
+                record.genre in sorted_genres[:2] or  # Match op de top 2 genres
+                record.artist in sorted_artists  # Of match op populaire artiesten
+            ) and record.price <= price_limit  # Prijslimiet
         ]
 
-        # Sorteer aanbevelingen op overeenkomsten met genres en condities
-        recommendations.sort(
+        # Als er minder dan 3 aanbevelingen zijn, vul de lijst aan met de dichtstbijzijnde platen
+        if len(filtered_recommendations) < 3:
+            additional_records = sorted(
+                [record for record in available_records if record not in filtered_recommendations],
+                key=lambda record: abs(record.price - max_price)  # Sorteer op prijsverschil
+            )
+            filtered_recommendations.extend(additional_records[:3 - len(filtered_recommendations)])
+
+        # Sorteer aanbevelingen: genres > artiesten > prijs
+        filtered_recommendations.sort(
             key=lambda record: (
-                (record.genre in genres) +  # Meer punten voor overeenkomend genre
-                (record.condition in conditions)  # Meer punten voor overeenkomende conditie
+                genre_weights.get(record.genre, 0) * 2 +  # Dubbele score voor genre-match
+                (record.artist in sorted_artists)  # Score voor artiest-match
             ),
             reverse=True
         )
 
         # Beperk tot 3 aanbevelingen
-        recommendations = recommendations[:3]
+        recommendations = filtered_recommendations[:3]
 
         # Formatteer als JSON, inclusief afbeelding
         return jsonify([
@@ -700,8 +732,8 @@ def get_recommendations():
                 "artist": record.artist,
                 "size": record.size,
                 "genre": record.genre,
-                "condition": record.condition,
                 "price": record.price,
+                "condition": record.condition,
                 "image": record.image  # Zorg dat dit veld bestaat in de `records`-tabel
             }
             for record in recommendations
@@ -710,6 +742,8 @@ def get_recommendations():
     except Exception as e:
         logging.error(f"Error fetching recommendations: {e}")
         return jsonify({"error": "Unable to fetch recommendations"}), 500
+
+
 
 @main.route('/update_favorite_status', methods=['POST'])
 def update_favorite_status():
