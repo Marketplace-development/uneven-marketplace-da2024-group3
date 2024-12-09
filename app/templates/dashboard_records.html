@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
         /* Global Styles */
         body {
             font-family: 'Georgia', serif;
-            background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+            background: linear-gradient(to bottom, #f7d9c4);
             margin: 0;
             padding: 0;
             display: flex;
@@ -21,29 +21,32 @@
             width: 100%;
             background-color: #8c564b;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around; /* Zorgt ervoor dat de items zich gelijkmatig over de ruimte verdelen */
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             position: fixed;
             top: 0;
             left: 0;
             z-index: 10;
+            padding-left: 2px;  /* Voeg wat ruimte aan de linkerzijde toe voor de eerste item (de gebruiker) */
+            padding-right: 20px; /* Voeg wat ruimte aan de rechterzijde toe voor de menu-knop */
+            gap: 440px; /* Dit is de ruimte tussen de icon, titel, en menu-knop */
         }
 
         .top-bar h1 {
             margin: 0;
             font-size: 24px;
             font-family: 'Trebuchet MS', sans-serif;
+            text-align: center;
         }
 
         /* User Icon Styles */
         .user-icon {
-            position: relative;
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            margin-right: 30px;
         }
 
         .user-icon-circle {
@@ -62,7 +65,7 @@
         .user-menu {
             display: none;
             position: absolute;
-            right: 0;
+            right: 10;
             top: 50px;
             background-color: white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -79,7 +82,7 @@
             padding: 10px 20px;
             font-size: 14px;
             color: #333;
-            text-align: left;
+            text-align: right;
             text-decoration: none;
             display: block;
             cursor: pointer;
@@ -98,6 +101,79 @@
             border-bottom: 1px solid #eee;
             cursor: default;
         }
+        .menu-button {
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            right: 10px;
+        }
+        
+        .menu-button div {
+            width: 100%;
+            height: 4px;
+            background-color: white;
+            border-radius: 2px;
+        }
+        
+        /* Dropdown-menu styling */
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;          /* Plaats het dropdown-menu onder de top-bar */
+            right: 10px;        /* Zorg dat het menu tegen de rechterkant van de top-bar blijft */
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1000;
+            min-width: 100px;
+        }
+        
+        /* Actieve dropdown-weergave */
+        .menu-dropdown.active {
+            display: block;
+        }
+        
+        /* Dropdown-item styling */
+        .menu-item {
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background-color: #f1f1f1;
+        }
+        .nav-links {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Ruimte tussen de knoppen */
+            padding: 15px 0;
+            background: linear-gradient(to bottom, #f7d9c4, #f4b085); /* Gebruik dezelfde lichtbruine achtergrond */
+            margin-top: 60px; /* Houd rekening met de hoogte van de top-bar */
+        }
+        
+        .nav-link {
+            color: #8c564b;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: #8c564b;
+            color: white;
+        }
 
         /* Listings Container */
         .listing-container {
@@ -106,7 +182,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            margin-top: 100px; /* To give space for top bar */
+            margin-top: 10px; /* To give space for top bar */
             background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
@@ -137,6 +213,15 @@
             height: 550px; /* Much taller button */
             background-size: cover; /* Ensure the background image fits well */
             background-position: center;
+        }
+        .library-text {
+            font-size: 14px;  /* Kleinere tekst dan de knoptekst */
+            color: white;   /* Zelfde kleur als de titel "Libraries" */
+            margin-top: 8px;   /* Ruimte tussen de titel en de tekst */
+            text-align: center; /* Zent de tekst onder de knoptekst */
+            line-height: 1.2;   /* Zorgt voor een mooie afstand tussen de tekstregels */
+            position: relative;
+            z-index: 1;
         }
 
         /* Button Specific Background Images */
@@ -189,19 +274,30 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <h1>Spinnback</h1>
         <div class="user-icon">
             <div class="user-icon-circle">M</div>
             <div id="userMenu" class="user-menu">
                 <div id="username-display" class="username-display">Loading...</div>
-                <a href="/my_library" class="user-menu-item">My Libraries</a>
-                <a href="/my_favorites" class="user-menu-item">My Favorites</a>
-                <a href="/my_purchases" class="user-menu-item">My Purchases</a>
-                <a href="/my_sold_records" class="user-menu-item">My Sold Records</a> <!-- Existing button -->
-                <a href="/my_rating" class="user-menu-item">My Rating</a> <!-- New button -->
-                <div class="user-menu-item" onclick="logout()">Log out</div>
             </div>
         </div>
+        <h1>Spinnback</h1>
+        <div class="menu-button" id="menuButton">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="menuDropdown" class="menu-dropdown">
+            <div class="menu-item" onclick="logout()">My Profile</div>
+            <div class="menu-item" onclick="logout()">Log Out</div>
+        </div>
+    </div>
+
+    <div class="nav-links">
+        <a href="/my_library" class="nav-link">My Library</a>
+        <a href="/my_favorites" class="nav-link">My Favorites</a>
+        <a href="/my_purchases" class="nav-link">My Purchases</a>
+        <a href="/my_sold_records" class="nav-link">My Sold Records</a>
+        <a href="/my_rating" class="nav-link">My Rating</a>
     </div>
 
     <!-- Listings Section -->
@@ -209,6 +305,7 @@
         <div class="button-container">
             <button class="libraries-btn" onclick="location.href='/library'">
                 <span>Libraries</span>
+                <p class="library-text">(Take a look at the collection of other users)</p>
             </button>
             <button class="add-sell-btn" onclick="location.href='/records'">
                 <span>Add/ Sell a record</span>
@@ -221,6 +318,18 @@
     
 
     <script>
+        const menuButton = document.getElementById("menuButton");
+        const menuDropdown = document.getElementById("menuDropdown");
+        
+        menuButton.addEventListener("click", () => {
+            menuDropdown.classList.toggle("active");
+        });
+        
+        window.addEventListener("click", (e) => {
+            if (!e.target.closest("#menuButton")) {
+                menuDropdown.classList.remove("active");
+            }
+        });
         const userIconCircle = document.querySelector(".user-icon-circle");
         const userMenu = document.getElementById("userMenu");
 
@@ -260,4 +369,3 @@
 
 </body>
 </html>
-
