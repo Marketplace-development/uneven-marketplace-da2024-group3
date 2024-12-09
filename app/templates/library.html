@@ -112,6 +112,43 @@
       border: 1px solid #8c564b;
       font-size: 16px;
     }
+
+    .listing {
+      display: flex;
+      justify-content: space-between;  /* Ruimte tussen de tekst en de afbeelding */
+      align-items: flex-start; /* Zorgt ervoor dat de afbeelding aan de bovenkant uitgelijnd is */
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 15px;
+    }
+  
+    .listing:last-child {
+      border-bottom: none;
+    }
+  
+    /* Minder witte ruimte tussen tekstregels */
+    .listing-details p {
+      margin: 2px 0; /* Verticale ruimte tussen regels minimaliseren */
+      font-size: 14px; /* Optioneel: tekst iets kleiner maken */
+      line-height: 1.2; /* Regelhoogte aanpassen voor compactere tekst */
+    }
+
+    .listing-details h3 {
+        margin-bottom: 5px; /* Minder ruimte onder de titel */
+        font-size: 18px; /* Iets kleinere titels voor consistentie */
+    }
+
+    /* Schalen van de afbeelding in de hoogte */
+    .listing-image {
+      height: 150px; /* Maximale hoogte van de afbeelding */
+      width: auto; /* Breedte aanpassen op basis van hoogte */
+      object-fit: cover; /* Snijd afbeelding bij om deze in het kader te laten passen */
+      object-position: top; /* Optioneel: focus op de bovenkant van de afbeelding */
+      border-radius: 5px;
+      margin-left: 20px;
+    }
+
+  
   </style>
 </head>
 <body>
@@ -150,27 +187,31 @@
         <div id="library-records">
           {% for record in library_records %}
             <div class="listing" data-album="{{ record['albumname'] }}" data-artist="{{ record['artist'] }}">
-              <h3>{{ record['albumname'] }}</h3>
-              <p><strong>Artist:</strong> {{ record['artist'] }}</p>
-              <p><strong>Genre:</strong> {{ record['genre'] }}</p>
-              <p><strong>Condition:</strong> {{ record['condition'] }}</p>
-              <p><strong>Color:</strong> {{ record['colour'] }}</p>
-              <p><strong>Price:</strong> 
-                {% if record['price'] %}
-                  €{{ "%.2f"|format(record['price']) }}
-                {% else %}
-                  N/A
-                {% endif %}
-              </p>
-              <p><strong>Status:</strong>
-                {% if record['Sellyesorno'] %}
-                  <span style="color: green;">For Sale</span>
-                {% else %}
-                  <span style="color: red;">Not for Sale</span>
-                {% endif %}
-              </p>
+              <div class="listing-details">
+                <h3>{{ record['albumname'] }}</h3>
+                <p><strong>Artist:</strong> {{ record['artist'] }}</p>
+                <p><strong>Genre:</strong> {{ record['genre'] }}</p>
+                <p><strong>Condition:</strong> {{ record['condition'] }}</p>
+                <p><strong>Color:</strong> {{ record['colour'] }}</p>
+                <p><strong>Price:</strong> 
+                  {% if record['price'] %}
+                    €{{ "%.2f"|format(record['price']) }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </p>
+                <p><strong>Status:</strong>
+                  {% if record['Sellyesorno'] %}
+                    <span style="color: green;">For Sale</span>
+                  {% else %}
+                    <span style="color: red;">Not for Sale</span>
+                  {% endif %}
+                </p>
+              </div>
+              <img src="{{ record['image'] }}" alt="{{ record['albumname'] }} cover" class="listing-image">
             </div>
           {% endfor %}
+
         </div>
       {% else %}
         <p>No records found for {{ username }}.</p>
@@ -187,14 +228,19 @@
       records.forEach(record => {
         const albumName = record.getAttribute('data-album').toLowerCase();
         const artistName = record.getAttribute('data-artist').toLowerCase();
-        
+    
         if (albumName.includes(query) || artistName.includes(query)) {
-          record.style.display = 'block'; // Toon als het matcht
+          record.style.visibility = 'visible'; // Maak zichtbaar
+          record.style.height = 'auto';        // Herstel de hoogte
+          record.style.marginBottom = '15px'; // Herstel marges
         } else {
-          record.style.display = 'none'; // Verberg als het niet matcht
+          record.style.visibility = 'hidden'; // Verberg
+          record.style.height = '0';         // Stel hoogte in op 0
+          record.style.marginBottom = '0';   // Verwijder marges
         }
       });
     }
+    
   </script>
 </body>
 </html>
