@@ -48,15 +48,65 @@
     }
 
     .top-bar button:first-child {
-      margin-right: 10px; /* Dicht bij de Register-knop */
+      margin-right: 10px;
     }
     
     .top-bar button:last-child {
-      margin-right: 40px; /* Afstand tot de rand van de top bar */
+      margin-right: 40px;
     }
 
     .top-bar button:hover {
       background-color: #fdd0b5;
+    }
+
+    /* Alert Styling */
+    .alert-container {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: 80%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .alert {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      font-weight: bold;
+      display: none; /* Initially hide the alert */
+      opacity: 1; /* Initially fully visible */
+    }
+
+    .alert.success {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .alert.error {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    /* Fadeout animation */
+    .alert.show {
+      display: block; /* Make the alert visible */
+      opacity: 1;
+      animation: fadeOut 4s forwards; /* Increased duration for fade-out */
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
     }
 
     /* Intro Text */
@@ -117,13 +167,12 @@
 
     .listing img {
       width: 100%;
-      height: 200px; /* Vaste hoogte voor consistentie */
-      object-fit: contain; /* Zorgt dat de hele afbeelding zichtbaar is */
+      height: 200px;
+      object-fit: contain;
       border-radius: 5px;
       margin-bottom: 10px;
-      background-color: #f7f7f7; /* Optioneel: achtergrondkleur voor lege ruimte */
+      background-color: #f7f7f7;
     }
-    
 
     .listing p {
       margin: 8px 0;
@@ -135,9 +184,22 @@
       font-weight: bold;
       color: #8c564b;
     }
+
   </style>
 </head>
 <body>
+  <!-- Flash messages section -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="alert-container">
+        {% for category, message in messages %}
+          <div class="alert {{ category }} show">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
 
   <!-- Top Bar -->
   <div class="top-bar">
@@ -162,6 +224,14 @@
   </div>
 
   <script>
+    // Automatically hide the alert after a set duration (e.g., 100,000ms)
+    setTimeout(function() {
+      const alerts = document.querySelectorAll('.alert.show');
+      alerts.forEach(alert => {
+        alert.classList.remove('show'); // Remove show class to trigger fade-out
+      });
+    }, 100000);  // 100,000ms = 100 seconds
+    
     // Fetch listings from the backend and render them
     async function loadListings() {
       const container = document.getElementById('listings-container');
@@ -207,6 +277,8 @@
 
 </body>
 </html>
+
+
 
 
 
