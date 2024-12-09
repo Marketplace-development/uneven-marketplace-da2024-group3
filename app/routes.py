@@ -249,8 +249,12 @@ def koop_1plaat(recordid):
     if not seller:
         return "Seller not found", 404
 
-    # Pass the seller's username to the template
-    return render_template('koop_1plaat.html', record=record, seller_username=seller.username)
+    # Pass the seller's username and record details to the template
+    return render_template(
+        'koop_1plaat.html', 
+        record=record, 
+        seller_username=seller.username
+    )
 
 @main.route('/create_transaction/<int:recordid>', methods=['POST'])
 def create_transaction(recordid):
