@@ -370,8 +370,8 @@ def user_library(username):
         # Haal de userid van de gevonden gebruiker op
         user_id = user_response.data['userid']
 
-        # Zoek records die aan deze gebruiker toebehoren
-        records_response = supabase.table('records').select('*').eq('ownerid', user_id).execute()
+        # Zoek records die aan deze gebruiker toebehoren, inclusief afbeelding
+        records_response = supabase.table('records').select('recordid, albumname, artist, genre, condition, colour, price, Sellyesorno, image').eq('ownerid', user_id).execute()
         library_records = records_response.data if records_response.data else []
 
     except Exception as e:
@@ -379,6 +379,7 @@ def user_library(username):
         return render_template('library.html', library_records=[], username=None, error="An error occurred.")
 
     return render_template('library.html', username=username, library_records=library_records)
+
 
 @main.route('/my_purchases', methods=['GET'])
 def get_my_purchases():
