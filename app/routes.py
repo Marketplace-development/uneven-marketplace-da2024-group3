@@ -323,7 +323,12 @@ def my_library():
         logging.error(f"Error fetching user records: {e}")
         records = []
 
+    # Haal de afbeeldings-URL van elke record (indien beschikbaar)
+    for record in records:
+        record['image_url'] = record.get('image', None)  # Voeg de afbeelding toe als het bestaat
+
     return render_template('my_library.html', records=records)
+
 
 @main.route('/library/search', methods=['GET'])
 def search_library():
