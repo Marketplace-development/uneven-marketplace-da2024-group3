@@ -82,12 +82,20 @@
       background: #ffe8dc;
       padding: 15px;
       margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center; /* Center content vertically */
       text-align: left;
       transition: transform 0.3s;
     }
 
     .listing:hover {
       transform: scale(1.02);
+    }
+
+    .listing .text-content {
+      flex: 1;
+      margin-right: 20px; /* Space between text and image */
     }
 
     .listing h3 {
@@ -100,6 +108,32 @@
       margin: 5px 0;
       font-size: 16px;
       color: #3d2b1f;
+    }
+
+    /* Image Styling */
+    .listing img {
+      max-height: 300px; /* Larger height */
+      width: auto;
+      object-fit: cover; /* Ensures the image fills the space without distorting */
+      margin-left: 20px;
+      border-radius: 8px; /* Optional: adds a little rounded corner */
+    }
+
+    /* Edit Button */
+    .edit-button {
+      padding: 10px 20px;
+      margin-left: 20px;
+      font-size: 16px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .edit-button:hover {
+      background-color: #f4b085;
     }
 
     /* Search Bar */
@@ -160,14 +194,21 @@
       <div id="listings-container">
         {% for record in records %}
           <div class="listing" data-albumname="{{ record['albumname'] }}" data-artist="{{ record['artist'] }}">
-            <h3>{{ record['albumname'] }}</h3>
-            <p><strong>Artist:</strong> {{ record['artist'] }}</p>
-            <p><strong>Genre:</strong> {{ record['genre'] }}</p>
-            <p><strong>Size:</strong> {{ record['size'] }}</p>
-            <p><strong>Condition:</strong> {{ record['condition'] }}</p>
-            <p><strong>Colour:</strong> {{ record['colour'] }}</p>
-            <p><strong>Description:</strong> {{ record['description'] }}</p>
-            <p><strong>Price:</strong> ${{ record['price'] }}</p>
+            <div class="text-content">
+              <h3>{{ record['albumname'] }}</h3>
+              <p><strong>Artist:</strong> {{ record['artist'] }}</p>
+              <p><strong>Genre:</strong> {{ record['genre'] }}</p>
+              <p><strong>Size:</strong> {{ record['size'] }}</p>
+              <p><strong>Condition:</strong> {{ record['condition'] }}</p>
+              <p><strong>Colour:</strong> {{ record['colour'] }}</p>
+              <p><strong>Description:</strong> {{ record['description'] }}</p>
+              <p><strong>Price:</strong> ${{ record['price'] }}</p>
+            </div>
+            <!-- Display image if available -->
+            {% if record['image_url'] %}
+              <img src="{{ record['image_url'] }}" alt="{{ record['albumname'] }}">
+            {% endif %}
+            <!-- Edit Button -->
             <button class="edit-button" onclick="location.href='/edit_1plaat/{{ record.recordid }}'">Edit</button>
           </div>
         {% endfor %}
@@ -198,4 +239,6 @@
 
 </body>
 </html>
+
+
 
