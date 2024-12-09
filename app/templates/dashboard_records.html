@@ -217,7 +217,28 @@
             height: 550px; /* Much taller button */
             background-size: cover; /* Ensure the background image fits well */
             background-position: center;
+            position: relative;
         }
+        .button-container button .tooltip {
+            display: none; /* Tooltip standaard verbergen */
+            position: absolute;
+            top: -40px; /* Plaats de tooltip boven de knop */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 10;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-container button:hover .tooltip {
+            display: block; /* Toon de tooltip bij hover */
+        }
+
         .library-text {
             font-size: 14px;  /* Kleinere tekst dan de knoptekst */
             color: white;   /* Zelfde kleur als de titel "Libraries" */
@@ -312,17 +333,18 @@
         <div class="button-container">
             <button class="libraries-btn" onclick="location.href='/library'">
                 <span>Libraries</span>
-                <p class="library-text">(Take a look at the collection of other users)</p>
+                <div class="tooltip">Take a look at collections from others</div>
             </button>
             <button class="add-sell-btn" onclick="location.href='/records'">
                 <span>Add/ Sell a record</span>
+                <div class="tooltip">Add a record to your collection and/or put it up for sale</div>
             </button>
             <button class="buy-record-btn" onclick="location.href='/transactions'">
                 <span>Buy a record</span>
+                <div class="tooltip">Buy records from other users</div>
             </button>
-        </div>
+        </div>        
     </div>
-    
 
     <script>
         const menuButton = document.getElementById("menuButton");
