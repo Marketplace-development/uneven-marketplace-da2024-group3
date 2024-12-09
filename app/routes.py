@@ -248,13 +248,13 @@ def koop_1plaat(recordid):
     seller = users.query.get(record.ownerid)
     if not seller:
         return "Seller not found", 404
+    
+    average_rating = db.session.query(func.avg(reviews.reviewscore)).join(transactions).filter(transactions.sellerid == seller.userid).scalar() or 0
+    average_rating = round(average_rating, 2)
 
     # Pass the seller's username and record details to the template
-    return render_template(
-        'koop_1plaat.html', 
-        record=record, 
-        seller_username=seller.username
-    )
+    return render_template('koop_1plaat.html', record=record, seller_username=seller.username, seller_rating=average_rating)
+
 
 @main.route('/create_transaction/<int:recordid>', methods=['POST'])
 def create_transaction(recordid):
