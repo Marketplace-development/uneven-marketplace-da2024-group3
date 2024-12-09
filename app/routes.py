@@ -47,28 +47,24 @@ def get_records():
 @main.route('/get_records_sellyes', methods=['GET'])
 def get_records_sellyes():
     try:
-        # Get the logged-in user's ID from the session
-        userid = session.get('userid')  
-
+        userid = session.get('userid')
         if not userid:
             return jsonify({"error": "User not logged in"}), 401
 
-        # Fetch all records from Supabase
         response = supabase.table('records').select('*').execute()
-
         if not response.data:
             return jsonify({"message": "No records found"}), 404
 
-        # Filter records where Sellyesorno is True and ownerid is not the logged-in user
-        filteredrecords = [
-            record for record in response.data 
-            if record.get('Sellyesorno') and record.get('ownerid') != userid
-        ]
+        # Filter records die te koop staan (Sellyesorno=True) en niet van de ingelogde gebruiker zijn
+        records_with_ratings = []
+        for record in response.data:
+            if record.get('Sellyesorno') and record.get('ownerid') != userid:
+                seller_id = record.get('ownerid')
+                average_rating = db.session.query(func.avg(reviews.reviewscore)).join(transactions).filter(transactions.sellerid == seller_id).scalar()
+                record['seller_rating'] = average_rating if average_rating else 0  # Stel standaard op 0 in als er geen beoordelingen zijn
+                records_with_ratings.append(record)
 
-        if filteredrecords:
-            return jsonify(filteredrecords), 200
-        else:
-            return jsonify({"message": "No matching records found"}), 404
+        return jsonify(records_with_ratings), 200
     except Exception as e:
         logging.error(f"Error fetching records: {e}")
         return jsonify({"error": "Unable to fetch records"}), 500
