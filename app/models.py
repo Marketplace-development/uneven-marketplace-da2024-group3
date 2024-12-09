@@ -63,11 +63,13 @@ class transactions(db.Model):
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid'), nullable=False)
     buyerid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
     sellerid = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), nullable = False)  # Database vult deze in
+    purchaseprice = db.Column(db.Float, nullable=False)  # Houdt de aankoopprijs bij
+    created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), nullable=False)  # Database vult deze in
     reviews = db.relationship('reviews', backref='transaction', lazy=True)
 
     def __repr__(self):
-        return f'transaction {self.transactionid}'
+        return f'transaction {self.transactionid}, purchase price: ${self.purchase_price}'
+
 
 
 
