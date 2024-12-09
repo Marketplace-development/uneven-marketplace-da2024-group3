@@ -232,7 +232,9 @@ def handle_transactions():
 @main.route('/logout', methods=['GET'])
 def logout():
     session.pop('username', None)  # Remove the username from the session
-    return redirect(url_for('main.index'))  # Redirect to login page
+    flash("You have successfully logged out.", "success")  # Flash the logout message
+    return redirect(url_for('main.overview_records'))  # Redirect to overview_records page
+
 
 @main.route('/library', methods=['GET'])
 def library_view():
