@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Details</title>
+  <title>Spinnback - Buy Record</title>
   <style>
     body {
       font-family: 'Georgia', serif;
@@ -17,11 +17,13 @@
       min-height: 100vh;
       color: #3d2b1f;
     }
+
     .top-right-button {
       position: absolute;
       top: 20px;
       right: 20px;
     }
+
     .button {
       padding: 10px 20px;
       background-color: #8c564b;
@@ -31,15 +33,19 @@
       font-size: 16px;
       cursor: pointer;
     }
+
     .button:hover {
       background-color: #5e3d2f;
     }
+
     .delete-button {
       background-color: #ff4d4d;
     }
+
     .delete-button:hover {
       background-color: #cc0000;
     }
+
     .container {
       background-color: #fff;
       padding: 20px;
@@ -49,39 +55,41 @@
       width: 90%;
       text-align: left;
     }
-    
+
     .content {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
-    
+
     .details {
       flex: 1;
       margin-right: 20px;
       display: flex; /* Activeer Flexbox */
       flex-direction: column; /* Stapel items verticaal */
       justify-content: center; /* Centreer items verticaal */
-      text-align: left; /* Houd de tekst links uitgelijnd */
+      text-align: left;
       height: 100%; /* Zorg ervoor dat de container de volledige hoogte benut */
-    }
-    .details p {
-      margin: 5px 0; /* Behoud compacte verticale marges tussen regels */
-    }
+      }
 
     .details p {
       margin: 5px 0; /* Verwijder marges van boven en onder de regels */
     }
-    
+
     .details strong {
-      display: inline-block; /* Dit maakt het mogelijk om ruimte toe te voegen */
+      display: inline-block;
       padding-right: 15px; /* Voeg ruimte toe tussen de benaming en de waarde */
       width: 120px; /* Eventueel een vaste breedte voor de labels */
     }
-    
-    
-    
-    
+
+    /* Seller rating en knop naast elkaar */
+    .seller-info {
+      display: flex; /* Zorg ervoor dat rating en knop naast elkaar staan */
+      align-items: center; /* Verticaal uitlijnen */
+      gap: 10px; /* Ruimte tussen rating en knop */
+    }
+
+/* Afbeelding rechts van de tekst */
     .image-container {
       display: flex;
       flex-direction: column;
@@ -89,7 +97,7 @@
       flex-shrink: 0; /* Zorg dat de afbeelding niet krimpt */
       margin-top: -20px; /* Verplaats afbeelding omhoog */
     }
-    
+
     .details-image {
       max-width: 300px;
       max-height: 300px;
@@ -97,31 +105,30 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .image-text {
       text-align: center; /* Centreer de tekst onder de afbeelding */
       margin-top: 10px; /* Ruimte tussen afbeelding en tekst */
     }
-    
+
     .album-name {
       font-size: 18px;
       font-weight: bold;
       color: #5a3a28;
       margin: 0;
     }
-    
+
     .artist-name {
       font-size: 16px;
-      font-weight: normal; /* Niet vetgedrukt */
-      color: #000; /* Zwart maken */
+      font-weight: normal;
+      color: #000;
       margin: 0;
       margin-top: 5px;
     }
-    
+
     h1 {
       color: #5a3a28;
     }
-    
 
     .rating-button {
       margin-left: 10px;
@@ -133,9 +140,11 @@
       cursor: pointer;
       font-size: 14px;
     }
+
     .rating-button:hover {
       background-color: #f4e9e2;
     }
+
     .alert {
       padding: 15px;
       background-color: #dff0d8;
@@ -144,6 +153,7 @@
       margin-bottom: 15px;
       border: 1px solid #d6e9c6;
     }
+
     .form {
       display: flex;
       justify-content: center;
@@ -162,7 +172,12 @@
 
   <div class="container">
     <div id="success-message" class="alert" style="display: none;">Vinyl Successfully Purchased!</div>
-    <h1>Details</h1>
+    
+    <!-- Title and Artist in one row -->
+    <div class="header-info">
+      <h1>{{ record.albumname }} - {{ record.artist }}</h1>
+    </div>
+    
     <div class="content">
       <div class="details">
         <p><strong>GENRE     </strong> {{ record.genre }}</p>
@@ -173,20 +188,23 @@
         </p>
         <p>
           <strong>SELLER   </strong> {{ seller_username }}
-          <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
-            View Seller Rating
-          </button>
         </p>
-      </div>
-      <div class="image-container">
-        <img src="{{ record.image }}" alt="{{ record.albumname }} cover" class="details-image">
-        <div class="image-text">
-          <p class="album-name">{{ record.albumname }}</p>
-          <p class="artist-name">{{ record.artist }}</p>
+        
+        <!-- Seller Rating and View Reviews Button in a flex container -->
+        <div class="seller-info">
+          <p><strong>SELLER RATING   </strong> {{ seller_rating }} / 5</p>  <!-- Show seller rating -->
+          <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
+            Watch Reviews
+          </button>
         </div>
       </div>
+      
+      <!-- Image on the right -->
+      <div class="image-container">
+        <img src="{{ record.image }}" alt="{{ record.albumname }} cover" class="details-image">
+      </div>
     </div>
-  
+    
     <!-- Buy Button -->
     <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form">
       <button type="submit" class="button delete-button">
@@ -194,9 +212,8 @@
       </button>
     </form>
     
-  
-  
-  </body>
+  </div>
+</body>
 </html>
 
 
