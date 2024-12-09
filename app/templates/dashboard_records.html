@@ -123,30 +123,34 @@
         .menu-dropdown {
             display: none;
             position: absolute;
-            top: 50px;          /* Plaats het dropdown-menu onder de top-bar */
-            right: 10px;        /* Zorg dat het menu tegen de rechterkant van de top-bar blijft */
+            top: 50px; /* Plaats het dropdown-menu onder de top-bar */
+            right: 10px; /* Zorg dat het menu tegen de rechterkant van de top-bar blijft */
             background-color: white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             overflow: hidden;
             z-index: 1000;
-            min-width: 100px;
+            min-width: 120px; /* Zorg voor een bredere dropdown */
+            padding: 5px 0; /* Voeg ruimte tussen items toe */
         }
-        
+
         /* Actieve dropdown-weergave */
         .menu-dropdown.active {
             display: block;
         }
-        
+
         /* Dropdown-item styling */
         .menu-item {
-            padding: 10px 20px;
+            padding: 10px 15px; /* Meer padding voor een betere klikbare ruimte */
             font-size: 14px;
             color: #333;
             text-align: left;
+            text-decoration: none;
+            display: block; /* Zorgt ervoor dat items onder elkaar staan */
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        
+
         .menu-item:hover {
             background-color: #f1f1f1;
         }
@@ -287,10 +291,13 @@
             <div></div>
         </div>
         <div id="menuDropdown" class="menu-dropdown">
-            <div class="menu-item" onclick="logout()">My Profile</div>
-            <div class="menu-item" onclick="logout()">Log Out</div>
+            <!-- Link naar My Profile -->
+            <a href="{{ url_for('main.my_profile') }}" class="menu-item">My Profile</a>
+            <!-- Link naar Logout -->
+            <a href="{{ url_for('main.logout') }}" class="menu-item">Log Out</a>
         </div>
     </div>
+    
 
     <div class="nav-links">
         <a href="/my_library" class="nav-link">My Library</a>
