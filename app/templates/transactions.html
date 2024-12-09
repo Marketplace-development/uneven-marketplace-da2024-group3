@@ -1,4 +1,3 @@
-HTML TRANSACTIONS
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,6 +76,7 @@ HTML TRANSACTIONS
             background-color: #fff;
             padding: 20px;
         }
+   
     
         /* Nieuwe CSS voor de grid van #listings-container */
         #listings-container {
@@ -92,6 +92,14 @@ HTML TRANSACTIONS
             padding: 15px;
             text-align: center; /* Optioneel: nette uitlijning */
         }
+
+        .artist {
+            font-weight: bold; /* Vetgedrukt maken */
+            font-size: 18px;   /* Groter dan gewone tekst */
+            margin: 5px 0;     /* Ruimte toevoegen rond de tekst */
+            color: #333;       /* Donkere kleur voor contrast */
+        }
+        
     
         .listing {
             position: relative;
@@ -232,28 +240,39 @@ HTML TRANSACTIONS
             z-index: 2;
             border-radius: 5px;
         }
-        #recommendations-container {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            background-color: #fde9e1;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
 
-        #recommendations-container h2 {
-            margin: 0 0 10px 0;
-            color: #8b5d47;
+        .divider {
+            border: none; /* Verwijder standaard rand */
+            height: 5px; /* Dikte van de lijn */
+            background-color: #8b5d47; /* Bruine kleur die consistent is met de header */
+            margin: 20px 0; /* Ruimte boven en onder de lijn */
         }
-
+        
+        #recommendations {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Drie gelijke kolommen */
+            gap: 20px; /* Ruimte tussen de items */
+            padding: 10px; /* Ruimte rondom de grid */
+        }
+        
         #recommendations .recommendation {
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #fde9e1;
-            position: relative; /* Voor absolute positionering van de ster */
+            background-color: #fde9e1; /* Achtergrondkleur voor elke aanbeveling */
+            border: 1px solid #ddd; /* Lichte rand */
+            border-radius: 5px; /* Afgeronde hoeken */
+            padding: 15px;
+            text-align: center; /* Uitlijning van de inhoud */
+            display: flex;
+            flex-direction: column; /* Zorg dat inhoud netjes gestapeld is */
+            align-items: center; /* Centreer de inhoud horizontaal */
         }
+        
+        #recommendations .recommendation img {
+            max-width: 100%; /* Zorg dat afbeeldingen responsief zijn */
+            height: auto; /* Houd de verhouding van afbeeldingen */
+            margin-bottom: 10px; /* Ruimte onder de afbeelding */
+            border-radius: 5px; /* Afgeronde hoeken */
+        }
+        
 
         #recommendations .favorite-button {
             position: absolute;
@@ -272,15 +291,39 @@ HTML TRANSACTIONS
         }
 
         .recommendation {
+            position: relative; /* Zorgt ervoor dat de favorietenknop binnen het kader kan worden gepositioneerd */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #fde9e1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .recommendation-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #fde9e1;
+            gap: 20px;
         }
+        
+        .recommendation-details {
+            text-align: left;
+            flex: 1;
+        }
+        
+        .recommendation-details p {
+            margin: 5px 0; /* Ruimte tussen regels */
+            font-size: 16px; /* Standaard tekstgrootte */
+        }
+        
+        .recommendation-image {
+            max-width: 150px;
+            height: auto;
+            border-radius: 5px;
+        }
+        
         
         .recommendation img {
             max-width: 120px;
@@ -291,18 +334,32 @@ HTML TRANSACTIONS
         }
         
 
+        
+        .recommendation-details .albumname {
+            font-weight: bold; /* Maak albumnaam vetgedrukt */
+            font-size: 18px; /* Iets grotere tekstgrootte voor de albumnaam */
+        }
+        
+        .recommendation-details .artist {
+            font-weight: bold; /* Maak de artiest vetgedrukt */
+            font-size: 16px; /* Iets kleiner dan albumnaam */
+        }
+        
+        .recommendation-details .genre, .recommendation-details .condition {
+            font-size: 14px; /* Iets kleinere tekstgrootte voor overige attributen */
+            color: #555; /* Lichtere kleur voor visuele hiërarchie */
+        }
+        
         .favorite-button {
-            position: absolute;
-            top: 10px;    /* Afstand vanaf de bovenkant */
-            right: 10px;  /* Afstand vanaf de rechterkant */
             background: none;
             border: none;
-            color: #ccc;  /* Neutrale kleur voor inactieve ster */
+            color: #ccc; /* Neutrale kleur voor inactieve ster */
             font-size: 24px;
             cursor: pointer;
             transition: color 0.3s;
+            margin-top: 10px; /* Ruimte boven de knop */
         }
-
+        
         .favorite-button.active {
             color: #ffc107; /* Gekleurde ster voor actieve favorieten */
         }
@@ -388,10 +445,13 @@ HTML TRANSACTIONS
                     <p>Loading recommendations...</p>
                 </div>
             </div>            
-            
+            <hr class="divider">
             <div id="listings-container">
-                <p>Loading listings...</p>
+                <div id="listings-container">
+                    <p>Loading listings...</p>
+                </div>
             </div>
+            
         </div>
     </div>
     <script>
@@ -445,10 +505,11 @@ HTML TRANSACTIONS
                 ? listings.map(listing => `
                     <div class="listing">
                         <img src="${listing.image}" alt="${listing.albumname} cover" style="width:100px; height:auto; border-radius:5px; margin-bottom:10px;">
-                        <h2>${listing.albumname} - ${listing.artist}</h2>
-                        <p>Genre: ${listing.genre}</p>
-                        <p>Price: €${listing.price}</p>
-                        <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now</button>
+                        <h2>${listing.albumname}</h2>
+                        <p class="artist">${listing.artist}</p>
+                        <p>${listing.genre}</p>
+                        <p>Condition: ${listing.condition}</p>
+                        <button class="buy-button" onclick="buyRecord('${listing.recordid}')">Buy Now - €${listing.price}</button>
                         <button 
                             class="favorite-button ${listing.isFavorite ? 'active' : ''}" 
                             onclick="toggleFavorite('${listing.recordid}', this)">
@@ -458,6 +519,9 @@ HTML TRANSACTIONS
                 `).join('')
                 : '<p>No results found.</p>';
         }
+        
+        
+        
         
 
         function toggleFavorite(recordId, buttonElement) {
@@ -588,22 +652,28 @@ HTML TRANSACTIONS
             recommendationsContainer.innerHTML = recommendations.length
                 ? recommendations.map(rec => `
                     <div class="recommendation">
-                        <div>
-                            <h3>${rec.albumname} - ${rec.artist}</h3>
-                            <p>Genre: ${rec.genre}</p>
-                            <p>Price: €${rec.price}</p>
-                            <button class="buy-button" onclick="buyRecord('${rec.recordid}')">Buy Now</button>
-                            <button 
-                                class="favorite-button ${favoriteIds.has(rec.recordid) ? 'active' : ''}" 
+                        <button class="favorite-button ${favoriteIds.has(rec.recordid) ? 'active' : ''}" 
                                 onclick="toggleFavorite('${rec.recordid}', this)">
-                                ☆
-                            </button>
+                            ☆
+                        </button>
+                        <div class="recommendation-content">
+                            <div class="recommendation-details">
+                                <p class="albumname">${rec.albumname}</p>
+                                <p class="artist">${rec.artist}</p>
+                                <p class="genre">${rec.genre}</p>
+                                <p class="condition">Condition: ${rec.condition}</p>
+                            </div>
+                            <img src="${rec.image}" alt="${rec.albumname} cover" class="recommendation-image">
                         </div>
-                        <img src="${rec.image}" alt="${rec.albumname} cover">
+                        <button class="buy-button" onclick="buyRecord('${rec.recordid}')">Buy Now - €${rec.price}</button>
                     </div>
                 `).join('')
                 : '<p>No recommendations available.</p>';
         }
+        
+        
+        
+        
         
         
 
