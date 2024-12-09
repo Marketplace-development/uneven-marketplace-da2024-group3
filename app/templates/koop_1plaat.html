@@ -45,20 +45,84 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      max-width: 500px;
+      max-width: 800px;
       width: 90%;
+      text-align: left;
     }
+    
+    .content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .details {
+      flex: 1;
+      margin-right: 20px;
+      display: flex; /* Activeer Flexbox */
+      flex-direction: column; /* Stapel items verticaal */
+      justify-content: center; /* Centreer items verticaal */
+      text-align: left; /* Houd de tekst links uitgelijnd */
+      height: 100%; /* Zorg ervoor dat de container de volledige hoogte benut */
+    }
+    .details p {
+      margin: 5px 0; /* Behoud compacte verticale marges tussen regels */
+    }
+
+    .details p {
+      margin: 5px 0; /* Verwijder marges van boven en onder de regels */
+    }
+    
+    .details strong {
+      display: inline-block; /* Dit maakt het mogelijk om ruimte toe te voegen */
+      padding-right: 15px; /* Voeg ruimte toe tussen de benaming en de waarde */
+      width: 120px; /* Eventueel een vaste breedte voor de labels */
+    }
+    
+    
+    
+    
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Centreer afbeelding en tekst */
+      flex-shrink: 0; /* Zorg dat de afbeelding niet krimpt */
+      margin-top: -20px; /* Verplaats afbeelding omhoog */
+    }
+    
+    .details-image {
+      max-width: 300px;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .image-text {
+      text-align: center; /* Centreer de tekst onder de afbeelding */
+      margin-top: 10px; /* Ruimte tussen afbeelding en tekst */
+    }
+    
+    .album-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #5a3a28;
+      margin: 0;
+    }
+    
+    .artist-name {
+      font-size: 16px;
+      font-weight: normal; /* Niet vetgedrukt */
+      color: #000; /* Zwart maken */
+      margin: 0;
+      margin-top: 5px;
+    }
+    
     h1 {
       color: #5a3a28;
     }
-    .details {
-      text-align: left;
-      margin-top: 15px;
-    }
-    .details p {
-      margin: 5px 0;
-    }
+    
+
     .rating-button {
       margin-left: 10px;
       background-color: white;
@@ -85,6 +149,9 @@
       justify-content: center;
       margin-top: 20px;
     }
+
+    
+    
   </style>
 </head>
 <body>
@@ -96,26 +163,38 @@
   <div class="container">
     <div id="success-message" class="alert" style="display: none;">Vinyl Successfully Purchased!</div>
     <h1>Details</h1>
-    <div class="details">
-      <p><strong>Albumname:</strong> {{ record.albumname }}</p>
-      <p><strong>Artist:</strong> {{ record.artist }}</p>
-      <p><strong>Genre:</strong> {{ record.genre }}</p>
-      <p><strong>State:</strong> {{ record.condition }}</p>
-      <p><strong>Color:</strong> {{ record.colour }}</p>
-      <p><strong>Description:</strong> {{ record.description }}</p>
-      <p><strong>Price:</strong> €{{ record.price }}</p>
-      <p>
-        <strong>Seller:</strong> {{ seller_username }}
-        <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
-          View Seller Rating
-        </button>
-      </p>
+    <div class="content">
+      <div class="details">
+        <p><strong>GENRE     </strong> {{ record.genre }}</p>
+        <p><strong>CONDITION     </strong> {{ record.condition }}</p>
+        <p><strong>COLOR   </strong> {{ record.colour }}</p>
+        <p><strong>DESCRIPTION   </strong> 
+          {{ record.description if record.description else "No description provided by seller" }}
+        </p>
+        <p>
+          <strong>SELLER   </strong> {{ seller_username }}
+          <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
+            View Seller Rating
+          </button>
+        </p>
+      </div>
+      <div class="image-container">
+        <img src="{{ record.image }}" alt="{{ record.albumname }} cover" class="details-image">
+        <div class="image-text">
+          <p class="album-name">{{ record.albumname }}</p>
+          <p class="artist-name">{{ record.artist }}</p>
+        </div>
+      </div>
     </div>
-
+  
     <!-- Buy Button -->
     <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form">
-      <button type="submit" class="button delete-button">Buy</button>
+      <button type="submit" class="button delete-button">
+        Buy - €{{ record.price }}
+      </button>
     </form>
+    
+  
   
   </body>
 </html>
