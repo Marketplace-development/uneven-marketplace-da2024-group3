@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input/build/css/intlTelInput.min.css">
     <style>
         /* Global Styles */
         body {
@@ -100,12 +101,13 @@
             padding: 12px;
             margin: 10px 0;
             border-radius: 10px; /* Rounded borders */
-            border: 2px solid #ccc; /* Light gray border */
             font-size: 16px;
-            background-color: #f9f9f9;
+            background-color: #f5f5f5e3;
             text-align: center; /* Centreer tekst binnen de invoervelden */
             box-sizing: border-box; /* Zorg dat padding geen breedte toevoegt */
             transition: all 0.3s ease-in-out; /* Smooth transition for focus */
+            border: none; /* Verwijder de borders */
+            box-shadow: none; /* Verwijder de schaduwen */
         }
 
         input[type="text"]:focus,
@@ -116,6 +118,21 @@
             outline: none;
             box-shadow: 0 0 5px rgba(140, 86, 75, 0.6); /* Focus shadow effect */
         }
+
+        /* Verbreedt de telefoonnummer invoer naar 100% */
+        input[type="tel"] {
+            width: 90%; /* Zelfde breedte als de andere velden */
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px; /* Rounded borders */
+            border: 2px solid #ccc; /* Light gray border */
+            font-size: 16px;
+            background-color: #f9f9f9;
+            text-align: center; /* Centreer tekst binnen de invoervelden */
+            box-sizing: border-box; /* Zorg dat padding geen breedte toevoegt */
+            transition: all 0.3s ease-in-out; /* Smooth transition for focus */
+        }
+        
 
         /* Button Styles */
         button {
@@ -129,6 +146,7 @@
             font-size: 16px;
             font-weight: bold;
             transition: background-color 0.3s, transform 0.3s;
+            margin-top: 20px;
         }
 
         button:hover {
@@ -155,6 +173,30 @@
         a:hover {
             text-decoration: underline;
         }
+
+        /* Zorg dat de .iti-container hetzelfde gedrag heeft */
+        .iti {
+            width: 90%; /* Match de breedte van andere velden */
+        }
+
+        .iti input[type="tel"] {
+            width: 100%; /* Vul de volledige breedte van de container */
+            padding: 12px;
+            margin: 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Zorg dat padding geen breedte toevoegt */
+            background-color: #f9f9f9;
+        }
+
+        /* Aanpassen van de dropdown */
+        .iti__flag-container {
+            margin-right: 8px; /* Ruimte tussen dropdown en input */
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -185,14 +227,37 @@
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="text" name="address" placeholder="Address" required>
-            <input type="tel" name="telefoonnummer" placeholder="vb: +32470 88 67 34" required>
+            
+            <!-- Landcode en Telefoonnummer -->    
+            <input type="tel" id="phone" name="telefoonnummer" placeholder="Phone number" required>
+            
+            <!-- Register button -->
             <button type="submit">Register</button>
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/intlTelInput.min.js"></script>
+
+    <!-- Script om intl-tel-input te initialiseren -->
+    <script>
+        var input = document.querySelector("#phone");
+        var iti = window.intlTelInput(input, {
+            separateDialCode: true,
+            preferredCountries: ['be', 'us', 'gb'],
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/utils.js"
+        });
+    
+        // Sla de landcode op in een verborgen veld bij het verzenden van het formulier
+        var form = document.querySelector("form");
+        var hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "country_code";
+        form.appendChild(hiddenInput);
+    
+        form.addEventListener("submit", function () {
+            hiddenInput.value = iti.getSelectedCountryData().dialCode;
+        });
+    </script>
+
 </body>
 </html>
-
-
-
-
