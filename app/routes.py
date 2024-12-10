@@ -43,6 +43,20 @@ def get_records():
     except Exception as e:
         logging.error(f"Error fetching records: {e}")
         return jsonify({"error": "Unable to fetch records"}), 500
+    
+@main.route('/save_text', methods=['POST'])
+def save_text():
+    try:
+        data = request.get_json()
+        text = data.get('text', '')
+
+        # Voeg logica toe om de tekst op te slaan in de database of een bestand
+        print(f'Tekst ontvangen: {text}')  # Voor debugging
+        return jsonify({"success": True, "message": "Tekst succesvol opgeslagen."}), 200
+    except Exception as e:
+        logging.error(f"Error saving text: {e}")
+        return jsonify({"success": False, "message": "Fout bij opslaan van tekst."}), 500
+
 
 @main.route('/get_records_sellyes', methods=['GET'])
 def get_records_sellyes():
