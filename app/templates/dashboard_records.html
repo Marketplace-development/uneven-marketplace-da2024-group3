@@ -293,6 +293,17 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        /* Styling for flash message */
+        .flash-message {
+            background-color: #c1dec8;
+            color: #2f721c;
+            padding: 10px;
+            text-align: center;
+            margin: 20px auto;
+            border-radius: 5px;
+            max-width: 80%;
+        }
     </style>
 </head>
 <body>
@@ -327,6 +338,17 @@
         <a href="/my_sold_records" class="nav-link">My Sold Records</a>
         <a href="/my_rating" class="nav-link">My Rating</a>
     </div>
+
+    <!-- Flash message block -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-message">
+                {% for category, message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <!-- Listings Section -->
     <div class="listing-container">
@@ -372,6 +394,18 @@
             }
         });
 
+        
+            // Functie om de flashmelding na 3 seconden te verbergen
+        window.addEventListener('load', function() {
+            const flashMessage = document.querySelector('.flash-message');
+            if (flashMessage) {
+                setTimeout(function() {
+                    flashMessage.style.display = 'none';
+                }, 3000); // 3000 milliseconden = 3 seconden
+            }
+        });
+    
+        
         async function fetchUsername() {
             try {
                 const response = await fetch('/get_username');
