@@ -1,189 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Profile</title>
-  <style>
-    body {
-      font-family: 'Georgia', serif;
-      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      color: #3d2b1f;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input/build/css/intlTelInput.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            color: #3d2b1f;
+        }
 
-    .top-bar {
-      width: 100%;
-      background-color: #8c564b;
-      color: white;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
+        /* Stijl voor de foutmelding */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
 
-    .top-bar h1 {
-      margin: 0;
-      font-size: 24px;
-      font-family: 'Trebuchet MS', sans-serif;
-    }
+        /* Top Navigation Bar */
+        .top-bar {
+            width: 100%;
+            background-color: #8c564b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
 
-    .top-bar button {
-      padding: 8px 12px;
-      background-color: #ffe5d9;
-      color: #8c564b;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      margin-left: 8px;
-      transition: background-color 0.3s;
-    }
+        .top-bar h1 {
+            margin: 0;
+            margin-left: 40px;
+            font-size: 24px;
+            font-family: 'Trebuchet MS', sans-serif;
+        }
 
-    .top-bar button:hover {
-      background-color: #fdd0b5;
-    }
+        .top-bar button {
+            background-color: #fcfcfc; /* Beige achtergrond */
+            color: #8c564b; /* Bruine tekst */
+            border: 2px solid #8c564b; /* Bruine rand */
+            border-radius: 8px;
+            padding: 5px 15px; /* Ruimte rond de tekst */
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap; /* Zorgt ervoor dat tekst op één lijn blijft */
+            margin-right: 40px; /* Rechtermarge voor uitlijning */
+            width: auto; /* Breedte past zich aan inhoud aan */
+            transition: background-color 0.3s, transform 0.3s;
+        }
+    
+        .top-bar button:hover {
+            background-color: #fdd0b5;
+            transform: scale(1.05);
+        }
 
-    .container {
-      width: 90%;
-      max-width: 600px;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-      margin-top: 20px;
-    }
+        /* Register Form */
+        .form-container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin-top: 20px;
+            text-align: center;
+        }
 
-    h2 {
-      text-align: center;
-      color: #5a3a28;
-    }
+        .form-container h1 {
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #5a3a28;
+        }
 
-    .form-group {
-      margin-bottom: 15px;
-    }
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centrerende uitlijning */
+            width: 100%;
+        }
 
-    .label {
-      font-weight: bold;
-      margin-bottom: 5px;
-      display: block;
-    }
+        /* Input Styles */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 90%; /* Zorgt ervoor dat het mooi binnen het kader blijft */
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px; /* Rounded borders */
+            font-size: 16px;
+            background-color: #f5f5f5e3;
+            text-align: center; /* Centreer tekst binnen de invoervelden */
+            box-sizing: border-box; /* Zorg dat padding geen breedte toevoegt */
+            transition: all 0.3s ease-in-out; /* Smooth transition for focus */
+            border: none; /* Verwijder de borders */
+            box-shadow: none; /* Verwijder de schaduwen */
+        }
 
-    .readonly-text {
-      background-color: #f4f4f4;
-      border: 1px solid #ddd;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      color: #555;
-      cursor: not-allowed;
-    }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus {
+            border-color: #8c564b; /* Darker border color on focus */
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(140, 86, 75, 0.6); /* Focus shadow effect */
+        }
 
-    input {
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #8c564b;
-      border-radius: 5px;
-      width: 100%;
-    }
+        /* Verbreedt de telefoonnummer invoer naar 100% */
+        input[type="tel"] {
+            width: 90%; /* Zelfde breedte als de andere velden */
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px; /* Rounded borders */
+            border: 2px solid #ccc; /* Light gray border */
+            font-size: 16px;
+            background-color: #f9f9f9;
+            text-align: center; /* Centreer tekst binnen de invoervelden */
+            box-sizing: border-box; /* Zorg dat padding geen breedte toevoegt */
+            transition: all 0.3s ease-in-out; /* Smooth transition for focus */
+        }
+        
 
-    button {
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #8c564b;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      width: 100%;
-    }
+        /* Button Styles */
+        button {
+            width: 90%; /* Match de breedte van de inputvelden */
+            padding: 12px;
+            background-color: #8c564b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 20px;
+        }
 
-    button:hover {
-      background-color: #f4b085;
-    }
-    .flash-message {
-        padding: 15px;
-        margin: 0 auto 20px auto; /* Plaatsing direct onder de top bar */
-        max-width: 800px;
-        text-align: center;
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: bold;
-        color: #8c564b; /* Witte tekst om goed af te steken tegen het bruine achtergrond */
-        background-color: #ffffffee; /* Bruine achtergrondkleur */
-        border: 1px solid #8c564b; /* Zelfde kleur voor de rand */
-        position: absolute; /* Maak de flash-melding absoluut */
-        top: 80px; /* Zorg ervoor dat het onder de top bar komt */
-        left: 50%;
-        transform: translateX(-50%); /* Centreer de flash-melding horizontaal */
-        display: none; /* Begin verborgen */
-    }
-  </style>
+        button:hover {
+            background-color: #fdd0b5;
+            transform: scale(1.05); /* Slight scale effect on hover */
+        }
+
+        /* Back Link */
+
+        p {
+            display: inline;
+            margin: 0;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #8c564b;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Zorg dat de .iti-container hetzelfde gedrag heeft */
+        .iti {
+            width: 90%; /* Match de breedte van andere velden */
+        }
+
+        .iti input[type="tel"] {
+            width: 100%; /* Vul de volledige breedte van de container */
+            padding: 12px;
+            margin: 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Zorg dat padding geen breedte toevoegt */
+            background-color: #f9f9f9;
+        }
+
+        /* Aanpassen van de dropdown */
+        .iti__flag-container {
+            margin-right: 8px; /* Ruimte tussen dropdown en input */
+        }
+
+        /* Address Group Styles */
+        .address-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        /* Styling for individual address parts */
+        .address-part {
+            width: 48%; /* Zorg ervoor dat de velden netjes naast elkaar komen */
+        }
+
+        h3 {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #060403; /* Zelfde kleur als de hoofdtekst */
+            text-align: center; /* Zorgt ervoor dat de titel links uitgelijnd is */
+            width: 100%;
+            margin-top: 40px;
+        }
+
+    </style>
 </head>
 <body>
-    <!-- Flash Message -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash-message flash-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-  <div class="top-bar">
-    <h1>Spinnback - My Profile</h1>
-    <div>
-      <button onclick="location.href='/dashboard'">Go to Dashboard</button>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>Spinnback</h1>
+        <button onclick="location.href='/dashboard'">Back to Home</button>
     </div>
-  </div>
-  <div class="container">
-    <h2>Edit Profile</h2>
-    <form method="POST">
-      <div class="form-group">
-        <label class="label">Username</label>
-        <div class="readonly-text">{{ user.username }}</div>
-      </div>
 
-      <div class="form-group">
-        <label class="label" for="email">Email</label>
-        <input type="email" id="email" name="email" value="{{ user.email }}" required>
-      </div>
+    <!-- EDIT Form Section -->
+    <div class="form-container">
+      <h1>EDIT PROFILE</h1>
 
-      <div class="form-group">
-        <label class="label" for="address">Address</label>
-        <input type="text" id="address" name="address" value="{{ user.address }}">
-      </div>
+        
+        <!-- Error Messages -->
+        {% if errors %}
+            <div class="error-message">
+                {% for error in errors %}
+                    <p>{{ error }}</p>  <!-- Toon elke foutmelding apart -->
+                {% endfor %}
+            </div>
+        {% endif %}
 
-      <div class="form-group">
-        <label class="label" for="phone">Phone Number</label>
-        <input type="text" id="phone" name="phone" value="{{ user.telefoonnummer }}">
-      </div>
+        <!-- Form -->
+        <form method="POST" action="{{ url_for('main.my_profile') }}">
+          <!-- Username - Niet aanpasbaar -->
+          <input type="text" name="username_display" placeholder="Username" value="{{ user.username }}" disabled>
 
-      <button type="submit">Save Changes</button>
-    </form>
-  </div>
-<script>
-    window.addEventListener('load', () => {
-        const flashMessages = document.querySelectorAll('.flash-message');
-        flashMessages.forEach(msg => {
-            msg.style.display = 'block'; // Maak zichtbaar
-            setTimeout(() => {
-                msg.style.display = 'none'; // Verberg na 5 seconden
-            }, 5000); // 5000 milliseconden = 5 seconden
+          <!-- Verborgen veld om de username door te sturen -->
+          <input type="hidden" name="username" value="{{ user.username }}">
+
+          <input type="email" name="email" placeholder="Email" value="{{ user.email }}" required>
+      
+          <!-- Phone Number -->
+          <input type="tel" id="phone" name="telefoonnummer" placeholder="Phone number" value="{{ user.telefoonnummer }}" required>
+      
+          <!-- Address Group -->
+          <h3>Address</h3>
+          <div class="address-group">
+              <div class="address-part">
+                  <input type="text" name="street" placeholder="Street" value="{{ user.street }}" required>
+              </div>
+              <div class="address-part">
+                  <input type="text" name="nr" placeholder="Nr." value="{{ user.nr }}" required>
+              </div>
+          </div>
+      
+          <div class="address-group">
+              <div class="address-part">
+                  <input type="text" name="postal_code" placeholder="Postal Code" value="{{ user.postal_code }}" required>
+              </div>
+              <div class="address-part">
+                  <input type="text" name="city" placeholder="City" value="{{ user.city }}" required>
+              </div>
+          </div>
+      
+          <input type="text" name="country" placeholder="Country" value="{{ user.country }}" required>
+      
+          <!-- Register Button -->
+          <button type="submit">Save Changes</button>
+      </form>
+      
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/intlTelInput.min.js"></script>
+
+    <!-- Script om intl-tel-input te initialiseren -->
+    <script>
+        var input = document.querySelector("#phone");
+        var iti = window.intlTelInput(input, {
+            separateDialCode: true,
+            preferredCountries: ['be', 'us', 'gb'],
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/utils.js"
         });
-    });
-</script>
+    
+        // Sla de landcode op in een verborgen veld bij het verzenden van het formulier
+        var form = document.querySelector("form");
+        var hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "country_code";
+        form.appendChild(hiddenInput);
+    
+        form.addEventListener("submit", function () {
+            hiddenInput.value = iti.getSelectedCountryData().dialCode;
+        });
+    </script>
 
 </body>
 </html>
