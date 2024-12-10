@@ -914,21 +914,58 @@ def my_profile():
     if not user:
         return "User not found", 404
 
+    logging.debug(f"User object: {user}")
+
+    # Ontleed het adres
+    street, nr, postal_code, city, country = '', '', '', '', ''
+    if user.address:
+        try:
+            address_parts = user.address.split(' - ')
+            if len(address_parts) >= 3:
+                street_and_nr = address_parts[0].rsplit(' ', 1)
+                street = street_and_nr[0]
+                nr = street_and_nr[1]
+
+                postal_and_city = address_parts[1].split(' ', 1)
+                postal_code = postal_and_city[0]
+                city = postal_and_city[1]
+
+                country = address_parts[2]
+            else:
+                logging.error("Address format incorrect.")
+        except Exception as e:
+            logging.error(f"Error processing address: {e}")
+
+    # Zet adrescomponenten in user
+    user.street = street
+    user.nr = nr
+    user.postal_code = postal_code
+    user.city = city
+    user.country = country
+
     if request.method == 'POST':
+        user.username = request.form.get('username', user.username)
         user.email = request.form.get('email', user.email)
-        user.address = request.form.get('address', user.address)
-        user.telefoonnummer = request.form.get('phone', user.telefoonnummer)
+
+        country_code = request.form.get('country_code').strip()  # Bijvoorbeeld "+32"
+        phone_number = request.form.get('telefoonnummer')  # Bijvoorbeeld "471740328"
+        full_phone_number = f"+{country_code}{phone_number}"
+        logging.debug(f"Full phone number: {full_phone_number}")
+        user.telefoonnummer = full_phone_number
+
+        # Combineer adres tot string
+        street = request.form.get('street')
+        nr = request.form.get('nr')
+        postal_code = request.form.get('postal_code')
+        city = request.form.get('city')
+        country = request.form.get('country')
+
+        user.address = f"{street} {nr} - {postal_code} {city} - {country}"
 
         try:
             db.session.commit()
-            
-            # Update session values
-            session['email'] = user.email
-            session['address'] = user.address
-            session['telefoonnummer'] = user.telefoonnummer
-            
             flash("Profile updated successfully.", "success")
-            return redirect(url_for('main.my_profile'))
+            return redirect(url_for('main.dashboard'))
         except Exception as e:
             logging.error(f"Error updating profile: {e}")
             return "Error updating profile", 500
