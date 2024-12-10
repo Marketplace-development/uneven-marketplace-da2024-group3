@@ -89,7 +89,15 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         address = request.form.get('address')
-        telefoonnummer = request.form.get('telefoonnummer')
+        country_code = request.form.get('country_code', '').strip()  # Default naar een lege string als dit veld ontbreekt
+        telefoonnummer = request.form.get('telefoonnummer', '').strip()  # Default naar een lege string
+
+        full_phone_number = None  # Initialiseer met een standaardwaarde
+        
+        if country_code and telefoonnummer:  # Controleer dat beide aanwezig zijn
+            full_phone_number = f"+{country_code}{telefoonnummer}"
+        else:
+            full_phone_number = "Unknown"  # Alternatieve waarde als er geen invoer is
 
         errors = []
 
@@ -101,12 +109,16 @@ def register():
         if users.query.filter_by(email=email).first():
             errors.append("There is already an existing account for this email address.")
 
+        # Voeg een fout toe als telefoonnummer niet correct is
+        if not full_phone_number or full_phone_number == "Unknown":
+            errors.append("Invalid phone number or country code.")
+
         # Als er fouten zijn, toon ze
         if errors:
             return render_template("register.html", errors=errors)
 
         # Maak een nieuwe gebruiker aan
-        new_user = users(username=username, email=email, address=address, telefoonnummer=telefoonnummer)
+        new_user = users(username=username, email=email, address=address, telefoonnummer=full_phone_number)
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -115,9 +127,11 @@ def register():
             flash("Welcome! You've registered your Spinnback account. You can now login with your username.", "success")
             return redirect(url_for('main.login'))  # Verwijs naar de loginpagina
         except Exception as e:
-            return render_template("register.html", errors=[f"Fout bij registratie: {str(e)}"])
+            return render_template("register.html", errors=[f"Error during registration: {str(e)}"])
 
     return render_template("register.html")
+
+
 
 
     
@@ -429,6 +443,7 @@ def get_my_purchases():
         seller = users.query.get(transaction.sellerid)  # Haal de verkoper op met de ID
         if record and seller:
             image_url = record.image if record.image else None
+            formatted_date = transaction.created_at.strftime('%Y-%m-%d %H:%M:%S')
             purchases_data.append({
                 "transaction_id": transaction.transactionid,
                 "record_id": record.recordid,
@@ -436,7 +451,7 @@ def get_my_purchases():
                 "artist": record.artist,
                 "condition": record.condition,
                 "purchase_price": transaction.purchaseprice,
-                "date": transaction.created_at,
+                "date": formatted_date,
                 "image_url": image_url,
                 "seller_name": seller.username,
                 "seller_email": seller.email,
@@ -476,6 +491,7 @@ def my_sold_records():
         buyer = users.query.get(transaction.buyerid)  # Haal de koperinformatie op
         if record and buyer:
             image_url = record.image if record.image else None  # Haal afbeelding op als deze bestaat
+            formatted_date = transaction.created_at.strftime('%Y-%m-%d %H:%M:%S')
             sold_records_data.append({
                 "transaction_id": transaction.transactionid,
                 "record_id": record.recordid,
@@ -483,7 +499,7 @@ def my_sold_records():
                 "artist": record.artist,
                 "condition": record.condition,
                 "price": transaction.purchaseprice,
-                "date_sold": transaction.created_at,  # Datum van de transactie
+                "date_sold": formatted_date,  # Datum van de transactie
                 "image_url": image_url,  # Voeg de afbeelding toe
                 "buyer_name": buyer.username,  # Naam van de koper
                 "buyer_email": buyer.email,  # E-mailadres van de koper
