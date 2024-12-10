@@ -88,7 +88,17 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
-        address = request.form.get('address')
+        
+        # Verkrijg de afzonderlijke adresvelden
+        street = request.form.get('street')
+        nr = request.form.get('nr')
+        postal_code = request.form.get('postal_code')
+        city = request.form.get('city')
+        country = request.form.get('country')
+        
+        # Combineer de adresvelden tot de gewenste stringindeling
+        address = f"{street} {nr} - {postal_code} {city} - {country}"
+
         country_code = request.form.get('country_code', '').strip()  # Default naar een lege string als dit veld ontbreekt
         telefoonnummer = request.form.get('telefoonnummer', '').strip()  # Default naar een lege string
 
@@ -130,8 +140,6 @@ def register():
             return render_template("register.html", errors=[f"Error during registration: {str(e)}"])
 
     return render_template("register.html")
-
-
 
 
     
