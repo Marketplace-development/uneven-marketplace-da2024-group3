@@ -129,6 +129,21 @@
         .search-container.with-flash {
             margin-top: 60px; /* Adjust this value as necessary */
         }
+
+        .buyer-info {
+            margin-top: 10px;
+            padding-left: 0; /* Zorg dat het links goed uitgelijnd is */
+        }
+        
+        .buyer-info p {
+            margin: 5px 0;
+            padding-left: 78px; /* Verschuif e-mail en telefoonnummer om overeen te komen met de verkoperstijl */
+        }
+        
+        .buyer-info p:first-child {
+            padding-left: 0; /* Zorg dat de naam niet wordt verschoven */
+        }
+        
     </style>
 </head>
 <body>
@@ -171,7 +186,14 @@
                             <p><strong>Condition:</strong> {{ record.condition }}</p>
                             <p><strong>Selling Price:</strong> €{{ record.price }}</p>
                             <p><strong>Date Sold:</strong> {{ record.date_sold }}</p>
+                            <p><strong>Shipping Adress:</strong>:</strong> {{ record.buyer_adress }}</p>
+                        <div class="buyer-info">
+                            <p><strong>Buyer info:</strong> {{ record.buyer_name }}</p>
+                            <p>{{ record.buyer_email }}</p>
+                            <p>{{ record.buyer_phone }}</p>
                         </div>
+                        
+                        </div>                       
                         {% if record.image_url %}
                         <!-- Voeg de afbeelding toe als er een image_url is -->
                         <img src="{{ record.image_url }}" alt="{{ record.album_name }}" class="purchase-image">
