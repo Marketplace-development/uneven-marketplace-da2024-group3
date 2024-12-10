@@ -150,7 +150,27 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        .seller-info {
+            display: flex;
+            flex-direction: column; /* Stapel alles onder elkaar */
+            align-items: flex-start; /* Links uitlijnen */
+            margin-top: 10px;
+        }
+        
+        .seller-info p {
+            margin: 0; /* Verwijder extra marges tussen regels */
+            padding-left: 78px; /* Zorg ervoor dat e-mail en telefoon netjes uitgelijnd zijn */
+            line-height: 1.5; /* Consistente afstand tussen regels */
+        }
+        
+        .seller-info p:first-child {
+            padding-left: 0; /* Laat de naam op de oorspronkelijke plek */
+        }
+        
     </style>
+        
+
 </head>
 <body>
     <!-- Flash Message -->
@@ -199,6 +219,12 @@
                             <p><strong>Condition:</strong> {{ purchase.condition }}</p>
                             <p><strong>Purchase Price:</strong> €{{ purchase.purchase_price }}</p>
                             <p><strong>Date:</strong> {{ purchase.date }}</p>
+                            <div class="seller-info">
+                                <p><strong>Seller info:</strong> {{ purchase.seller_name }}</p>
+                                <p>{{ purchase.seller_email }}</p>
+                                <p>{{ purchase.seller_telefoonnummer }}</p>
+                            </div>
+                               
                         </div>
                         {% if purchase.image_url %}
                         <!-- Voeg de afbeelding toe als er een image_url is -->
