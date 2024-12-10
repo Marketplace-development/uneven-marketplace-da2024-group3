@@ -39,10 +39,12 @@
         .purchase-details {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center; /* Zorgt ervoor dat de afbeelding en tekst verticaal gecentreerd worden */
+            gap: 20px;
         }
+        
         .purchase-details-info {
-            max-width: 60%;
+            flex: 1; /* Laat de tekst ruimte innemen */
         }
         .purchase-details-info h2 {
             font-size: 24px;
@@ -58,11 +60,13 @@
             color: #8c564b;
         }
         .purchase-image {
-            max-width: 30%;
-            max-height: 150px;
-            object-fit: contain;
-            margin-left: 20px;
+            flex-shrink: 0; /* Voorkomt dat de afbeelding wordt ingedrukt */
+            width: 250px; /* Zorgt ervoor dat de afbeelding een vaste breedte krijgt */
+            height: 250px; /* Zorgt ervoor dat de afbeelding een vaste hoogte krijgt */
+            object-fit: cover; /* Zorgt ervoor dat de afbeelding de ruimte volledig vult, zonder te vervormen */
+            border-radius: 5px; /* Optioneel, voor mooie afgeronde hoeken */
         }
+        
         .review-button {
             background-color: #8c564b;
             color: white;
@@ -137,7 +141,7 @@
         
         .buyer-info p {
             margin: 5px 0;
-            padding-left: 78px; /* Verschuif e-mail en telefoonnummer om overeen te komen met de verkoperstijl */
+            text-align: left /* Verschuif e-mail en telefoonnummer om overeen te komen met de verkoperstijl */
         }
         
         .buyer-info p:first-child {
@@ -186,12 +190,18 @@
                             <p><strong>Condition:</strong> {{ record.condition }}</p>
                             <p><strong>Selling Price:</strong> €{{ record.price }}</p>
                             <p><strong>Date:</strong> {{ record.date_sold }}</p>
-                            <p><strong>Shipping Adress:</strong>:</strong> {{ record.buyer_adress }}</p>
-                        <div class="buyer-info">
-                            <p><strong>Buyer info:</strong> {{ record.buyer_name }}</p>
-                            <p>{{ record.buyer_email }}</p>
-                            <p>{{ record.buyer_phone }}</p>
-                        </div>
+                            <p><strong>Shipping Address:</strong></p>
+                            {% for line in record.buyer_adress %}
+                                <p>{{ line }}</p>
+                            {% endfor %}
+
+                            <div class="buyer-info">
+                                <p><strong>Buyer Info:</strong></p>
+                                <p>Name: {{ record.buyer_name }}</p>
+                                <p>Email: {{ record.buyer_email }}</p>
+                                <p>Phone: {{ record.buyer_phone }}</p>
+                            </div>
+                            
                         
                         </div>                       
                         {% if record.image_url %}
