@@ -492,6 +492,26 @@ def my_sold_records():
     if not sold_transactions:
         return render_template('my_sold_records.html', sold_records=[])
 
+    # Functie om het adres te formatteren
+    def format_shipping_address(address):
+        try:
+            # Splits het adres in de drie delen op basis van " - "
+            street_nr, postal_city, country = address.split(" - ", 2)
+        
+        # Splits postal code en city op de eerste spatie
+            postal_code, city = postal_city.split(" ", 1)
+        
+        # Retourneer de lijst met correct geformatteerde elementen
+            return [
+                street_nr,
+                f"{postal_code} {city}",
+                country,
+            ]
+        except ValueError:
+        # Zorg voor een fallback als de invoer niet aan de verwachtingen voldoet
+            return ["Invalid Address Format"]
+
+
     # Haal de bijbehorende records en kopergegevens op voor elke transactie
     sold_records_data = []
     for transaction in sold_transactions:
@@ -500,6 +520,7 @@ def my_sold_records():
         if record and buyer:
             image_url = record.image if record.image else None  # Haal afbeelding op als deze bestaat
             formatted_date = transaction.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            formatted_address = format_shipping_address(buyer.address)  # Formatteer het adres
             sold_records_data.append({
                 "transaction_id": transaction.transactionid,
                 "record_id": record.recordid,
@@ -512,11 +533,12 @@ def my_sold_records():
                 "buyer_name": buyer.username,  # Naam van de koper
                 "buyer_email": buyer.email,  # E-mailadres van de koper
                 "buyer_phone": buyer.telefoonnummer,  # Telefoonnummer van de koper
-                "buyer_adress": buyer.address
+                "buyer_adress": formatted_address  # Gebruik het geformatteerde adres
             })
 
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_sold_records.html', sold_records=sold_records_data)
+
 
 
 
