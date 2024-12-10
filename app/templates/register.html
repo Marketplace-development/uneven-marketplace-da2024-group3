@@ -195,7 +195,26 @@
             margin-right: 8px; /* Ruimte tussen dropdown en input */
         }
 
+        /* Address Group Styles */
+        .address-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
 
+        /* Styling for individual address parts */
+        .address-part {
+            width: 48%; /* Zorg ervoor dat de velden netjes naast elkaar komen */
+        }
+
+        h3 {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #060403; /* Zelfde kleur als de hoofdtekst */
+            text-align: center; /* Zorgt ervoor dat de titel links uitgelijnd is */
+            width: 100%;
+            margin-top: 40px;
+        }
 
     </style>
 </head>
@@ -226,14 +245,36 @@
         <form method="POST" action="/register">
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>
-            <input type="text" name="address" placeholder="Address" required>
-            
-            <!-- Landcode en Telefoonnummer -->    
+
+            <!-- Phone Number -->
             <input type="tel" id="phone" name="telefoonnummer" placeholder="Phone number" required>
-            
-            <!-- Register button -->
+
+            <!-- Address Group -->
+            <h3>Address</h3>
+            <div class="address-group">
+                <div class="address-part">
+                    <input type="text" name="street" placeholder="Street" required>
+                </div>
+                <div class="address-part">
+                    <input type="text" name="nr" placeholder="Nr." required>
+                </div>
+            </div>
+    
+            <div class="address-group">
+                <div class="address-part">
+                    <input type="text" name="postal_code" placeholder="Postal Code" required>
+                </div>
+                <div class="address-part">
+                    <input type="text" name="city" placeholder="City" required>
+                </div>
+            </div>
+
+            <input type="text" name="country" placeholder="Country" required>
+    
+            <!-- Register Button -->
             <button type="submit">Register</button>
         </form>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/intlTelInput.min.js"></script>
