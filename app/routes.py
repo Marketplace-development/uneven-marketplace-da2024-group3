@@ -935,4 +935,24 @@ def my_profile():
 
     return render_template('my_profile.html', user=user)
 
-#beter werkt dit
+@main.route('/delete_1plaat/<int:recordid>')
+def remove_1plaat(recordid):
+    ownerid = session.get('userid')
+    if not ownerid:
+        return "User not logged in", 401
+
+        # Fetch the record
+    record = records.query.filter_by(recordid=recordid, ownerid=ownerid).first()
+     
+    if not record:
+        return "Record not found or access denied", 404
+    try:
+                    # Delete the record
+        db.session.delete(record)
+        db.session.commit()
+        return redirect(url_for('main.my_library'))
+    except Exception as e:
+        logging.error(f"Error removing record: {e}")
+        return "Error removing record", 500
+    
+
