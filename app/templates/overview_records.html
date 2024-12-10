@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Georgia', serif;
-      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+      background-color: #ede2cf ; /* Zelfde kleur als de achtergrond van de grid */
       margin: 0;
       padding: 0;
       display: flex;
@@ -133,9 +133,8 @@
     .listing-container {
       width: 90%;
       max-width: 1200px;
-      background-color: #fff;
+      background-color: #ede2cf;
       padding: 20px;
-      border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       margin-top: 20px;
     }
@@ -151,19 +150,31 @@
     /* Grid layout for listings */
     .listings-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 20px;
+      background-color: #ede2cf; /* Achtergrondkleur van de grid */
+      padding: 0; /* Verwijdert padding van de grid-container */
+      margin: 0; /* Verwijdert eventuele marges rondom de grid */
+      border: none; /* Verwijdert de rand van de grid */
+      box-shadow: none; /* Verwijdert eventuele schaduw rond de grid */
     }
-
-    /* Individual Listing */
+    
+    /* Grid items (listings) */
     .listing {
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background: #fff;
+      background-color: #ede2cf; /* Achtergrondkleur van de vakken */
+      border: none; /* Verwijdert de rand van de vakken */
+      border-radius: 5px; /* Optioneel: afgeronde hoeken */
       padding: 10px;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: none; /* Verwijdert schaduwen van de vakken */
     }
+
+    *,
+    *::before,
+    *::after {
+      box-shadow: none !important;
+    }
+    
 
     .listing img {
       width: 100%;
@@ -171,7 +182,7 @@
       object-fit: contain;
       border-radius: 5px;
       margin-bottom: 10px;
-      background-color: #f7f7f7;
+      background-color: #ede2cf;
     }
 
     .listing p {
@@ -185,6 +196,38 @@
       color: #8c564b;
     }
 
+    textarea.listing {
+      width: 100%;
+      resize: none; /* Voorkomt dat gebruikers het tekstvak handmatig kunnen vergroten/verkleinen */
+      border: none; /* Verwijdert de rand rond het tekstvak */
+      border-radius: 5px; /* Optioneel: laat de hoeken afgerond, kan verwijderd worden als je scherpe hoeken wilt */
+      padding: 10px;
+      font-size: 15.5px;
+      font-weight: bold; /* Tekst vet maken */
+      color: #5a3a28; /* Bruine tekstkleur */
+      background-color: #ede2cf; /* Achtergrondkleur */
+      font-family: 'Arial', sans-serif; /* Lettertype */
+      line-height: 1.6; /* Regelafstand */
+    }
+    
+
+    .listing-container textarea.listing {
+      color: #5a3a28 !important; /* Bruine tekstkleur afdwingen */
+    }
+    
+    
+
+    /* Specifieke styling voor tekstvakken die 2 kolommen beslaan (zoals in rij 1) */
+    textarea.listing.span2 {
+      grid-column: span 2; /* Dit maakt het vak breed genoeg voor twee kolommen */
+    }
+
+    /* Specifieke styling voor tekstvakken die maar 1 kolom beslaan (zoals in rij 2 en 3) */
+    textarea.listing.span1 {
+      grid-column: span 1; /* Dit zorgt ervoor dat het vak maar één kolom beslaat */
+    }
+
+  
   </style>
 </head>
 <body>
@@ -212,18 +255,58 @@
 
   <div class="intro-text">
     <h2>LOGIN OR REGISTER TO PROCEED TO THE SPINNBACK PLATFORM</h2>
-    <p>...Or just have a look at which records are owned by Spinnback'ers</p>
+    <p>...Or find out what Spinnback is below!</p>
   </div>
 
   <!-- Listings Section -->
   <div class="listing-container">
-    <h1 class="page-title">RECORDS ON SPINNBACK</h1>
+    <h1 class="page-title">WELCOME TO SPINNBACK!</h1>
     <div id="listings-container" class="listings-grid">
-      <p>Loading listings...</p>
+      <!-- Dynamische vakken voor records -->
+      <div class="listing">Vak 1</div>
+      <div class="listing">Vak 2</div>
+      <textarea class="static listing span2" placeholder="Welcome to Spinnback – The Vinyl Revolution
+
+Spinnback is a platform for vinyl lovers to connect, share, and trade records. Whether you're an experienced collector or just starting out, Spinnback lets you discover new music, engage with a community of enthusiasts, and experience vinyl in its purest form. It’s not just a marketplace—it’s a space where the love of vinyl meets modern technology, creating an interactive way to explore, share, and enjoy your collection."></textarea>
+  
+      <textarea class="static listing span1" placeholder="With Spinnback, you can upload and showcase your own vinyl collection, and browse through the collections of others. Discover hidden gems, learn the stories behind albums, and connect with fellow collectors from all over. It’s a place to share your passion and immerse yourself in a world of music."></textarea>
+      <div class="listing">Vak 2</div>
+      <div class="listing">Vak 3</div>
+      <div class="listing">Vak 4</div>
+  
+      <div class="listing">Vak 1</div>
+      <textarea class="static listing span1" placeholder="Looking for rare or exclusive records? Spinnback makes it easy to trade vinyl directly with others. Whether you're buying, selling, or swapping, our platform helps you find those elusive albums and complete your collection. Spinnback is the perfect place to score your next vinyl treasure!"></textarea>
+
+      <div class="listing">Vak 3</div>
+      <div class="listing">Vak 4</div>
     </div>
   </div>
+  
+
 
   <script>
+    // Event handler om tekstdata te versturen
+    document.querySelectorAll('textarea').forEach(textarea => {
+      textarea.addEventListener('change', async () => {
+        try {
+          const response = await fetch('/save_text', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: textarea.value })
+          });
+
+          if (!response.ok) {
+            throw new Error('Fout bij opslaan van tekst');
+          }
+
+          alert('Tekst opgeslagen!');
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Fout bij opslaan van tekst.');
+        }
+      });
+    });
+
     // Automatically hide the alert after a set duration (e.g., 100,000ms)
     setTimeout(function() {
       const alerts = document.querySelectorAll('.alert.show');
@@ -236,40 +319,50 @@
     async function loadListings() {
       const container = document.getElementById('listings-container');
       try {
-        const response = await fetch('/get_records'); // Fetch data from the backend route
+        const response = await fetch('/get_records'); // Haal gegevens op van de backend
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         const listings = await response.json();
-
-        // Clear the loading message
-        container.innerHTML = '';
-
-        // Render each listing dynamically
-        if (listings.length > 0) {
-          listings.forEach(listing => {
-            const listingDiv = document.createElement('div');
-            listingDiv.className = 'listing';
-
-            // Build the HTML content for each listing
-            let listingContent = `
+    
+        // Verkrijg alle listing-vakken die geen 'textarea' zijn
+        const dynamicElements = Array.from(container.querySelectorAll('.listing:not(textarea)'));
+    
+        let dynamicIndex = 0;
+    
+        // Vul de dynamische vakken met records
+        dynamicElements.forEach(vak => {
+          if (dynamicIndex < listings.length) {
+            const listing = listings[dynamicIndex++];
+            vak.innerHTML = `
               <img src="${listing.image || 'placeholder.jpg'}" alt="${listing.albumname}">
               <p class="artist">${listing.artist}</p>
               <p>${listing.albumname}</p>
             `;
-
-            // Set the content and append the listing
-            listingDiv.innerHTML = listingContent;
-            container.appendChild(listingDiv);
-          });
-        } else {
-          container.innerHTML = '<p>No listings available.</p>';
+          }
+        });
+    
+        // Voeg overige dynamische listings toe als er ruimte over is
+        while (dynamicIndex < listings.length) {
+          const listingDiv = document.createElement('div');
+          listingDiv.className = 'listing';
+          const listing = listings[dynamicIndex++];
+          listingDiv.innerHTML = `
+            <img src="${listing.image || 'placeholder.jpg'}" alt="${listing.albumname}">
+            <p class="artist">${listing.artist}</p>
+            <p>${listing.albumname}</p>
+          `;
+          container.appendChild(listingDiv);
         }
       } catch (error) {
         console.error('Error loading listings:', error);
         container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
       }
     }
+    
+    
+    
+    
 
     // Load the listings when the page loads
     window.onload = loadListings;
