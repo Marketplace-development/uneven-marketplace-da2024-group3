@@ -262,12 +262,20 @@ def koop_1plaat(recordid):
     seller = users.query.get(record.ownerid)
     if not seller:
         return "Seller not found", 404
-    
+
     average_rating = db.session.query(func.avg(reviews.reviewscore)).join(transactions).filter(transactions.sellerid == seller.userid).scalar() or 0
     average_rating = round(average_rating, 2)
 
-    # Pass the seller's username and record details to the template
-    return render_template('koop_1plaat.html', record=record, seller_username=seller.username, seller_rating=average_rating)
+    # Pass the seller's details to the template
+    return render_template(
+        'koop_1plaat.html',
+        record=record,
+        seller_username=seller.username,
+        seller_rating=average_rating,
+        seller_email=seller.email,
+        seller_telefoonnummer=seller.telefoonnummer
+    )
+
 
 
 @main.route('/create_transaction/<int:recordid>', methods=['POST'])
@@ -414,11 +422,12 @@ def get_my_purchases():
     if not user_transactions:
         return render_template('my_purchases.html', purchases=[])
 
-    # Haal de bijbehorende records op voor elke transactie
+    # Haal de bijbehorende records en verkopers op voor elke transactie
     purchases_data = []
     for transaction in user_transactions:
         record = records.query.get(transaction.recordid)  # Haal het record op met de ID
-        if record:
+        seller = users.query.get(transaction.sellerid)  # Haal de verkoper op met de ID
+        if record and seller:
             image_url = record.image if record.image else None
             purchases_data.append({
                 "transaction_id": transaction.transactionid,
@@ -427,12 +436,16 @@ def get_my_purchases():
                 "artist": record.artist,
                 "condition": record.condition,
                 "purchase_price": transaction.purchaseprice,
-                "date": transaction.created_at,  # Dit moet mogelijk aangepast worden naar een datumveld in "transactions"
-                "image_url": image_url
+                "date": transaction.created_at,
+                "image_url": image_url,
+                "seller_name": seller.username,
+                "seller_email": seller.email,
+                "seller_telefoonnummer": seller.telefoonnummer,
             })
 
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_purchases.html', purchases=purchases_data)
+
 
 @main.route('/my_purchases')
 def return_my_purchases():
@@ -456,11 +469,12 @@ def my_sold_records():
     if not sold_transactions:
         return render_template('my_sold_records.html', sold_records=[])
 
-    # Haal de bijbehorende records op voor elke transactie
+    # Haal de bijbehorende records en kopergegevens op voor elke transactie
     sold_records_data = []
     for transaction in sold_transactions:
         record = records.query.get(transaction.recordid)  # Haal het record op met de ID
-        if record:
+        buyer = users.query.get(transaction.buyerid)  # Haal de koperinformatie op
+        if record and buyer:
             image_url = record.image if record.image else None  # Haal afbeelding op als deze bestaat
             sold_records_data.append({
                 "transaction_id": transaction.transactionid,
@@ -470,11 +484,16 @@ def my_sold_records():
                 "condition": record.condition,
                 "price": transaction.purchaseprice,
                 "date_sold": transaction.created_at,  # Datum van de transactie
-                "image_url": image_url  # Voeg de afbeelding toe
+                "image_url": image_url,  # Voeg de afbeelding toe
+                "buyer_name": buyer.username,  # Naam van de koper
+                "buyer_email": buyer.email,  # E-mailadres van de koper
+                "buyer_phone": buyer.telefoonnummer,  # Telefoonnummer van de koper
+                "buyer_adress": buyer.address
             })
 
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_sold_records.html', sold_records=sold_records_data)
+
 
 
 
