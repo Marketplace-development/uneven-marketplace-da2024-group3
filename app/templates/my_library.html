@@ -77,14 +77,14 @@
 
     /* Individual Listing */
     .listing {
-      border: 2px solid #f4b085;
+      border: 2px solid #ffe8dc;
       border-radius: 10px;
       background: #ffe8dc;
       padding: 15px;
       margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
-      align-items: center; /* Center content vertically */
+      align-items: center;
       text-align: left;
       transition: transform 0.3s;
     }
@@ -95,7 +95,7 @@
 
     .listing .text-content {
       flex: 1;
-      margin-right: 20px; /* Space between text and image */
+      margin-right: 20px;
     }
 
     .listing h3 {
@@ -112,17 +112,25 @@
 
     /* Image Styling */
     .listing img {
-      max-height: 300px; /* Larger height */
+      max-height: 300px;
       width: auto;
-      object-fit: cover; /* Ensures the image fills the space without distorting */
+      object-fit: cover;
       margin-left: 20px;
-      border-radius: 8px; /* Optional: adds a little rounded corner */
+      border-radius: 8px;
+    }
+
+    /* Button Container for stacking */
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Align buttons to the left */
+      gap: 10px; /* Space between buttons */
     }
 
     /* Edit Button */
-    .edit-button {
+    .edit-button,
+    .delete-button {
       padding: 10px 20px;
-      margin-left: 20px;
       font-size: 16px;
       background-color: #8c564b;
       color: white;
@@ -132,7 +140,8 @@
       transition: background-color 0.3s;
     }
 
-    .edit-button:hover {
+    .edit-button:hover,
+    .delete-button:hover {
       background-color: #f4b085;
     }
 
@@ -167,7 +176,6 @@
     .search-button:hover {
       background-color: #f4b085;
     }
-
   </style>
 </head>
 <body>
@@ -208,8 +216,11 @@
             {% if record['image_url'] %}
               <img src="{{ record['image_url'] }}" alt="{{ record['albumname'] }}">
             {% endif %}
-            <!-- Edit Button -->
-            <button class="edit-button" onclick="location.href='/edit_1plaat/{{ record.recordid }}'">Edit</button>
+            <!-- Edit and Delete Buttons -->
+            <div class="button-container">
+              <button class="edit-button" onclick="location.href='/edit_1plaat/{{ record.recordid }}'">Edit</button>
+              <button class="delete-button" onclick="location.href='/delete_1plaat/{{ record.recordid }}'">Delete</button>
+            </div>
           </div>
         {% endfor %}
       </div>
