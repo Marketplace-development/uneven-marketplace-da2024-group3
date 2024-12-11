@@ -20,23 +20,21 @@
         }
         .flash-message {
             padding: 15px;
-            margin: 0 auto 20px auto; /* Plaatsing direct onder de top bar */
+            margin: 0 auto 20px auto;
             max-width: 800px;
             text-align: center;
             border-radius: 5px;
             font-size: 16px;
             font-weight: bold;
-            color: #8c564b; /* Witte tekst om goed af te steken tegen het bruine achtergrond */
-            background-color: #ffffffee; /* Bruine achtergrondkleur */
-            border: 1px solid #8c564b; /* Zelfde kleur voor de rand */
-            position: absolute; /* Maak de flash-melding absoluut */
-            top: 80px; /* Zorg ervoor dat het onder de top bar komt */
+            color: #8c564b;
+            background-color: #ffffffee;
+            border: 1px solid #8c564b;
+            position: absolute;
+            top: 80px;
             left: 50%;
-            transform: translateX(-50%); /* Centreer de flash-melding horizontaal */
-            display: none; /* Begin verborgen */
+            transform: translateX(-50%);
+            display: none;
         }
-        
-        
         .purchases-container {
             max-width: 800px;
             margin: 20px auto;
@@ -47,7 +45,6 @@
         }
         .purchase-item {
             display: flex;
-            flex-direction: column;
             padding: 15px;
             border-bottom: 1px solid #eee;
             margin-bottom: 15px;
@@ -57,20 +54,18 @@
         }
         .purchase-details {
             display: flex;
-            justify-content: space-between;
+            flex: 1;
             align-items: center;
+            gap: 20px;
         }
-
         .purchase-details-info {
-            max-width: 60%;
+            flex: 1;
         }
-
         .purchase-details-info h2 {
             font-size: 24px;
             margin: 0 0 10px 0;
             color: #8c564b;
         }
-
         .purchase-details-info p {
             margin: 5px 0;
             font-size: 14px;
@@ -79,13 +74,19 @@
         .purchase-details-info strong {
             color: #8c564b;
         }
-        .purchase-image {
-            max-width: 30%;
-            max-height: 150px;
-            object-fit: contain;
-            margin-left: 20px;
+        .status-container {
+            text-align: center;
+            flex-shrink: 0;
+            width: 150px;
+            margin-right: 150px;
         }
-
+        .purchase-image {
+            flex-shrink: 0;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
         .review-button {
             background-color: #8c564b;
             color: white;
@@ -95,9 +96,8 @@
             cursor: pointer;
             text-decoration: none;
             font-size: 14px;
-            display: block;
-            text-align: center;
-            margin: 15px 0 0;
+            display: inline-block;
+            margin-top: 10px;
         }
         .review-button:hover {
             background-color: #5c3a31;
@@ -110,21 +110,19 @@
             z-index: 1000;
         }
         .back-button-container .back-link {
-            background-color: #fdd0b5; /* Beige achtergrond */
-            color: #8c564b; /* Bruine tekst */
+            background-color: #fdd0b5;
+            color: #8c564b;
             padding: 10px 15px;
             border-radius: 5px;
             text-decoration: none;
             font-size: 14px;
             font-weight: bold;
-            border: 1px solid #8c564b; /* Optionele bruine rand */
+            border: 1px solid #8c564b;
         }
-        
         .back-button-container .back-link:hover {
-            background-color: #8c564b; /* Donkerder bruine achtergrond bij hover */
-            color: white; /* Witte tekst bij hover */
+            background-color: #8c564b;
+            color: white;
         }
-
         .search-container {
             display: flex;
             justify-content: center;
@@ -132,7 +130,6 @@
             margin-top: 30px;
             gap: 10px;
         }
-
         .search-bar {
             padding: 10px;
             width: 100%;
@@ -141,7 +138,6 @@
             border: 1px solid #8c564b;
             font-size: 16px;
         }
-
         .dropdown {
             padding: 10px;
             border: 1px solid #8c564b;
@@ -150,24 +146,6 @@
             font-size: 16px;
             cursor: pointer;
         }
-
-        .seller-info {
-            display: flex;
-            flex-direction: column; /* Stapel alles onder elkaar */
-            align-items: flex-start; /* Links uitlijnen */
-            margin-top: 10px;
-        }
-        
-        .seller-info p {
-            margin: 0; /* Verwijder extra marges tussen regels */
-            padding-left: 78px; /* Zorg ervoor dat e-mail en telefoon netjes uitgelijnd zijn */
-            line-height: 1.5; /* Consistente afstand tussen regels */
-        }
-        
-        .seller-info p:first-child {
-            padding-left: 0; /* Laat de naam op de oorspronkelijke plek */
-        }
-        
     </style>
         
 
@@ -223,6 +201,17 @@
                                 <p>{{ purchase.seller_email }}</p>
                                 <p>{{ purchase.seller_telefoonnummer }}</p>
                             </div>
+                        </div>
+
+                        <!-- Toevoeging: STATUS en Waarde -->
+                        <div class="status-container">
+                            <p><strong>Status:</strong></p>
+                            {% if purchase.handled_status %}
+                                <p class="status-handled">HANDLED &amp; SHIPPED <span>&#x2713;</span></p>
+                            {% else %}
+                                <p class="status-pending">Waiting for seller to ship record</p>
+                            {% endif %}
+                        </div>
                                
                         </div>
                         {% if purchase.image_url %}
