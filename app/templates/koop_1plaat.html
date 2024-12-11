@@ -128,6 +128,7 @@
 
     h1 {
       color: #5a3a28;
+      margin-bottom: 70px;
     }
 
     .rating-button {
@@ -187,7 +188,7 @@
           {{ record.description if record.description else "No description provided by seller" }}
         </p>
         <p>
-          <strong>SELLER   </strong> {{ seller_username }}
+          <strong>SELLER INFO   </strong> {{ seller_username }}
           <p><strong></strong> {{ seller_email }}
           <p><strong></strong> {{ seller_telefoonnummer }}
 
@@ -197,7 +198,7 @@
         <div class="seller-info">
           <p><strong>SELLER RATING   </strong> {{ seller_rating }} / 5</p>  <!-- Show seller rating -->
           <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
-            Watch Reviews
+            Seller Reviews
           </button>
         </div>
       </div>
