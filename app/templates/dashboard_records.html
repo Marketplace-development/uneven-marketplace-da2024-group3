@@ -148,26 +148,28 @@
 
         /* Listings Container */
         .listing-container {
-            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            margin-top: 10px; /* To give space for top bar */
-            background-color: #ffffff;
             padding: 20px;
+            margin-top: 80px; /* Houd rekening met de top-bar */
+            background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%; /* Zorg voor een vaste breedte */
+            max-width: 1200px; /* Beperking van de maximale breedte */
+            margin-left: auto;
+            margin-right: auto;
         }
 
+        /* Button Container */
         .button-container {
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 90%;
-            max-width: 1000px;
-            margin: 20px auto;
-            gap: 40px; /* Larger gap between buttons */
+            justify-content: center; /* Centreer de knoppen horizontaal */
+            align-items: center; /* Zorg dat de knoppen verticaal gecentreerd zijn */
+            gap: 40px; /* Ruimte tussen de knoppen */
+            width: 100%; /* Zorg dat de container zich uitstrekt over de breedte */
+            max-width: 1200px; /* Zorg dat de knoppen netjes binnen de container blijven */
         }
 
         .button-container button {
@@ -297,11 +299,11 @@
     
 
     <div class="nav-links">
-        <a href="/my_library" class="nav-link">My Library</a>
-        <a href="/my_favorites" class="nav-link">My Favorites</a>
-        <a href="/my_purchases" class="nav-link">My Purchases</a>
+        <a href="/my_library" class="nav-link">My Collection</a>
+        <a href="/my_favorites" class="nav-link">My Favorite Records</a>
+        <a href="/my_purchases" class="nav-link">My Purchased Records</a>
         <a href="/my_sold_records" class="nav-link">My Sold Records</a>
-        <a href="/my_rating" class="nav-link">My Rating</a>
+        <a href="/my_rating" class="nav-link">My Seller Rating</a>
     </div>
 
     <!-- Flash message block -->
@@ -319,16 +321,16 @@
     <div class="listing-container">
         <div class="button-container">
             <button class="libraries-btn" onclick="location.href='/library'">
-                <span>Libraries</span>
-                <div class="tooltip">Take a look at collections from others</div>
+                <span>Collections</span>
+                <div class="tooltip">Take a look at other Spinnbackers' collections</div>
             </button>
             <button class="add-sell-btn" onclick="location.href='/records'">
-                <span>Add/ Sell a record</span>
-                <div class="tooltip">Add a record to your collection and/or put it up for sale</div>
+                <span>Add Records</span>
+                <div class="tooltip">Add one of your records to your Spinnback collection and choose whether to put it for sale or not</div>
             </button>
             <button class="buy-record-btn" onclick="location.href='/transactions'">
-                <span>Buy a record</span>
-                <div class="tooltip">Buy records from other users</div>
+                <span>Buy Records</span>
+                <div class="tooltip">Buy records from other Spinnbackers</div>
             </button>
         </div>        
     </div>
