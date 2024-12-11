@@ -196,7 +196,9 @@
         
         <!-- Seller Rating and View Reviews Button in a flex container -->
         <div class="seller-info">
-          <p><strong>SELLER RATING   </strong> {{ seller_rating }} / 5</p>  <!-- Show seller rating -->
+          {% if seller_rating is not none %}
+            <p><strong>SELLER RATING   </strong> {{ seller_rating }} / 5</p>  <!-- Show seller rating -->
+          {% endif %}
           <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
             Seller Reviews
           </button>
