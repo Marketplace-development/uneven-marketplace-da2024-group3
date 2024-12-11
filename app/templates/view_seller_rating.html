@@ -69,28 +69,61 @@
             align-items: center;
         }
 
+        /* Container for Average Review Score */
+        .average-score-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
         .average-score {
             font-size: 24px;
             font-weight: bold;
             color: #8c564b;
-            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Grid layout for reviews */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 5 columns */
+            gap: 20px; /* Space between the items */
+            width: 100%;
+            margin-top: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .review-card {
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin: 10px;
             padding: 20px;
-            width: 80%;
-            max-width: 600px;
+            width: 100%;
+            max-width: 300px;
             text-align: left;
+            position: relative;
         }
 
-        .review-score {
-            font-size: 20px;
+        .review-author {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .author-name {
             font-weight: bold;
             color: #8c564b;
+        }
+
+        /* Style for review score */
+        .review-score {
+            font-size: 20px;
+            font-weight: bold; /* Bold */
+            color: #8c564b; /* Brown */
         }
 
         .review-reasoning {
@@ -110,7 +143,6 @@
     <div class="back-button-container">
         <!-- Back to previous page -->
         <a href="/koop_1plaat/{{ recordid }}" class="back-link">Back to Record</a>
-
     </div>
 
     <!-- Top Bar -->
@@ -121,21 +153,27 @@
     <!-- Content Section -->
     <div class="content-container">
         <!-- Average Score Display -->
-        {% if average_score is not none %}
-            <div class="average-score">Average Review Score: {{ average_score | round(2) }}/5</div>
-        {% else %}
-            <div class="average-score">No reviews yet</div>
-        {% endif %}
-
-        <!-- If there are reviews, display them in cards -->
+        <div class="average-score-container">
+            {% if average_score is not none %}
+                <div class="average-score">Average Review Score: {{ average_score | round(2) }}/5</div>
+            {% else %}
+                <div class="average-score">No reviews yet</div>
+            {% endif %}
+        </div>
+    
+        <!-- Reviews Grid -->
         {% if reviews %}
-            {% for review in reviews %}
-                <div class="review-card">
-                    <div class="review-score">{{ review.reviewscore }}/5</div>
-                    <div class="review-reasoning">{{ review.reasoning if review.reasoning else "No reasoning provided" }}</div>
-                </div>
-            {% endfor %}
-        <!-- If no reviews, display a message -->
+            <div class="reviews-grid">
+                {% for review in reviews %}
+                    <div class="review-card">
+                        <div class="review-score">{{ review[0] }}/5</div>
+                        <div class="review-reasoning">
+                            {{ review[1] if review[1] else "No reasoning provided" }}
+                        </div>
+                        <div class="review-author">Reviewed by: {{ review[2] }}</div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
             <div class="no-reviews">This seller has not received any reviews yet.</div>
         {% endif %}
