@@ -623,37 +623,52 @@ def watch_review(transaction_id):
 @main.route('/my_rating')
 def my_rating():
     # Ensure the user is logged in
-    # Haal de ingelogde gebruiker op uit de sessie
     logged_in_user_id = session.get('userid')
 
     if not logged_in_user_id:
         return "User not logged in", 401  # Geef een foutmelding als de gebruiker niet is ingelogd
 
     # Query to find all reviews where the sellerid matches the logged-in user's userid
-    user_reviews = db.session.query(reviews).join(transactions).filter(transactions.sellerid == logged_in_user_id).all()
-
-    # Calculate the average review score
-    average_score = db.session.query(func.avg(reviews.reviewscore)).join(transactions).filter(transactions.sellerid == logged_in_user_id).scalar()
-
-    return render_template('my_rating.html', reviews=user_reviews, average_score=average_score)
-
-if __name__ == '__main__':
-    main.run(debug=True)
-
-@main.route('/view_seller_rating/<int:seller_id>')
-def view_seller_rating(seller_id):
-    # Get the `recordid` from the query parameter
-    recordid = request.args.get('recordid')
-
-    # Query to find all reviews for the given seller
-    seller_reviews = (
-        db.session.query(reviews)
-        .join(transactions)
-        .filter(transactions.sellerid == seller_id)
+    user_reviews = (
+        db.session.query(reviews, users.username)
+        .join(transactions, reviews.transactionid == transactions.transactionid)
+        .join(users, transactions.buyerid == users.userid)
+        .filter(transactions.sellerid == logged_in_user_id)
         .all()
     )
 
-    # Calculate the average review score for the seller
+    # Calculate the average review score
+    average_score = (
+        db.session.query(func.avg(reviews.reviewscore))
+        .join(transactions, reviews.transactionid == transactions.transactionid)
+        .filter(transactions.sellerid == logged_in_user_id)
+        .scalar()
+    )
+
+    return render_template('my_rating.html', reviews=user_reviews, average_score=average_score)
+
+
+@main.route('/view_seller_rating/<int:seller_id>')
+def view_seller_rating(seller_id):
+    # Haal een willekeurig record op van de verkoper (indien van toepassing)
+    record = db.session.query(records).filter_by(ownerid=seller_id).first()
+
+    # Query om reviews en bijbehorende auteurs (kopers) op te halen
+    seller_reviews = (
+        db.session.query(
+            reviews.reviewscore,  # De reviewscore
+            reviews.reasoning,    # De toelichting bij de review
+            users.username        # De naam van de auteur (koper)
+        )
+        .join(transactions, reviews.transactionid == transactions.transactionid)
+        .join(users, transactions.buyerid == users.userid)  # Koppel transacties met gebruikers
+        .filter(transactions.sellerid == seller_id)        # Filter op de seller ID
+        .all()
+    )
+
+    print(seller_reviews)  # Controleer de output in de server log
+
+    # Bereken de gemiddelde reviewscore
     average_score = (
         db.session.query(func.avg(reviews.reviewscore))
         .join(transactions)
@@ -661,12 +676,14 @@ def view_seller_rating(seller_id):
         .scalar()
     )
 
+    # Render de template met reviews en gemiddelde score
     return render_template(
         'view_seller_rating.html',
         reviews=seller_reviews,
         average_score=average_score,
-        recordid=recordid,  # Pass the recordid to the template
+        recordid=record.recordid if record else None
     )
+
 
 @main.route('/edit_1plaat/<int:record_id>', methods=['GET', 'POST'])
 def edit_1plaat(record_id):
