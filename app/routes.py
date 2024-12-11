@@ -285,6 +285,7 @@ def koop_1plaat(recordid):
     if not seller:
         return "Seller not found", 404
 
+    # Calculate average rating (if there are reviews)
     average_rating = db.session.query(func.avg(reviews.reviewscore)).join(transactions).filter(transactions.sellerid == seller.userid).scalar() or 0
     average_rating = round(average_rating, 2)
 
@@ -293,10 +294,11 @@ def koop_1plaat(recordid):
         'koop_1plaat.html',
         record=record,
         seller_username=seller.username,
-        seller_rating=average_rating,
+        seller_rating=average_rating if average_rating > 0 else None,  # Only show rating if it's greater than 0
         seller_email=seller.email,
         seller_telefoonnummer=seller.telefoonnummer
     )
+
 
 
 
