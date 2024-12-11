@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Library</title>
+  <title>Spinnback - My Collection</title>
   <style>
     /* Global Styles */
     body {
@@ -182,15 +182,15 @@
 
   <!-- Top Bar with title and back button -->
   <div class="top-bar">
-    <h1>Spinnback - My Library</h1>
+    <h1>Spinnback</h1>
     <div>
-      <button onclick="location.href='/dashboard'">Go to Dashboard</button>
+      <button onclick="location.href='/dashboard'">Home</button>
     </div>
   </div>
 
   <!-- Listings Section -->
   <div class="listing-container">
-    <h1>My Library</h1>
+    <h1>My Collection</h1>
 
     <!-- Search Bar with button next to it -->
     <div class="search-container">
@@ -208,7 +208,7 @@
               <p><strong>Genre:</strong> {{ record['genre'] }}</p>
               <p><strong>Size:</strong> {{ record['size'] }}</p>
               <p><strong>Condition:</strong> {{ record['condition'] }}</p>
-              <p><strong>Colour:</strong> {{ record['colour'] }}</p>
+              <p><strong>Color:</strong> {{ record['colour'] }}</p>
               <p><strong>Description:</strong> {{ record['description'] }}</p>
               <p><strong>Price:</strong> ${{ record['price'] }}</p>
             </div>
