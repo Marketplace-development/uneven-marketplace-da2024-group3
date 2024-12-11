@@ -44,6 +44,7 @@
             text-align: right;
             z-index: 1000;
         }
+
         .back-button-container .home-button,
         .back-button-container .back-link {
             display: inline-block;
@@ -55,6 +56,7 @@
             border-radius: 5px;
             margin-bottom: 5px;
         }
+
         .back-button-container .home-button:hover,
         .back-button-container .back-link:hover {
             background-color: #8c564b;
@@ -63,53 +65,75 @@
 
         /* Content Section */
         .content-container {
-            margin-top: 100px; /* Space for top bar */
+            margin-top: 100px; /* Ruimte voor de top bar */
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
+        } 
+
+        /* Container voor de Average Review Score */
+        .average-score-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
         }
 
         .average-score {
             font-size: 24px;
             font-weight: bold;
             color: #8c564b;
-            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Grid layout voor de reviews */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 5 kolommen */
+            gap: 20px; /* Ruimte tussen de items */
+            width: 100%;
+            margin-top: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .review-card {
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin: 10px;
             padding: 20px;
-            width: 80%;
-            max-width: 600px;
+            width: 100%;
+            max-width: 300px;
             text-align: left;
+            position: relative;
         }
 
-        .review-score {
-            font-size: 20px;
+        .review-author {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .author-name {
             font-weight: bold;
             color: #8c564b;
         }
 
-        .review-reasoning {
-            font-size: 16px;
-            color: #333;
-            margin-top: 10px;
-        }
-
-        .no-reviews {
-            font-size: 18px;
-            color: #555;
-            text-align: center;
+            /* Style for review score */
+        .review-score {
+            font-size: 20px;
+            font-weight: bold; /* Vetgedrukt */
+            color: #8c564b; /* Bruin */
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
     <div class="back-button-container">
-        <!-- Knop rechtsboven -->
         <a href="/dashboard" class="back-link">Back to Home</a>
     </div>
 
@@ -120,27 +144,34 @@
 
     <!-- Content Section -->
     <div class="content-container">
-        <!-- Average Score Display -->
-        {% if average_score is not none %}
-            <div class="average-score">Average Review Score: {{ average_score | round(2) }}/5</div>
-        {% else %}
-            <div class="average-score">No reviews yet</div>
-        {% endif %}
+        <!-- Average Score Container -->
+        <div class="average-score-container">
+            {% if average_score is not none %}
+                <div class="average-score">Average Review Score: {{ average_score | round(2) }}/5</div>
+            {% else %}
+                <div class="average-score">No reviews yet</div>
+            {% endif %}
+        </div>
 
         <!-- If there are reviews, display them in cards -->
         {% if reviews %}
-            {% for review in reviews %}
-                <div class="review-card">
-                    <div class="review-score">{{ review.reviewscore }}/5</div>
-                    <div class="review-reasoning">{{ review.reasoning if review.reasoning else "No reasoning provided" }}</div>
-                </div>
-            {% endfor %}
-        <!-- If no reviews, display a message -->
+            <div class="reviews-grid">
+                {% for review in reviews %}
+                    <div class="review-card">
+                        <div class="review-score">{{ review[0].reviewscore }}/5</div>
+                        <div class="review-reasoning">{{ review[0].reasoning if review[0].reasoning else "No reasoning provided" }}</div>
+                        <div class="review-author">
+                            Reviewe by: <span class="author-name">{{ review[1] }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
             <div class="no-reviews">You have not received any reviews yet.</div>
         {% endif %}
     </div>
-
 </body>
 </html>
+
+
 
