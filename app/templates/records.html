@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voeg een Nieuwe Vinyl Listing Toe</title>
+  <title>Spinnback - Add Record</title>
   <style>
     body {
       font-family: 'Georgia', serif;
@@ -139,18 +139,18 @@
   <div class="top-bar">
     <h1>Spinnback</h1>
     <div>
-      <button onclick="location.href='/dashboard'">Terug naar Dashboard</button>
+      <button onclick="location.href='/dashboard'">Home</button>
     </div>
   </div>
 
   <!-- Form Section -->
   <div class="form-container">
-    <h1 class="page-title">Voeg een Nieuwe Vinyl Listing Toe</h1>
+    <h1 class="page-title">Add your Record</h1>
     <form action="/records" method="POST" enctype="multipart/form-data">
-      <label for="albumname">Albumnaam</label>
+      <label for="albumname">Album</label>
       <input type="text" id="albumname" name="albumname" required>
 
-      <label for="artist">Artiest</label>
+      <label for="artist">Artist</label>
       <input type="text" id="artist" name="artist" required>
 
       <label for="genre">Genre</label>
@@ -172,14 +172,14 @@
         <option value="World Music">World Music</option>
       </select>
 
-      <label for="size">Grootte van de Plaat</label>
+      <label for="size">Size</label>
       <select id="size" name="size" required>
         <option value='12"'>12-inch</option>
         <option value='10"'>10-inch</option>
         <option value='7"'>7-inch</option>
       </select>
 
-      <label for="condition">Staat van de Plaat</label>
+      <label for="condition">Condition</label>
       <select id="condition" name="condition" required>
         <option value="M">M (Mint)</option>
         <option value="NM">NM (Near Mint)</option>
@@ -189,7 +189,7 @@
         <option value="P">P (Poor)</option>
       </select>
 
-      <label for="colour">Kleur</label>
+      <label for="colour">Color</label>
       <input type="text" id="colour" name="colour" required>
       
       <label for="Sellyesorno">Do you want to sell this record?</label>
@@ -199,18 +199,18 @@
       </select>
       
       <div id="price-container" style="display: none;">
-        <label for="price">Prijs (€)</label>
+        <label for="price">Price (€)</label>
         <input type="number" id="price" name="price" step="0.01" min="0">
       </div>
       
-      <label for="description">Beschrijving</label>
+      <label for="description">Description</label>
       <textarea id="description" name="description"></textarea>
 
-      <label for="image">Afbeelding</label>
+      <label for="image">Image (Album Cover)</label>
       <input type="file" id="image" name="image" accept="image/png, image/jpeg, image/jpg" required>
 
       
-      <button type="submit">Toevoegen</button>
+      <button type="submit">Add to Collection</button>
     </form>
       
     <script>
