@@ -52,6 +52,7 @@ class transactions(db.Model):
     recordid = db.Column(db.Integer, db.ForeignKey('records.recordid', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     buyerid = db.Column(db.Integer, db.ForeignKey('users.userid', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     sellerid = db.Column(db.Integer, db.ForeignKey('users.userid', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
+    handledyesorno = db.Column(db.Boolean, default=False, nullable=False)
     purchaseprice = db.Column(db.Float, nullable=False)  # Houdt de aankoopprijs bij
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), nullable=False)  # Database vult deze in
     albumname = db.Column(db.String(100), nullable=False)
