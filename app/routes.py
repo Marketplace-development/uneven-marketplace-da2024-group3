@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, url_for, flash, current_app
-from .models import db, users, records, libraries, libraryrecords, reviews, transactions, favorites
+from .models import db, users, records, reviews, transactions, favorites
 from sqlalchemy import func
 from . import supabase
 import logging
@@ -330,7 +330,13 @@ def create_transaction(recordid):
             sellerid=record.ownerid,
             buyerid=buyer_id,
             recordid=recordid,
-            purchaseprice=record.price  # Sla de huidige prijs van het record op
+            purchaseprice=record.price,  # Sla de huidige prijs van het record op
+            albumname=record.albumname,
+            artist=record.artist,
+            genre=record.genre,
+            size=record.size,
+            condition=record.condition,
+            colour=record.colour
         )
         db.session.add(new_transaction)
 
@@ -443,30 +449,34 @@ def get_my_purchases():
     if not user_transactions:
         return render_template('my_purchases.html', purchases=[])
 
-    # Haal de bijbehorende records en verkopers op voor elke transactie
+    # Haal de bijbehorende verkopers op voor elke transactie
     purchases_data = []
     for transaction in user_transactions:
-        record = records.query.get(transaction.recordid)  # Haal het record op met de ID
         seller = users.query.get(transaction.sellerid)  # Haal de verkoper op met de ID
-        if record and seller:
+        record = records.query.get(transaction.recordid)  # Haal het record op met de ID
+        if seller and record:
             image_url = record.image if record.image else None
             formatted_date = transaction.created_at.strftime('%Y-%m-%d %H:%M:%S')
             purchases_data.append({
                 "transaction_id": transaction.transactionid,
-                "record_id": record.recordid,
-                "album_name": record.albumname,
-                "artist": record.artist,
-                "condition": record.condition,
+                "record_id": transaction.recordid,
+                "album_name": transaction.albumname,
+                "artist": transaction.artist,
+                "genre": transaction.genre,
+                "condition": transaction.condition,
+                "size": transaction.size,
+                "colour": transaction.colour,
                 "purchase_price": transaction.purchaseprice,
                 "date": formatted_date,
-                "image_url": image_url,
                 "seller_name": seller.username,
                 "seller_email": seller.email,
                 "seller_telefoonnummer": seller.telefoonnummer,
+                "image_url": image_url,
             })
 
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_purchases.html', purchases=purchases_data)
+
 
 
 @main.route('/my_purchases')
@@ -516,23 +526,26 @@ def my_sold_records():
     for transaction in sold_transactions:
         record = records.query.get(transaction.recordid)  # Haal het record op met de ID
         buyer = users.query.get(transaction.buyerid)  # Haal de koperinformatie op
-        if record and buyer:
-            image_url = record.image if record.image else None  # Haal afbeelding op als deze bestaat
+        if buyer and record:
+            image_url = record.image if record.image else None
             formatted_date = transaction.created_at.strftime('%Y-%m-%d %H:%M:%S')
             formatted_address = format_shipping_address(buyer.address)  # Formatteer het adres
             sold_records_data.append({
                 "transaction_id": transaction.transactionid,
-                "record_id": record.recordid,
-                "album_name": record.albumname,
-                "artist": record.artist,
-                "condition": record.condition,
+                "record_id": transaction.recordid,
+                "album_name": transaction.albumname,
+                "artist": transaction.artist,
+                "genre": transaction.genre,
+                "condition": transaction.condition,
+                "size": transaction.size,
+                "colour": transaction.colour,
                 "price": transaction.purchaseprice,
-                "date_sold": formatted_date,  # Datum van de transactie
-                "image_url": image_url,  # Voeg de afbeelding toe
+                "date_sold": formatted_date,
+                "image_url": image_url,  
                 "buyer_name": buyer.username,  # Naam van de koper
                 "buyer_email": buyer.email,  # E-mailadres van de koper
                 "buyer_phone": buyer.telefoonnummer,  # Telefoonnummer van de koper
-                "buyer_adress": formatted_address  # Gebruik het geformatteerde adres
+                "buyer_address": formatted_address  # Gebruik het geformatteerde adres
             })
 
     # Render de HTML-template met de verzamelde gegevens
