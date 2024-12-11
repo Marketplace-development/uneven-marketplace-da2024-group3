@@ -273,6 +273,50 @@
             border-radius: 5px;
             max-width: 80%;
         }
+
+        .unhandled-orders-container {
+            padding: 15px; /* Verminder de padding */
+            background-color: #ffcccb;
+            width: 250px; /* Stel een vaste breedte in */
+            height: 55px; /* Stel een vaste hoogte in */
+            margin: 20px;
+            text-align: center;
+            border-radius: 10px;
+            position: absolute;
+            top: 100px; /* Aanpassing mogelijk via deze waarde */
+            left: 20px; /* Aanpassing mogelijk via deze waarde */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Zorg dat tekst niet uitsteekt */
+        }
+        
+        .unhandled-orders-container h3 {
+            font-size: 14px; /* Kleinere lettergrootte */
+            color: #333;
+            margin-bottom: 5px; /* Minder ruimte onder de koptekst */
+            margin-top: 5px;
+            line-height: 1.2; /* Kleinere regelafstand */
+        }
+        
+        .unhandled-orders-container p {
+            font-size: 12px; /* Kleinere lettergrootte */
+            color: #555;
+            line-height: 1.2; /* Kleinere regelafstand */
+            margin: 0; /* Geen extra marge */
+        }
+        
+        .unhandled-orders-link {
+            text-decoration: underline;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .unhandled-orders-link:hover {
+            color: #b71c1c;
+            text-decoration: none;
+        }
+        
+
+        
     </style>
 </head>
 <body>
@@ -280,11 +324,12 @@
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="user-icon">
-            <div class="user-icon-circle">M</div>
+            <div class="user-icon-circle" id="user-icon-circle"></div> <!-- Geen tekst standaard -->
             <div id="userMenu" class="user-menu">
-                <div id="username-display" class="username-display">Loading...</div>
+                <div id="username-display" class="username-display"></div>
             </div>
         </div>
+        
         <h1>Spinnback</h1>
         <div class="menu-button" id="menuButton">
             <div></div>
@@ -305,6 +350,15 @@
         <a href="/my_sold_records" class="nav-link">My Sold Records</a>
         <a href="/my_rating" class="nav-link">My Seller Rating</a>
     </div>
+
+    {% if unhandled_orders %}
+    <div id="unhandled-orders-container" class="unhandled-orders-container">
+        <h3>You have {{ unhandled_orders }} unhandled order(s).</h3>
+        <p>Go to <a href="/my_sold_records" class="unhandled-orders-link">'My Sold Records'</a> and handle them for good reviews!</p>
+    </div>
+    {% endif %}
+    
+    
 
     <!-- Flash message block -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -383,6 +437,34 @@
             alert("You have been successfully logged out!");
             window.location.href = '/logout';
         }
+        
+        // Zorg ervoor dat de functie wordt aangeroepen bij het laden van de pagina
+        window.onload = fetchUsername;
+        
+        
+        function logout() {
+            alert("You have been successfully logged out!");
+            window.location.href = '/logout';
+        }
+
+        async function fetchUnhandledOrders() {
+            try {
+                const response = await fetch('/get_unhandled_orders');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('unhandled-orders-count').innerText = data.unhandled_orders;
+                } else {
+                    console.error("Error fetching unhandled orders");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+    
+        window.onload = fetchUnhandledOrders;
+    
+        
+        
     </script>
 
 </body>
