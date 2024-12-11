@@ -141,38 +141,38 @@
 
       <label for="genre">Genre</label>
       <select id="genre" name="genre" required>
-        <option value="Pop">Pop</option>
-        <option value="Rock">Rock</option>
-        <option value="Jazz">Jazz</option>
-        <option value="Blues">Blues</option>
-        <option value="Hip-hop/Rap">Hip-hop/Rap</option>
-        <option value="Classical">Classical</option>
-        <option value="Electronic/Dance">Electronic/Dance</option>
-        <option value="Reggae">Reggae</option>
-        <option value="R&B/Soul">R&B/Soul</option>
-        <option value="Country">Country</option>
-        <option value="Folk">Folk</option>
-        <option value="Metal">Metal</option>
-        <option value="Latin">Latin</option>
-        <option value="Indie/Alternative">Indie/Alternative</option>
-        <option value="World Music">World Music</option>
+        <option value="Pop" {% if record.genre == 'Pop' %}selected{% endif %}>Pop</option>
+        <option value="Rock" {% if record.genre == 'Rock' %}selected{% endif %}>Rock</option>
+        <option value="Jazz" {% if record.genre == 'Jazz' %}selected{% endif %}>Jazz</option>
+        <option value="Blues" {% if record.genre == 'Blues' %}selected{% endif %}>Blues</option>
+        <option value="Hip-hop/Rap" {% if record.genre == 'Hip-hop/Rap' %}selected{% endif %}>Hip-hop/Rap</option>
+        <option value="Classical" {% if record.genre == 'Classical' %}selected{% endif %}>Classical</option>
+        <option value="Electronic/Dance" {% if record.genre == 'Electronic/Dance' %}selected{% endif %}>Electronic/Dance</option>
+        <option value="Reggae" {% if record.genre == 'Reggae' %}selected{% endif %}>Reggae</option>
+        <option value="R&B/Soul" {% if record.genre == 'R&B/Soul' %}selected{% endif %}>R&B/Soul</option>
+        <option value="Country" {% if record.genre == 'Country' %}selected{% endif %}>Country</option>
+        <option value="Folk" {% if record.genre == 'Folk' %}selected{% endif %}>Folk</option>
+        <option value="Metal" {% if record.genre == 'Metal' %}selected{% endif %}>Metal</option>
+        <option value="Latin" {% if record.genre == 'Latin' %}selected{% endif %}>Latin</option>
+        <option value="Indie/Alternative" {% if record.genre == 'Indie/Alternative' %}selected{% endif %}>Indie/Alternative</option>
+        <option value="World Music" {% if record.genre == 'World Music' %}selected{% endif %}>World Music</option>        
       </select>
 
       <label for="size">Size</label>
       <select id="size" name="size" required>
         <option value='12"' {% if record.size == '12"' %}selected{% endif %}>12-inch</option>
         <option value='10"' {% if record.size == '10"' %}selected{% endif %}>10-inch</option>
-        <option value='7"' {% if record.size == '7"' %}selected{% endif %}>7-inch</option>
+        <option value='7"' {% if record.size == '7"' %}selected{% endif %}>7-inch</option>        
       </select>
 
       <label for="condition">Condition</label>
       <select id="condition" name="condition" required>
-        <option value="M">M (Mint)</option>
-        <option value="NM">NM (Near Mint)</option>
-        <option value="VG+">VG+ (Very Good Plus)</option>
-        <option value="VG">VG (Very Good)</option>
-        <option value="G">G (Good)</option>
-        <option value="P">P (Poor)</option>
+        <option value="M" {% if record.condition == 'M' %}selected{% endif %}>M (Mint)</option>
+        <option value="NM" {% if record.condition == 'NM' %}selected{% endif %}>NM (Near Mint)</option>
+        <option value="VG+" {% if record.condition == 'VG+' %}selected{% endif %}>VG+ (Very Good Plus)</option>
+        <option value="VG" {% if record.condition == 'VG' %}selected{% endif %}>VG (Very Good)</option>
+        <option value="G" {% if record.condition == 'G' %}selected{% endif %}>G (Good)</option>
+        <option value="P" {% if record.condition == 'P' %}selected{% endif %}>P (Poor)</option>
       </select>
 
       <label for="colour">Color</label>
