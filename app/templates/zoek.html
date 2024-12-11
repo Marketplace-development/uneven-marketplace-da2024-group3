@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spinnback - Collections</title>
   <style>
+    /* Algemene styling */
     body {
       font-family: 'Georgia', serif;
       background: linear-gradient(to bottom, #f7d9c4, #f4b085);
@@ -13,9 +14,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
 
+    /* Container styling */
     .container {
       background-color: white;
       padding: 30px;
@@ -23,15 +25,25 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
       width: 800px;
-      height: 200px;
+      max-width: 90%;
     }
 
+    /* Titel styling */
     h1 {
       color: #8c564b;
       margin-bottom: 20px;
-      font-size: 25px;
+      font-size: 24px;
+      font-weight: bold;
     }
 
+    h2 {
+      color: #6c4a3d;
+      margin-top: -10px;
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    /* Zoekbalk styling */
     .search-bar {
       display: flex;
       align-items: center;
@@ -74,33 +86,69 @@
       height: 20px;
     }
 
-    .error-message {
-      color: red;
-      margin-top: 10px;
-      font-size: 14px;
+    /* Lijst styling */
+    ul#similar-collections {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
     }
 
+    ul#similar-collections li {
+      background-color: #ffe8dc;
+      border: 2px solid #f4b085;
+      border-radius: 8px;
+      margin: 10px 0;
+      padding: 15px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    ul#similar-collections li a {
+      text-decoration: none;
+      color: #8c564b;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    ul#similar-collections li:hover {
+      background-color: #fdd0b5;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    ul#similar-collections li a:hover {
+      text-decoration: underline;
+    }
+
+    /* Error boodschap */
+    .error-message {
+      color: red;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    /* Link naar Dashboard */
     .back-link {
-      display: block;
+      display: inline-block;
       margin-top: 20px;
       font-size: 14px;
       text-decoration: none;
       color: #8c564b;
+      transition: color 0.3s ease;
     }
 
     .back-link:hover {
+      color: #f4b085;
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Which Spinnbackers' collection de you want to see?</h1>
+    <h1>Which Spinnbackers' collection do you want to see?</h1>
     <form action="/library/search" method="GET">
       <div class="search-bar">
         <input type="text" name="username" placeholder="Enter a username" required>
         <button type="submit">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/search--v1.png" alt="Zoek">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/search--v1.png" alt="Search">
           Search
         </button>
       </div>
@@ -109,9 +157,40 @@
       {% endif %}
     </form>
     
-    <a href="/dashboard" class="back-link">VERANDEREN DOOR UNIFORME HOMEKNOP IN TOP BAR ZOALS ANDER PAGINA'S</a>
+    <!-- Nieuwe sectie voor vergelijkbare collecties -->
+    <h1>Similar Collections</h1>
+    <h2>Spinnbackers with similar taste</h2>
+    <ul id="similar-collections">
+      <!-- Suggesties worden hier dynamisch geladen -->
+    </ul>
+
+    <a href="/dashboard" class="back-link">Go to Dashboard</a>
   </div>
+
+  <script>
+    // Haal vergelijkbare collecties op bij het laden van de pagina
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const response = await fetch("/library/similar");
+        const data = await response.json();
+
+        const list = document.getElementById("similar-collections");
+        if (data.error) {
+          // Toon een foutmelding of informatieve boodschap
+          list.innerHTML = <li>${data.error}</li>;
+        } else if (data.length === 0) {
+          list.innerHTML = <li>No similar collections found.</li>;
+        } else {
+          data.forEach(user => {
+            const li = document.createElement("li");
+            li.innerHTML = <a href="/library/${user.username}">${user.username}</a>;
+            list.appendChild(li);
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching similar collections:", error);
+      }
+    });
+  </script>
 </body>
 </html>
-
-
