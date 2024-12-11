@@ -342,7 +342,6 @@ def create_transaction(recordid):
         # Commit de wijzigingen naar de database
         db.session.commit()
 
-        flash("Congrats on adding to your collection!", "success")
         return render_template('edit_after_purchase.html', record=record)
 
     except Exception as e:
