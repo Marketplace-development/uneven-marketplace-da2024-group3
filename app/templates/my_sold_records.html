@@ -147,6 +147,21 @@
         .buyer-info p:first-child {
             padding-left: 0; /* Zorg dat de naam niet wordt verschoven */
         }
+
+        .checkbox-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Zorgt ervoor dat de checkbox en het label verticaal worden uitgelijnd */
+            height: 100%; /* Laat de checkbox container de volledige hoogte van de row innemen */
+            margin-right: 100px;
+        }
+
+        .checkbox-container label {
+            font-weight: bold;  /* Maakt de tekst vetgedrukt */
+            color: #8c564b;     /* Bruine kleur voor de tekst */
+            font-size: 18px;     /* Optioneel, stel de grootte van de tekst in als dat nodig is */
+        }
         
     </style>
 </head>
@@ -172,13 +187,18 @@
     <!-- Zoekbalk -->
     <div class="search-container">
         <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchRecords()" />
+        <select class="dropdown" id="sort-dropdown" onchange="sortSoldRecords()">
+            <option value="">Sort by</option>
+            <option value="newest">Newest to Oldest</option>
+            <option value="oldest">Oldest to Newest</option>
+        </select>
     </div>
 
     <div class="records-container">
         {% if sold_records and sold_records|length > 0 %}
             <div id="records-list">
                 {% for record in sold_records %}
-                <div class="purchase-item" data-album="{{ record.album_name }}" data-artist="{{ record.artist }}">
+                <div class="purchase-item" data-album="{{ record.album_name }}" data-artist="{{ record.artist }}" data-date="{{ record.date_sold }}">
                     <!-- Details van de transactie -->
                     <div class="purchase-details">
                         <div class="purchase-details-info">
@@ -200,9 +220,16 @@
                                 <p>Email: {{ record.buyer_email }}</p>
                                 <p>Phone: {{ record.buyer_phone }}</p>
                             </div>
-                            
+                        </div> 
                         
-                        </div>                       
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="handled-{{ record.transaction_id }}" 
+                                   class="handled-checkbox" 
+                                   {% if record.handled_status %}checked{% endif %}>
+                            <label for="handled-{{ record.transaction_id }}">HANDLED</label>
+                        </div>
+                        
+
                         {% if record.image_url %}
                         <!-- Voeg de afbeelding toe als er een image_url is -->
                         <img src="{{ record.image_url }}" alt="{{ record.album_name }}" class="purchase-image">
@@ -236,6 +263,28 @@
             });
         }
 
+        function sortSoldRecords() {
+            const dropdown = document.getElementById('sort-dropdown');
+            const sortOrder = dropdown.value;
+            const recordsContainer = document.getElementById('records-list');
+            const records = Array.from(document.querySelectorAll('.purchase-item'));
+        
+            records.sort((a, b) => {
+                const dateA = new Date(a.getAttribute('data-date'));
+                const dateB = new Date(b.getAttribute('data-date'));
+        
+                if (sortOrder === 'newest') {
+                    return dateB - dateA; // Sort newest to oldest
+                } else if (sortOrder === 'oldest') {
+                    return dateA - dateB; // Sort oldest to newest
+                }
+                return 0; // Default, no sorting
+            });
+        
+            // Re-append the sorted records to the container
+            records.forEach(record => recordsContainer.appendChild(record));
+        }
+
         
         // Functie om de flashmelding automatisch te laten verdwijnen na 2.5 seconden
         window.onload = function() {
@@ -245,7 +294,38 @@
                     flashMessage.style.display = 'none';
                 }, 2500); // 2.5 seconden
             }
-        };       
+        };
+        
+        document.querySelectorAll('.handled-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const transactionId = this.id.replace('handled-', '');  // Haalt de transaction_id op uit de checkbox ID
+                const handledStatus = this.checked;  // Kijkt of de checkbox is aangevinkt
+        
+                // AJAX-aanroep naar de backend om de status bij te werken
+                fetch('/update-handled-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        transaction_id: transactionId,
+                        handled_status: handledStatus
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        console.log(data.message);  // Succesbericht
+                    } else {
+                        console.error(data.error);  // Foutbericht
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+        
     </script>
 </body>
 </html>
