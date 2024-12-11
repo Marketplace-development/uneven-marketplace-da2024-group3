@@ -21,17 +21,14 @@
             width: 100%;
             background-color: #8c564b;
             color: white;
-            padding: 10px 0;
+            padding: 10px 20px; /* Voeg padding toe aan de zijkanten */
             display: flex;
-            justify-content: space-around; /* Zorgt ervoor dat de items zich gelijkmatig over de ruimte verdelen */
+            justify-content: space-around; /* Verdeel de ruimte tussen de icon, titel, en knoppen */
             align-items: center;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 10;
-            padding-left: 2px;  /* Voeg wat ruimte aan de linkerzijde toe voor de eerste item (de gebruiker) */
-            padding-right: 20px; /* Voeg wat ruimte aan de rechterzijde toe voor de menu-knop */
-            gap: 440px; /* Dit is de ruimte tussen de icon, titel, en menu-knop */
         }
 
         .top-bar h1 {
@@ -47,6 +44,7 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            margin-right: 275px; /* Pas deze waarde aan voor de afstand tussen de icon en de titel */
         }
 
         .user-icon-circle {
@@ -101,58 +99,27 @@
             border-bottom: 1px solid #eee;
             cursor: default;
         }
-        .menu-button {
-            width: 30px;
-            height: 25px;
-            cursor: pointer;
+        .action-buttons {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            right: 10px;
+            gap: 15px; /* Pas de afstand tussen de knoppen aan */
+            align-items: center;
+            margin-left: 0; /* Pas deze waarde aan voor de afstand tussen de titel en de knoppen */
         }
         
-        .menu-button div {
-            width: 100%;
-            height: 4px;
-            background-color: white;
-            border-radius: 2px;
-        }
-        
-        /* Dropdown-menu styling */
-        .menu-dropdown {
-            display: none;
-            position: absolute;
-            top: 50px; /* Plaats het dropdown-menu onder de top-bar */
-            right: 10px; /* Zorg dat het menu tegen de rechterkant van de top-bar blijft */
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            z-index: 1000;
-            min-width: 120px; /* Zorg voor een bredere dropdown */
-            padding: 5px 0; /* Voeg ruimte tussen items toe */
-        }
-
-        /* Actieve dropdown-weergave */
-        .menu-dropdown.active {
-            display: block;
-        }
-
-        /* Dropdown-item styling */
-        .menu-item {
-            padding: 10px 15px; /* Meer padding voor een betere klikbare ruimte */
-            font-size: 14px;
-            color: #333;
-            text-align: left;
+        /* Stijl voor de knoppen */
+        .nav-button {
+            color: white;
+            background-color: #714239;
+            padding: 8px 12px;
             text-decoration: none;
-            display: block; /* Zorgt ervoor dat items onder elkaar staan */
-            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
             transition: background-color 0.3s;
         }
-
-        .menu-item:hover {
-            background-color: #f1f1f1;
+        
+        .nav-button:hover {
+            background-color: #5a322b; /* Donkerdere kleur bij hover */
         }
         .nav-links {
             width: 100%;
@@ -322,11 +289,9 @@
             <div></div>
             <div></div>
         </div>
-        <div id="menuDropdown" class="menu-dropdown">
-            <!-- Link naar My Profile -->
-            <a href="{{ url_for('main.my_profile') }}" class="menu-item">My Profile</a>
-            <!-- Link naar Logout -->
-            <a href="{{ url_for('main.logout') }}" class="menu-item">Log Out</a>
+        <div class="action-buttons">
+            <a href="{{ url_for('main.my_profile') }}" class="nav-button">My Profile</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Log Out</a>
         </div>
     </div>
     
@@ -369,18 +334,6 @@
     </div>
 
     <script>
-        const menuButton = document.getElementById("menuButton");
-        const menuDropdown = document.getElementById("menuDropdown");
-        
-        menuButton.addEventListener("click", () => {
-            menuDropdown.classList.toggle("active");
-        });
-        
-        window.addEventListener("click", (e) => {
-            if (!e.target.closest("#menuButton")) {
-                menuDropdown.classList.remove("active");
-            }
-        });
         const userIconCircle = document.querySelector(".user-icon-circle");
         const userMenu = document.getElementById("userMenu");
 
