@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if username %}Library of {{ username }}{% else %}Libraries{% endif %}</title>
+  <title>Spinnback - {% if username %}Collection of {{ username }}{% else %}Libraries{% endif %}</title>
   <style>
     body {
       font-family: 'Georgia', serif;
@@ -153,9 +153,9 @@
 </head>
 <body>
   <div class="top-bar">
-    <h1>{% if username %}Library of {{ username }}{% else %}Libraries{% endif %}</h1>
+    <h1>{% if username %}Collection of {{ username }}{% else %}Collections{% endif %}</h1>
     <div>
-      <button class="dashboard-button" onclick="location.href='/dashboard'">Go to Dashboard</button>
+      <button class="dashboard-button" onclick="location.href='/dashboard'">Home</button>
     </div>
   </div>
 
@@ -166,7 +166,7 @@
   {% if not username %}
     <!-- Gebruikerslijst -->
     <div class="user-list">
-      <h2>Found Users</h2>
+      <h2>Users Found</h2>
       <ul>
         {% for user in users %}
           <li>
@@ -178,7 +178,7 @@
   {% else %}
     <!-- Bibliotheek van specifieke gebruiker -->
     <div class="libraries">
-      <h2>Library of {{ username }}</h2>
+      <h2>Collection of {{ username }}</h2>
 
       <!-- Zoekbalk -->
       <input type="text" id="search" class="search-bar" placeholder="Search by album or artist" onkeyup="searchRecords()" />
