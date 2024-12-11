@@ -162,12 +162,6 @@ def login():
     return render_template('login.html')  # Render de loginpagina voor GET verzoeken
 
 
-@main.route('/dashboard', methods=['GET'])
-def dashboard():
-    username = session.get('username')  # Retrieve the logged-in user's username
-    if not username:
-        return redirect(url_for('main.login'))  # Redirect to login if no user is logged in
-    return render_template('dashboard_records.html')
 
 
 
@@ -361,12 +355,11 @@ def create_transaction(recordid):
 
 @main.route('/get_username', methods=['GET'])
 def get_username():
-    # Controleer of een gebruiker is ingelogd
-    username = session.get('username')
+    username = session.get('username')  # Haal de gebruikersnaam op uit de sessie
     if username:
         return jsonify({"username": username}), 200
-    else:
-        return jsonify({"error": "Not logged in"}), 401
+    return jsonify({"error": "Not logged in"}), 401
+
 
 @main.route('/my_library', methods=['GET'])
 def my_library():
@@ -474,6 +467,7 @@ def get_my_purchases():
                 "seller_email": seller.email,
                 "seller_telefoonnummer": seller.telefoonnummer,
                 "image_url": image_url,
+                "handled_status": transaction.handledyesorno
             })
 
     # Render de HTML-template met de verzamelde gegevens
@@ -547,12 +541,60 @@ def my_sold_records():
                 "buyer_name": buyer.username,  # Naam van de koper
                 "buyer_email": buyer.email,  # E-mailadres van de koper
                 "buyer_phone": buyer.telefoonnummer,  # Telefoonnummer van de koper
-                "buyer_address": formatted_address  # Gebruik het geformatteerde adres
+                "buyer_address": formatted_address,  # Gebruik het geformatteerde adres
+                "handled_status": transaction.handledyesorno
             })
 
     # Render de HTML-template met de verzamelde gegevens
     return render_template('my_sold_records.html', sold_records=sold_records_data)
 
+# Route om de checkbox status bij te werken
+@main.route('/update-handled-status', methods=['POST'])
+def update_handled_status():
+    transaction_id = request.json.get('transaction_id')
+    handled_status = request.json.get('handled_status')
+
+    if not transaction_id or handled_status is None:
+        return jsonify({"error": "Invalid data"}), 400
+
+    # Haal de transactie op uit de database
+    transaction = None
+    transaction = transactions.query.get(transaction_id)
+
+    if not transaction:
+        return jsonify({"error": "Transaction not found"}), 404
+
+    # Werk de handledyesorno waarde bij
+    transaction.handledyesorno = handled_status
+    db.session.commit()
+
+    return jsonify({"message": "Handled status updated successfully"}), 200
+
+if __name__ == '__main__':
+    main.run(debug=True)
+
+
+from flask import session
+
+@main.route('/dashboard', methods=['GET'])
+def dashboard():
+    username = session.get('username')  # Controleer of de gebruiker is ingelogd
+    if not username:
+        return redirect(url_for('main.login'))  # Redirect naar login als niet ingelogd
+
+    # Haal het aantal ongehandelde transacties op
+    userid = session.get('userid')
+    unhandled_count = transactions.query.filter_by(
+        sellerid=userid,
+        handledyesorno=False
+    ).count()
+
+    # Voeg de ongehandelde orders toe aan de context voor de template
+    return render_template(
+        'dashboard_records.html',
+        username=username,
+        unhandled_orders=unhandled_count if unhandled_count > 0 else None
+    )
 
 
 
@@ -1022,5 +1064,62 @@ def remove_1plaat(recordid):
     except Exception as e:
         logging.error(f"Error removing record: {e}")
         return "Error removing record", 500
+    
+
+@main.route('/library/similar', methods=['GET'])
+def find_similar_collections():
+    try:
+        # Haal de ingelogde gebruiker op
+        userid = session.get('userid')
+        if not userid:
+            return jsonify({"error": "User not logged in"}), 401
+
+        # Haal de collectie van de gebruiker op
+        user_records = records.query.filter_by(ownerid=userid).all()
+        if not user_records:
+            return jsonify({"error": "Your collection is empty. Add some records to get better suggestions."}), 200
+
+        # Bereken frequentie van genres en artiesten in de collectie van de gebruiker
+        from collections import Counter
+        user_genres = Counter(record.genre for record in user_records)
+        user_artists = Counter(record.artist for record in user_records)
+
+        # Zoek naar andere gebruikers met overeenkomende genres of artiesten
+        similar_users = db.session.query(users).join(records).filter(
+            (records.genre.in_(user_genres.keys()) | records.artist.in_(user_artists.keys())),
+            records.ownerid != userid  # Exclude de ingelogde gebruiker
+        ).distinct().all()
+
+        # Bereken een score voor overeenkomende gebruikers
+        user_scores = []
+        for user in similar_users:
+            user_records = records.query.filter_by(ownerid=user.userid).all()
+            genre_score = sum(user_genres[record.genre] for record in user_records if record.genre in user_genres)
+            artist_score = sum(user_artists[record.artist] for record in user_records if record.artist in user_artists)
+            total_score = genre_score + artist_score
+            user_scores.append((user, total_score))
+
+        # Sorteer gebruikers op score
+        sorted_users = sorted(user_scores, key=lambda x: x[1], reverse=True)
+
+        # Beperk tot gebruikers met een niet-lege collectie
+        filtered_users = [user for user, score in sorted_users if records.query.filter_by(ownerid=user.userid).count() > 0]
+
+        # Voeg willekeurige gebruikers toe als er minder dan 3 zijn
+        if len(filtered_users) < 3:
+            all_users = db.session.query(users).filter(users.userid != userid).all()
+            non_empty_users = [user for user in all_users if records.query.filter_by(ownerid=user.userid).count() > 0]
+            random_fill = [user for user in non_empty_users if user not in filtered_users]
+            from random import sample
+            filtered_users.extend(sample(random_fill, min(3 - len(filtered_users), len(random_fill))))
+
+        # Beperk tot een maximum van 5 suggesties
+        suggestions = [{"username": user.username, "userid": user.userid} for user in filtered_users[:5]]
+
+        return jsonify(suggestions), 200
+
+    except Exception as e:
+        logging.error(f"Error finding similar collections: {e}")
+        return jsonify({"error": "Unable to fetch similar collections"}), 500
     
 
