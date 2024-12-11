@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search user</title>
+  <title>Spinnback - Collections</title>
   <style>
     body {
       font-family: 'Georgia', serif;
@@ -22,12 +22,14 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-      width: 400px;
+      width: 800px;
+      height: 200px;
     }
 
     h1 {
       color: #8c564b;
       margin-bottom: 20px;
+      font-size: 25px;
     }
 
     .search-bar {
@@ -93,7 +95,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Search library</h1>
+    <h1>Which Spinnbackers' collection de you want to see?</h1>
     <form action="/library/search" method="GET">
       <div class="search-bar">
         <input type="text" name="username" placeholder="Enter a username" required>
@@ -107,7 +109,7 @@
       {% endif %}
     </form>
     
-    <a href="/dashboard" class="back-link">Go to Dashboard</a>
+    <a href="/dashboard" class="back-link">VERANDEREN DOOR UNIFORME HOMEKNOP IN TOP BAR ZOALS ANDER PAGINA'S</a>
   </div>
 </body>
 </html>
