@@ -1085,7 +1085,7 @@ def delete_1plaat(recordid):
     try:
         # Handle dependencies
         transactions.query.filter_by(recordid=recordid).update({'recordid': None})
-        favorites.query.filter_by(recordid=recordid).update({'recordid': None})
+        favorites.query.filter_by(recordid=recordid).delete()
         db.session.commit()
         # Delete the record
         db.session.delete(record)
