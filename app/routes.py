@@ -616,7 +616,7 @@ def write_review(transaction_id):
 
     if existing_review:
         # Er is al een review, toon een melding en redirect naar 'my_purchases'
-        flash('A review has already been written for this purchase.', 'error')
+        flash('You have already written a review for this purchase!', 'error')
         return redirect(url_for('main.return_my_purchases'))
     
     # Als er geen review is, toon dan de schrijf-review pagina
@@ -637,9 +637,6 @@ def submit_review():
     )
     db.session.add(new_review)
     db.session.commit()
-
-    # Flash message voor succesvolle inzending
-    flash('Review successfully submitted!', 'success')
 
     # Redirect naar een bevestigingspagina of terug naar de aankopen
     return redirect(url_for('main.return_my_purchases'))
@@ -978,6 +975,32 @@ def get_favorites():
         return jsonify(favorite_record_ids), 200
     except Exception as e:
         logging.error(f"Error fetching favorites: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
+    
+
+@main.route('/remove_favorite', methods=['POST'])
+def remove_favorite():
+    if 'userid' not in session:
+        return jsonify({"error": "User not logged in"}), 401
+
+    data = request.get_json()
+    userid = session['userid']
+    recordid = data.get('recordid')
+
+    if not recordid:
+        return jsonify({"error": "Record ID is required"}), 400
+
+    try:
+        # Verwijder favoriet uit de database
+        favorite = favorites.query.filter_by(userid=userid, recordid=recordid).first()
+        if favorite:
+            db.session.delete(favorite)
+            db.session.commit()
+            return jsonify({"success": True}), 200
+        else:
+            return jsonify({"error": "Favorite not found"}), 404
+    except Exception as e:
+        logging.error(f"Error removing favorite: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
     
 @main.route('/my_profile', methods=['GET', 'POST'])
