@@ -6,19 +6,11 @@
   <title>Spinnback</title>
   <style>
     body {
-      font-family: 'Georgia', serif;
-      background-color: #ede2cf ; /* Zelfde kleur als de achtergrond van de grid */
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      color: #3d2b1f;
+      background-color: #f9f9f9;
     }
-
-    /* Top Bar */
     .top-bar {
       width: 100%;
       background-color: #8c564b;
@@ -30,34 +22,53 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
-    .top-bar h1 {
-      margin: 0px;
-      margin-left: 40px;
+    .top-bar h1 .intro-text{
+      margin-left: 30px;
       font-size: 24px;
-      font-family: 'Trebuchet MS', sans-serif;
     }
 
-    .top-bar button {
-      padding: 5px 15px;
-      background-color: white;
-      color: #8c564b;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    .top-bar h2 .intro-text h2{
+      margin: 0;
+      font-size: 24px;
+      align-self: center;
+    }
+    .top-bar .intro-text p {
+      margin: 5px 0 0;
       font-size: 14px;
     }
 
-    .top-bar button:first-child {
-      margin-right: 10px;
-    }
-    
-    .top-bar button:last-child {
-      margin-right: 40px;
+    .top-bar button {
+      padding: 8px 12px;
+      background-color: #ffffff;
+      color: #8c564b;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      margin-right: 30px;
     }
 
     .top-bar button:hover {
-      background-color: #fdd0b5;
+      background-color: #8c564b;
+      color: white;
     }
+  
+
+
+/* Logo Styling */
+    .LOGO-upload-container {
+      position: absolute;
+      top: 0px; /* Keeps the logo slightly above the top bar */
+      left: 10px; /* Keeps it closer to the top-left corner */
+      z-index: 2; /* Ensures the logo appears on top of other elements */
+    }
+
+    .LOGO-upload-container img {
+      max-width: 80px; /* Slightly larger than the top bar height */
+      height: 80px; /* Maintains aspect ratio */
+    }
+
 
     /* Alert Styling */
     .alert-container {
@@ -70,7 +81,7 @@
       max-width: 600px;
       text-align: center;
     }
-
+    
     .alert {
       padding: 10px;
       margin: 5px;
@@ -109,45 +120,15 @@
       }
     }
 
-    /* Intro Text */
-    .intro-text {
-      text-align: center;
-      margin-top: 20px;
-      margin-bottom: 20px;
-      color: #5a3a28;
-    }
-
-    .intro-text h2 {
-      font-size: 20px;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    .intro-text p {
-      font-size: 16px;
-      margin: 5px 0 0 0;
-      font-style: italic;
-    }
 
     /* Listings Section */
     .listing-container {
       width: 90%;
       max-width: 1200px;
-      background-color: #ede2cf;
+      background-color: #f9f9f9;
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       margin-top: 20px;
-      text-align: center;
-    }
-
-    .listing-container h2 {
-      font-size: 18px;
-      color: #5a3a28;
-    }
-  
-    .listing-container p {
-      font-weight: bold;
-      margin-bottom: 40px;
     }
 
     h1.page-title {
@@ -163,16 +144,16 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
-      background-color: #ede2cf; /* Achtergrondkleur van de grid */
+      background-color: #f9f9f9; /* Achtergrondkleur van de grid */
       padding: 0; /* Verwijdert padding van de grid-container */
-      margin: 0; /* Verwijdert eventuele marges rondom de grid */
+      margin: 0 auto; /* Verwijdert eventuele marges rondom de grid */
       border: none; /* Verwijdert de rand van de grid */
       box-shadow: none; /* Verwijdert eventuele schaduw rond de grid */
     }
     
     /* Grid items (listings) */
     .listing {
-      background-color: #ede2cf; /* Achtergrondkleur van de vakken */
+      background-color: #f9f9f9; /* Achtergrondkleur van de vakken */
       border: none; /* Verwijdert de rand van de vakken */
       border-radius: 5px; /* Optioneel: afgeronde hoeken */
       padding: 10px;
@@ -193,7 +174,7 @@
       object-fit: contain;
       border-radius: 5px;
       margin-bottom: 10px;
-      background-color: #ede2cf;
+      background-color: #f9f9f9;
     }
 
     .listing p {
@@ -207,6 +188,15 @@
       color: #8c564b;
     }
 
+    .listing-pair {
+      display: flex;
+      flex-direction: column; /* Stack the listings vertically */
+      justify-content: center;
+      align-items: center;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      padding: 10px;
+    }
     textarea.listing {
       width: 100%;
       resize: none; /* Voorkomt dat gebruikers het tekstvak handmatig kunnen vergroten/verkleinen */
@@ -227,7 +217,6 @@
     }
     
     
-
     /* Specifieke styling voor tekstvakken die 2 kolommen beslaan (zoals in rij 1) */
     textarea.listing.span2 {
       grid-column: span 2; /* Dit maakt het vak breed genoeg voor twee kolommen */
@@ -238,7 +227,36 @@
       grid-column: span 1; /* Dit zorgt ervoor dat het vak maar één kolom beslaat */
     }
 
-  
+    .image-upload-container {
+      grid-column: span 2; /* Make it span 2 columns */
+      background-color: #f9f9f9; /* Match the background color */
+      padding: 20px;
+      text-align: center; /* Center the content */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #5a3a28; /* Matching text color */
+      font-family: 'Arial', sans-serif;
+    }
+    
+    .image-upload-container p {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    
+    #image-upload {
+      margin-top: 0px;
+    }
+    
+    #preview-image {
+      display: block;
+      max-width: 100%;
+      margin-top: 10px;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
+    }
+    
   </style>
 </head>
 <body>
@@ -257,42 +275,77 @@
 
   <!-- Top Bar -->
   <div class="top-bar">
-    <h1>Spinnback</h1>
+    <div></div>
+    <div class="intro-text">
+      <h2>LOGIN OR REGISTER TO PROCEED TO THE SPINNBACK PLATFORM</h2>
+      <p>...Or find out what Spinnback is below!</p>
+    </div>
     <div>
       <button onclick="location.href='/login'">Login</button>
       <button onclick="location.href='/register'">Register</button>
-    </div>
+    </div> 
   </div>
-
-  <div class="intro-text">
-    <h1 class="page-title">WELCOME TO SPINNBACK!</h1>
+  <div class="LOGO-upload-container">
+    <img src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true/300x200" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 2 -->
   </div>
 
   <!-- Listings Section -->
-  <div class="listing-container" style="text-align: center;">
-    <h2>LOGIN OR REGISTER TO PROCEED TO THE SPINNBACK PLATFORM</h2>
-    <p>...Or find out what Spinnback is below!</p>
+  <div class="listing-container">
     <div id="listings-container" class="listings-grid">
-      <!-- Dynamische vakken voor records -->
-      <div class="listing">Vak 1</div>
-      <div class="listing">Vak 2</div>
-      <textarea class="static listing span2" placeholder="Welcome to Spinnback – The Vinyl Revolution
-
-Spinnback is a platform for vinyl lovers to connect, share, and trade records. Whether you're an experienced collector or just starting out, Spinnback lets you discover new music, engage with a community of enthusiasts, and experience vinyl in its purest form. It’s not just a marketplace—it’s a space where the love of vinyl meets modern technology, creating an interactive way to explore, share, and enjoy your collection."></textarea>
-  
-      <textarea class="static listing span1" placeholder="With Spinnback, you can upload and showcase your own vinyl collection, and browse through the collections of others. Discover hidden gems, learn the stories behind albums, and connect with fellow collectors from all over. It’s a place to share your passion and immerse yourself in a world of music."></textarea>
-      <div class="listing">Vak 2</div>
-      <div class="listing">Vak 3</div>
-      <div class="listing">Vak 4</div>
-  
-      <div class="listing">Vak 1</div>
-      <textarea class="static listing span1" placeholder="Looking for rare or exclusive records? Spinnback makes it easy to trade vinyl directly with others. Whether you're buying, selling, or swapping, our platform helps you find those elusive albums and complete your collection. Spinnback is the perfect place to score your next vinyl treasure!"></textarea>
-
-      <div class="listing">Vak 3</div>
-      <div class="listing">Vak 4</div>
+      <div class = "listing-pair">
+        <!-- Dynamische vakken voor records -->
+        <div class="listing">Vak 1</div>
+        <div class="listing">Vak 2</div>
+      </div>
+      <div class = "listing-pair">
+        <!-- Dynamische vakken voor records -->
+        <div class="listing">Vak 3</div>
+        <div class="listing">Vak 4</div>
+      </div>
+        <div class="image-upload-container">
+            <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/text1%20overview.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 1 -->
+        </div>
+        <div class="image-upload-container">
+          <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/text-2%20overview.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 2 -->
+        </div>
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 1</div>
+          <div class="listing">Vak 2</div>
+        </div>
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 3</div>
+          <div class="listing">Vak 4</div>
+        </div>
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 1</div>
+          <div class="listing">Vak 2</div>
+        </div>
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 3</div>
+          <div class="listing">Vak 4</div>
+        </div>
+        <div class="image-upload-container">
+          <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/text3%20overview.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 1 -->
+        </div>
+        <div class="image-upload-container">
+          <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/text4%20overview.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 2 -->
+        </div>
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 1</div>
+          <div class="listing">Vak 2</div>
+        </div>
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 3</div>
+          <div class="listing">Vak 4</div>
+        </div>
     </div>
-  </div>
-  
+    
 
 
   <script>
@@ -381,7 +434,6 @@ Spinnback is a platform for vinyl lovers to connect, share, and trade records. W
 
 </body>
 </html>
-
 
 
 
