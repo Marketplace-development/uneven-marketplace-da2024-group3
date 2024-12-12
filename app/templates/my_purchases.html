@@ -42,12 +42,13 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            margin-bottom: 0px;
         }
         .purchase-item {
             display: flex;
             padding: 15px;
             border-bottom: 1px solid #eee;
-            margin-bottom: 15px;
+            margin-bottom: 0px;
         }
         .purchase-item:last-child {
             border-bottom: none;
@@ -87,6 +88,15 @@
             object-fit: cover;
             border-radius: 5px;
         }
+        .center-container {
+            display: flex;
+            justify-content: center; /* Centreer horizontaal */
+            align-items: center; /* Centreer verticaal */
+            margin-top: 0px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Lichtgrijze lijn met transparantie */
+        }
+        
         .review-button {
             background-color: #8c564b;
             color: white;
@@ -96,9 +106,10 @@
             cursor: pointer;
             text-decoration: none;
             font-size: 14px;
-            display: inline-block;
-            margin-top: 10px;
+            width: 800px; /* Breedte van de knop */
+            text-align: center;
         }
+        
         .review-button:hover {
             background-color: #5c3a31;
         }
@@ -219,8 +230,10 @@
                         <img src="{{ purchase.image_url }}" alt="{{ purchase.album_name }}" class="purchase-image">
                         {% endif %}
                     </div>
-                    <!-- Write Review-knop -->
-                    <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
+                    <div class="center-container">
+                        <!-- Write Review-knop -->
+                        <a href="/write_review/{{ purchase.transaction_id }}" class="review-button">Write Review</a>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
