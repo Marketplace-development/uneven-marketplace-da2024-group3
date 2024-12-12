@@ -11,13 +11,45 @@
             padding: 0;
             background-color: #fdd0b5;
         }
-        h1 {
-            text-align: center;
-            padding: 20px;
+
+        .top-bar {
+            width: 100%;
             background-color: #8c564b;
             color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+          }
+      
+          .top-bar h1 {
+            margin-left: 30px;
+            font-size: 24px;
+          }
+      
+          .top-bar h2 {
             margin: 0;
-        }
+            font-size: 24px;
+            align-self: center;
+          }
+      
+          .top-bar button {
+            padding: 8px 12px;
+            background-color: #ffffff;
+            color: #8c564b;
+            border: 1px solid #8c564b;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 30px;
+          }
+      
+          .top-bar button:hover {
+            background-color: #8c564b;
+            color: white;
+          }
         .flash-message {
             padding: 15px;
             margin: 0 auto 20px auto;
@@ -132,17 +164,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 30px;
+            margin-bottom: 20px;
             gap: 10px;
-        }
-        .search-bar {
+          }
+      
+          .search-bar {
             padding: 10px;
             width: 100%;
             max-width: 400px;
             border-radius: 5px;
             border: 1px solid #8c564b;
             font-size: 16px;
-        }
+          }
+      
+
         .dropdown {
             padding: 10px;
             border: 1px solid #8c564b;
@@ -167,26 +202,26 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Back button rechtsboven -->
-    <div class="back-button-container">
-        <a href="/dashboard" class="back-link">Back to Home</a>
+  <!-- Top Bar with title and back button -->
+  <div class="top-bar">
+    <h1>Spinnback</h1>
+    <h2>My Purchased Records</h2>
+    <div>
+      <button onclick="location.href='/dashboard'">Home</button>
     </div>
-
-    <h1>My Purchases</h1>
-
+  </div>
 
 
-    <!-- Zoekbalk en sorteeropties -->
-    <div class="search-container">
-        <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchPurchases()" />
-        <select class="dropdown" id="sort-dropdown" onchange="sortPurchases()">
-            <option value="">Sort by</option>
-            <option value="newest">Newest to Oldest</option>
-            <option value="oldest">Oldest to Newest</option>
-        </select>
-    </div>
 
     <div class="purchases-container">
+        <div class="search-container">
+            <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchPurchases()" />
+            <select class="dropdown" id="sort-dropdown" onchange="sortPurchases()">
+                <option value="">Sort by</option>
+                <option value="newest">Newest to Oldest</option>
+                <option value="oldest">Oldest to Newest</option>
+            </select>
+        </div>
         {% if purchases and purchases|length > 0 %}
             <div id="purchases-list">
                 {% for purchase in purchases %}
