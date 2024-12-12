@@ -582,6 +582,9 @@ def dashboard():
     if not username:
         return redirect(url_for('main.login'))  # Redirect naar login als niet ingelogd
 
+    first_letter = None
+    first_letter = username[0].upper()  # Converteer naar hoofdletter voor consistentie
+    print(first_letter)
     # Haal het aantal ongehandelde transacties op
     userid = session.get('userid')
     unhandled_count = transactions.query.filter_by(
@@ -593,6 +596,7 @@ def dashboard():
     return render_template(
         'dashboard_records.html',
         username=username,
+        first_letter=first_letter,
         unhandled_orders=unhandled_count if unhandled_count > 0 else None
     )
 
