@@ -7,11 +7,15 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #fdd0b5;
       margin: 0;
       padding: 0;
-      background-color: #fdd0b5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      color: #3d2b1f;
     }
-
 
     .top-bar {
       width: 100%;
@@ -51,61 +55,92 @@
       background-color: #8c564b;
       color: white;
     }
-  
-  
 
-    /* Listings Container */
     .listing-container {
+      width: 90%;
       max-width: 800px;
-      margin: 20px auto;
       background: white;
+      padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      padding: 20px;
+      margin-top: 20px;
     }
-  
+
+    .listing-container h1 {
+      text-align: center;
+      font-size: 28px;
+      color: #8c564b;
+      margin-bottom: 20px;
+    }
 
     .listing {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      border-bottom: 1px solid #eee;
-      margin-bottom: 15px;
+      align-items: flex-start;
+      position: relative;
     }
-    .listing:last-child {
-      border-bottom: none;
-    }
-  
 
     .listing-details {
-        max-width: 60%;
+      display: flex;
+      flex-direction: column; /* Zorgt ervoor dat de items onder elkaar staan */
+      gap: 0px; /* Kleine ruimte tussen de items */
+      * {
+        margin: 5px;
+        padding: 0;
+      }
     }
-    .listing-details h3 {
+    
+    .listing-details-info p {
+      margin: 0; /* Houd de afstand tussen paragrafen consistent klein */
+      line-height: 0.4; /* Verklein de lijnhoogte voor compactere tekst */
+    }
+    
+    .listing-details-info h2 {
       font-size: 24px;
       margin: 0 0 10px 0;
       color: #8c564b;
     }
-    .listing-details p {
-      margin: 5px 0;
+    .listing-details-info p {
+      margin: 0px 0;
       font-size: 14px;
       color: #333;
     }
-    .listing-details strong {
+    .listing-details-info strong {
       color: #8c564b;
     }
-  
-  
-    
-    .listing-image {
-      max-width: 30%;
-      max-height: 150px;
-      object-fit: contain;
-      margin-left: 20px;
-      border-radius: 5px;
+
+    .listing:last-child {
+      border-bottom: none;
     }
-  
-    
+
+    .listing img {
+      max-width: 200px;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-left: 20px;
+    }
+
+
+
+    .buy-button {
+      margin: 20px auto 0; /* Zorgt dat de knop onderaan staat en gecentreerd is */
+      display: block; /* Zorgt dat de knop gecentreerd is binnen de container */
+      padding: 10px 15px;
+      font-size: 14px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .buy-button:hover {
+      background-color: #5c3a31;
+    }
 
     .search-container {
       display: flex;
@@ -137,8 +172,6 @@
     .search-button:hover {
       background-color: #5c3a31;
     }
-  
-
   </style>
 </head>
 <body>
@@ -174,11 +207,16 @@
             <p><strong>Description:</strong> {{ record['description'] }}</p>
             <p><strong>Price:</strong> €{{ record['price'] }}</p>
           </div>
+
           <img src="{{ record['image'] }}" alt="{{ record['albumname'] }} cover" class="listing-image">
-        </div>
+          </div>
+          
+        <a href="{{ url_for('main.koop_1plaat', recordid=record['recordid']) }}" class="buy-button">
+          Buy Now - €{{ record['price'] }}
+        </a>
+          
+        
       {% endfor %}
-      
-      
       </div>
     {% else %}
       <p>No favorites yet.</p>
