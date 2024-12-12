@@ -16,7 +16,6 @@
             min-height: 100vh;
         }
 
-        /* Top Navigation Bar */
         .top-bar {
             width: 100%;
             background-color: #8c564b;
@@ -44,8 +43,9 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            margin-right: 275px; /* Pas deze waarde aan voor de afstand tussen de icon en de titel */
+            margin-right: 190px; /* Pas deze waarde aan voor de afstand tussen de icon en de titel */
         }
+
 
         .user-icon-circle {
             width: 40px;
@@ -283,7 +283,7 @@
             text-align: center;
             border-radius: 10px;
             position: absolute;
-            top: 100px; /* Aanpassing mogelijk via deze waarde */
+            top: 60px; /* Aanpassing mogelijk via deze waarde */
             left: 20px; /* Aanpassing mogelijk via deze waarde */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden; /* Zorg dat tekst niet uitsteekt */
@@ -324,11 +324,13 @@
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="user-icon">
-            <div class="user-icon-circle" id="user-icon-circle"></div> <!-- Geen tekst standaard -->
-            <div id="userMenu" class="user-menu">
-                <div id="username-display" class="username-display"></div>
+            <div class="user-icon">               
+                <div class="user-icon-circle">
+                    {{ first_letter | default("A") }}
+                </div>
             </div>
         </div>
+
         
         <h1>Spinnback</h1>
         <div class="menu-button" id="menuButton">
