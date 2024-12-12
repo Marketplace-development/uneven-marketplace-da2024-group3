@@ -30,23 +30,31 @@
     }
 
     .top-bar h1 {
+      margin-left: 30px;
+      font-size: 24px;
+    }
+
+    .top-bar h2 {
       margin: 0;
       font-size: 24px;
-      font-family: 'Trebuchet MS', sans-serif;
+      align-self: center;
     }
 
     .top-bar button {
-      padding: 5px 15px;
-      background-color: white;
+      padding: 8px 12px;
+      background-color: #ffffff;
       color: #8c564b;
-      border: none;
-      border-radius: 4px;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
       cursor: pointer;
       font-size: 14px;
+      font-weight: bold;
+      margin-right: 30px;
     }
 
     .top-bar button:hover {
-      background-color: #fdd0b5;
+      background-color: #8c564b;
+      color: white;
     }
 
     .form-container {
@@ -125,9 +133,13 @@
   </style>
 </head>
 <body>
+  <!-- Top Bar with title and back button -->
   <div class="top-bar">
     <h1>Spinnback</h1>
-    <button onclick="location.href='/dashboard'">Home</button>
+    <h2>Edit Record Info</h2>
+    <div>
+      <button onclick="location.href='/dashboard'">Home</button>
+    </div>
   </div>
 
   <div class="form-container">
