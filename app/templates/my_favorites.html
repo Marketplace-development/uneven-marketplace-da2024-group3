@@ -172,27 +172,6 @@
     .search-button:hover {
       background-color: #5c3a31;
     }
-    
-    .remove-favorite-button {
-      background-color: #e74c3c; /* Rood om aan te geven dat het iets verwijdert */
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 15px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-      margin-top: 10px;
-      transition: background-color 0.3s;
-    }
-
-    .remove-favorite-button:hover {
-      background-color: #c0392b; /* Donkerder rood bij hover */
-    }
-
-    .remove-favorite-button:focus {
-      outline: none; /* Verwijder focusrand */
-    }
   </style>
 </head>
 <body>
@@ -205,7 +184,7 @@
       <button onclick="location.href='/dashboard'">Home</button>
     </div>
   </div>
-  
+
   <!-- Listings Section -->
   <div class="listing-container">
     <!-- Search Bar -->
@@ -228,11 +207,8 @@
             <p><strong>Description:</strong> {{ record['description'] }}</p>
             <p><strong>Price:</strong> €{{ record['price'] }}</p>
           </div>
+
           <img src="{{ record['image'] }}" alt="{{ record['albumname'] }} cover" class="listing-image">
-          <button class="remove-favorite-button" data-recordid="{{ record['recordid'] }}" onclick="removeFavorite(this)">
-            Remove Favorite
-          </button>
-                          
           </div>
           
         <a href="{{ url_for('main.koop_1plaat', recordid=record['recordid']) }}" class="buy-button">
@@ -264,68 +240,6 @@
         }
       });
     }
-
-    function removeFavorite(button) {
-    const recordId = button.getAttribute("data-recordid");
-
-    fetch("/remove_favorite", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ recordid: recordId })
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Verwijder de hele listing-container inclusief knop
-          const listingElement = button.closest(".listing");
-          const buyButton = listingElement.nextElementSibling; // Verwijder ook de Buy Now knop
-          if (listingElement) listingElement.remove();
-          if (buyButton && buyButton.classList.contains("buy-button")) buyButton.remove();
-        } else {
-          console.error("Error removing favorite:", data.error);
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
-    }
-    
-    document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".remove-favorite-button").forEach(button => {
-      button.addEventListener("click", () => {
-        const recordId = button.getAttribute("data-recordid");
-
-        fetch("/remove_favorite", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ recordid: recordId })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Verwijder alleen het specifieke record
-            const listingElement = button.closest(".listing");
-            const buyButton = listingElement.nextElementSibling;
-
-            // Verwijder het listing en de gekoppelde "Buy Now"-knop
-            if (listingElement) {
-              listingElement.remove();
-            }
-            if (buyButton && buyButton.classList.contains("buy-button")) {
-              buyButton.remove();
-            }
-          } else {
-            console.error("Error removing favorite:", data.error);
-          }
-        })
-        .catch(error => {
-          console.error("Error:", error);
-        });
-      });
-    });
-  });
   </script>
 
 </body>
