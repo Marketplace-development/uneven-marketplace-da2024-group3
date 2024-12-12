@@ -49,7 +49,7 @@ class records(db.Model):
 class transactions(db.Model):
     __tablename__ = 'transactions'
     transactionid = db.Column(db.Integer, primary_key=True)
-    recordid = db.Column(db.Integer, db.ForeignKey('records.recordid', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
+    recordid = db.Column(db.Integer, db.ForeignKey('records.recordid', ondelete='SET NULL', onupdate='CASCADE'), nullable=True)
     buyerid = db.Column(db.Integer, db.ForeignKey('users.userid', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     sellerid = db.Column(db.Integer, db.ForeignKey('users.userid', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     handledyesorno = db.Column(db.Boolean, default=False, nullable=False)
@@ -81,9 +81,10 @@ class reviews(db.Model):
 
 class favorites(db.Model):
     _tablename_ = 'favorites'
-    userid = db.Column(db.Integer, db.ForeignKey('users.userid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
-    recordid = db.Column(db.Integer, db.ForeignKey('records.recordid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    favoriteid = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, db.ForeignKey('users.userid', ondelete='CASCADE', onupdate='CASCADE'),  nullable=False)
+    recordid = db.Column(db.Integer, db.ForeignKey('records.recordid', ondelete='SET NULL', onupdate='CASCADE'), nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), nullable=False)
-
+    
     def __repr__(self):
         return f'<Favorite User {self.userid} for Record {self.recordid}>'
