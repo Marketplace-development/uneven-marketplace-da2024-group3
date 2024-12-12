@@ -177,13 +177,13 @@
         const list = document.getElementById("similar-collections");
         if (data.error) {
           // Toon een foutmelding of informatieve boodschap
-          list.innerHTML = <li>${data.error}</li>;
+          list.innerHTML = `<li>${data.error}</li>`;
         } else if (data.length === 0) {
-          list.innerHTML = <li>No similar collections found.</li>;
+          list.innerHTML = `<li>No similar collections found.</li>`;
         } else {
           data.forEach(user => {
             const li = document.createElement("li");
-            li.innerHTML = <a href="/library/${user.username}">${user.username}</a>;
+            li.innerHTML = `<a href="/library/${user.username}">${user.username}</a>`;
             list.appendChild(li);
           });
         }
