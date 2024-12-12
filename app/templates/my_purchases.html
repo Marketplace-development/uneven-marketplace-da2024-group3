@@ -89,12 +89,14 @@
         }
         .purchase-details {
             display: flex;
-            flex: 1;
-            align-items: center;
-            gap: 20px;
+            justify-content: space-between; /* Verdeelt de ruimte tussen de items */
+            align-items: center; /* Centreert de items verticaal */
+            width: 100%; /* Zorgt ervoor dat de items evenredig worden verdeeld */
+            gap: 20px; /* Voegt ruimte toe tussen de items */
         }
         .purchase-details-info {
-            flex: 1;
+            flex: 1; /* Neemt de beschikbare ruimte links in */
+            text-align: left; /* Links uitlijnen */
         }
         .purchase-details-info h2 {
             font-size: 24px;
@@ -110,17 +112,17 @@
             color: #8c564b;
         }
         .status-container {
-            text-align: center;
-            flex-shrink: 0;
-            width: 150px;
-            margin-right: 150px;
+            text-align: center; /* Centraal uitlijnen van de tekst */
+            flex-shrink: 0; /* Voorkomt dat de container verkleint */
+            width: 150px; /* Constante breedte */
+            margin-right: 80px
         }
         .purchase-image {
-            flex-shrink: 0;
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
+            flex-shrink: 0; /* Voorkomt dat de afbeelding wordt verkleind */
+            width: 200px; /* Constante breedte voor afbeelding */
+            height: 200px; /* Constante hoogte voor afbeelding */
+            object-fit: cover; /* Zorgt ervoor dat de afbeelding proportioneel wordt geschaald */
+            border-radius: 5px; /* Maakt de hoeken afgerond */
         }
         
         .review-button {
@@ -132,7 +134,7 @@
             cursor: pointer;
             text-decoration: none;
             font-size: 14px;
-            width: 685px; /* Breedte van de knop */
+            width: 760px; /* Breedte van de knop */
             text-align: center;
         }
         
@@ -237,10 +239,12 @@
                             <p><strong>Purchase Price:</strong> €{{ purchase.purchase_price }}</p>
                             <p><strong>Date:</strong> {{ purchase.date }}</p>
                             <div class="seller-info">
-                                <p><strong>Seller info:</strong> {{ purchase.seller_name }}</p>
+                                <p><strong>Seller Info:</strong></p>
+                                <p>{{ purchase.seller_name }}</p>
                                 <p>{{ purchase.seller_email }}</p>
                                 <p>{{ purchase.seller_telefoonnummer }}</p>
                             </div>
+                            
                         </div>
 
                         <!-- Toevoeging: STATUS en Waarde -->
