@@ -77,9 +77,10 @@
     .listing {
       border-bottom: 1px solid #eee;
       padding: 15px 0;
-      display: flex;
-      align-items: center;
       position: relative;
+      min-height: 240px; /* Zorg voor een vaste minimale hoogte */
+      display: flex; /* Zorgt voor een nette flex-lay-out */
+      align-items: flex-start;
     }
 
     .listing:last-child {
@@ -90,6 +91,7 @@
       flex: 1;
       margin-right: 20px;
       text-align: left;
+      min-width: 50%;
     }
 
     .listing h3 {
@@ -105,8 +107,8 @@
     }
 
     .listing img {
-      max-width: 200px;
-      max-height: 200px;
+      width: 200px;
+      height: 200px;
       object-fit: cover;
       border-radius: 8px;
     }
@@ -230,9 +232,11 @@
         const artistName = listing.getAttribute('data-artist').toLowerCase();
         
         if (albumName.includes(query) || artistName.includes(query)) {
-          listing.style.display = 'block'; // Show matching record
+          listing.style.visibility = 'visible';
+          listing.style.opacity = '1'; // Zorg voor zichtbaarheid
         } else {
-          listing.style.display = 'none'; // Hide non-matching record
+          listing.style.visibility = 'hidden';
+          listing.style.opacity = '0'; // Verberg het element
         }
       });
     }
