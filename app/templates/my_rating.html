@@ -15,7 +15,6 @@
             min-height: 100vh;
         }
 
-        /* Top Navigation Bar */
         .top-bar {
             width: 100%;
             background-color: #8c564b;
@@ -24,17 +23,35 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
-
+      
         .top-bar h1 {
+            margin-left: 30px;
+            font-size: 24px;
+        }
+      
+        .top-bar h2 {
             margin: 0;
             font-size: 24px;
-            font-family: 'Trebuchet MS', sans-serif;
+            align-self: center;
+        }
+      
+        .top-bar button {
+            padding: 8px 12px;
+            background-color: #ffffff;
+            color: #8c564b;
+            border: 1px solid #8c564b;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 30px;
+        }
+      
+        .top-bar button:hover {
+            background-color: #8c564b;
+            color: white;
         }
 
         .back-button-container {
@@ -133,14 +150,14 @@
     </style>
 </head>
 <body>
-    <div class="back-button-container">
-        <a href="/dashboard" class="back-link">Back to Home</a>
+  <!-- Top Bar with title and back button -->
+  <div class="top-bar">
+    <h1>Spinnback</h1>
+    <h2>My Seller Rating</h2>
+    <div>
+      <button onclick="location.href='/dashboard'">Home</button>
     </div>
-
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <h1>My Seller Rating</h1>
-    </div>
+  </div>
 
     <!-- Content Section -->
     <div class="content-container">
