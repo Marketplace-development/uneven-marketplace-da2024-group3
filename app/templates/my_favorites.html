@@ -80,6 +80,8 @@
       justify-content: space-between;
       align-items: flex-start;
       position: relative;
+      min-height: 240px; /* Zorg voor een vaste minimale hoogte */
+      display: flex; /* Blijf flex voor goede lay-out */
     }
 
     .listing-details {
@@ -116,11 +118,11 @@
     }
 
     .listing img {
-      max-width: 200px;
-      max-height: 200px;
-      object-fit: cover;
       border-radius: 8px;
       margin-left: 20px;
+      width: 200px; /* Houd de breedte consistent */
+      height: 200px; /* Houd de hoogte consistent */
+      object-fit: cover;
     }
 
 
@@ -259,9 +261,9 @@
         const artistName = listing.getAttribute('data-artist').toLowerCase();
         
         if (albumName.includes(query) || artistName.includes(query)) {
-          listing.style.display = 'block'; // Show matching record
+          listing.style.visibility = 'visible';
         } else {
-          listing.style.display = 'none'; // Hide non-matching record
+          listing.style.visibility = 'hidden';
         }
       });
     }
