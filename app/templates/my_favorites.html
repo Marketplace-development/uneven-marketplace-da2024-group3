@@ -11,53 +11,45 @@
       padding: 0;
       background-color: #fdd0b5;
     }
-    h1 {
-      text-align: center;
-      padding: 20px;
-      background-color: #8c564b;
-      color: white;
-      margin: 0;
-    }
-  
+
 
     .top-bar {
       width: 100%;
       background-color: #8c564b;
       color: white;
-      padding: 40px 20px;
+      padding: 10px 20px;
       display: flex;
-      justify-content: center; /* Centreert de titel */
-      align-items: center; /* Horizontaal centreren van items */
+      justify-content: space-between;
+      align-items: center;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      position: relative; /* Maakt ruimte voor de knop */
     }
-  
+
     .top-bar h1 {
+      margin-left: 30px;
+      font-size: 24px;
+    }
+
+    .top-bar h2 {
       margin: 0;
       font-size: 24px;
-      font-family: 'Arial', sans-serif;
-      position: absolute; /* Absoluut positioneren in het midden */
-      left: 50%;
-      transform: translateX(-50%);
+      align-self: center;
     }
-  
+
     .top-bar button {
-      position: absolute; /* Absoluut positioneren */
-      right: 60px; /* Zorgt dat de knop rechts blijft */
       padding: 8px 12px;
-      background-color: white;
+      background-color: #ffffff;
       color: #8c564b;
-      border: none;
-      border-radius: 4px;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
       cursor: pointer;
       font-size: 14px;
       font-weight: bold;
-      transition: background-color 0.3s;
+      margin-right: 30px;
     }
-  
+
     .top-bar button:hover {
-      background-color: #fdd0b5;
-      color: #8c564b;
+      background-color: #8c564b;
+      color: white;
     }
   
   
@@ -119,9 +111,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 30px;
+      margin-bottom: 20px;
       gap: 10px;
     }
+
     .search-bar {
       padding: 10px;
       width: 100%;
@@ -129,6 +122,20 @@
       border-radius: 5px;
       border: 1px solid #8c564b;
       font-size: 16px;
+    }
+
+    .search-button {
+      padding: 10px 15px;
+      font-size: 14px;
+      background-color: #8c564b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .search-button:hover {
+      background-color: #5c3a31;
     }
   
 
@@ -138,7 +145,8 @@
 
   <!-- Top Bar with title and back button -->
   <div class="top-bar">
-    <h1>My Favorites</h1>
+    <h1>Spinnback</h1>
+    <h2>My Favorite Records</h2>
     <div>
       <button onclick="location.href='/dashboard'">Home</button>
     </div>
