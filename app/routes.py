@@ -1129,4 +1129,27 @@ def find_similar_collections():
         logging.error(f"Error finding similar collections: {e}")
         return jsonify({"error": "Unable to fetch similar collections"}), 500
     
+@main.route('/remove_favorite', methods=['POST'])
+def remove_favorite():
+    if 'userid' not in session:
+        return jsonify({"error": "User not logged in"}), 401
 
+    data = request.get_json()
+    userid = session['userid']
+    recordid = data.get('recordid')
+
+    if not recordid:
+        return jsonify({"error": "Record ID is required"}), 400
+
+    try:
+        # Verwijder favoriet uit de database
+        favorite = favorites.query.filter_by(userid=userid, recordid=recordid).first()
+        if favorite:
+            db.session.delete(favorite)
+            db.session.commit()
+            return jsonify({"success": True}), 200
+        else:
+            return jsonify({"error": "Favorite not found"}), 404
+    except Exception as e:
+        logging.error(f"Error removing favorite: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
