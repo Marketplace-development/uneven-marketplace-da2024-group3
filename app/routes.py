@@ -1049,25 +1049,29 @@ def my_profile():
     return render_template('my_profile.html', user=user)
 
 @main.route('/delete_1plaat/<int:recordid>')
-def remove_1plaat(recordid):
+def delete_1plaat(recordid):
     ownerid = session.get('userid')
     if not ownerid:
         return "User not logged in", 401
 
-        # Fetch the record
+    # Fetch the record
     record = records.query.filter_by(recordid=recordid, ownerid=ownerid).first()
-     
     if not record:
         return "Record not found or access denied", 404
+
     try:
-                    # Delete the record
+        # Handle dependencies
+        transactions.query.filter_by(recordid=recordid).update({'recordid': None})
+        favorites.query.filter_by(recordid=recordid).update({'recordid': None})
+        db.session.commit()
+        # Delete the record
         db.session.delete(record)
         db.session.commit()
         return redirect(url_for('main.my_library'))
     except Exception as e:
         logging.error(f"Error removing record: {e}")
+        db.session.rollback()
         return "Error removing record", 500
-    
 
 @main.route('/library/similar', methods=['GET'])
 def find_similar_collections():
