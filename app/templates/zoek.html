@@ -12,9 +12,48 @@
       margin: 0;
       padding: 0;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column; /* Zorgt ervoor dat items boven elkaar worden gestapeld */
+      align-items: center; /* Centraal op de horizontale as */
       min-height: 100vh;
+    }
+
+    .top-bar {
+      width: 100%;
+      background-color: #8c564b;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .top-bar h1 {
+      margin-left: 30px;
+      font-size: 24px;
+    }
+
+    .top-bar h2 {
+      margin: 0;
+      font-size: 24px;
+      align-self: center;
+    }
+
+    .top-bar button {
+      padding: 8px 12px;
+      background-color: #ffffff;
+      color: #8c564b;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      margin-right: 30px;
+    }
+
+    .top-bar button:hover {
+      background-color: #8c564b;
+      color: white;
     }
 
     /* Container styling */
@@ -26,17 +65,18 @@
       text-align: center;
       width: 800px;
       max-width: 90%;
+      margin-top:40px;
     }
 
     /* Titel styling */
-    h1 {
+    h3 {
       color: #8c564b;
       margin-bottom: 20px;
       font-size: 24px;
       font-weight: bold;
     }
 
-    h2 {
+    h4 {
       color: #6c4a3d;
       margin-top: -10px;
       font-size: 18px;
@@ -142,8 +182,18 @@
   </style>
 </head>
 <body>
+    <!-- Top Bar with title and back button -->
+  <div class="top-bar">
+    <h1>Spinnback</h1>
+    <h2>Edit Record Info</h2>
+    <div>
+      <button onclick="location.href='/dashboard'">Home</button>
+    </div> 
+  </div>
+
+
   <div class="container">
-    <h1>Which Spinnbackers' collection do you want to see?</h1>
+    <h3>Which Spinnbackers' collection do you want to see?</h3>
     <form action="/library/search" method="GET">
       <div class="search-bar">
         <input type="text" name="username" placeholder="Enter a username" required>
@@ -158,13 +208,12 @@
     </form>
     
     <!-- Nieuwe sectie voor vergelijkbare collecties -->
-    <h1>Similar Collections</h1>
-    <h2>Spinnbackers with similar taste</h2>
-    <ul id="similar-collections">
+      <h3>Similar Collections</h3>
+      <h4>Spinnbackers with similar taste</h4>
+      <ul id="similar-collections">
       <!-- Suggesties worden hier dynamisch geladen -->
-    </ul>
+      </ul>
 
-    <a href="/dashboard" class="back-link">Go to Dashboard</a>
   </div>
 
   <script>
