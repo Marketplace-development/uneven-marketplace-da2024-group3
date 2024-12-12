@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spinnback - My Collection</title>
   <style>
-    /* Global Styles */
     body {
-      font-family: 'Georgia', serif;
-      background: linear-gradient(to bottom, #f7d9c4, #f4b085);
+      font-family: Arial, sans-serif;
+      background-color: #fdd0b5;
       margin: 0;
       padding: 0;
       display: flex;
@@ -19,7 +18,6 @@
       color: #3d2b1f;
     }
 
-    /* Top Navigation Bar */
     .top-bar {
       width: 100%;
       background-color: #8c564b;
@@ -32,70 +30,66 @@
     }
 
     .top-bar h1 {
+      margin-left: 30px;
+      font-size: 24px;
+    }
+
+    .top-bar h2 {
       margin: 0;
       font-size: 24px;
-      font-family: 'Trebuchet MS', sans-serif;
+      align-self: center;
     }
 
     .top-bar button {
       padding: 8px 12px;
-      background-color: #ffe5d9;
+      background-color: #ffffff;
       color: #8c564b;
-      border: none;
-      border-radius: 4px;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
-      margin-left: 8px;
-      transition: background-color 0.3s;
+      margin-right: 30px;
     }
 
     .top-bar button:hover {
-      background-color: #fdd0b5;
+      background-color: #8c564b;
+      color: white;
     }
 
-    /* Listings Container */
     .listing-container {
       width: 90%;
-      max-width: 900px;
-      background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+      max-width: 800px;
+      background: white;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       margin-top: 20px;
-      text-align: center;
-      position: relative; /* For background vinyl positioning */
-      overflow: hidden; /* To ensure background images stay confined */
     }
 
     .listing-container h1 {
-      font-family: 'Georgia', serif;
+      text-align: center;
       font-size: 28px;
+      color: #8c564b;
       margin-bottom: 20px;
-      color: #5a3a28;
     }
 
-    /* Individual Listing */
     .listing {
-      border: 2px solid #ffe8dc;
-      border-radius: 10px;
-      background: #ffe8dc;
-      padding: 15px;
-      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      text-align: left;
-      transition: transform 0.3s;
+      position: relative;
     }
 
-    .listing:hover {
-      transform: scale(1.02);
+    .listing:last-child {
+      border-bottom: none;
     }
 
     .listing .text-content {
       flex: 1;
       margin-right: 20px;
+      text-align: left;
     }
 
     .listing h3 {
@@ -106,75 +100,71 @@
 
     .listing p {
       margin: 5px 0;
-      font-size: 16px;
-      color: #3d2b1f;
+      font-size: 14px;
+      color: #333;
     }
 
-    /* Image Styling */
     .listing img {
-      max-height: 300px;
-      width: auto;
+      max-width: 200px;
+      max-height: 200px;
       object-fit: cover;
-      margin-left: 20px;
       border-radius: 8px;
     }
 
-    /* Button Container for stacking */
     .button-container {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start; /* Align buttons to the left */
-      gap: 10px; /* Space between buttons */
+      gap: 10px;
+      justify-content: center;
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
-    /* Edit Button */
-    .edit-button,
-    .delete-button {
-      padding: 10px 20px;
-      font-size: 16px;
+    .edit-button, .delete-button {
+      padding: 10px 15px;
+      font-size: 14px;
       background-color: #8c564b;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      text-align: center;
     }
 
-    .edit-button:hover,
-    .delete-button:hover {
-      background-color: #f4b085;
+    .edit-button:hover, .delete-button:hover {
+      background-color: #5c3a31;
     }
 
-    /* Search Bar */
     .search-container {
       display: flex;
       justify-content: center;
+      align-items: center;
       margin-bottom: 20px;
+      gap: 10px;
     }
 
     .search-bar {
       padding: 10px;
-      width: 60%;
+      width: 100%;
       max-width: 400px;
-      font-size: 16px;
-      border: 2px solid #8c564b;
       border-radius: 5px;
+      border: 1px solid #8c564b;
+      font-size: 16px;
     }
 
     .search-button {
-      padding: 10px 20px;
-      margin-left: 10px;
-      font-size: 16px;
+      padding: 10px 15px;
+      font-size: 14px;
       background-color: #8c564b;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     .search-button:hover {
-      background-color: #f4b085;
+      background-color: #5c3a31;
     }
   </style>
 </head>
@@ -183,6 +173,7 @@
   <!-- Top Bar with title and back button -->
   <div class="top-bar">
     <h1>Spinnback</h1>
+    <h2>My Collection</h2>
     <div>
       <button onclick="location.href='/dashboard'">Home</button>
     </div>
@@ -190,7 +181,6 @@
 
   <!-- Listings Section -->
   <div class="listing-container">
-    <h1>My Collection</h1>
 
     <!-- Search Bar with button next to it -->
     <div class="search-container">
