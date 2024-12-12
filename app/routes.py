@@ -698,8 +698,7 @@ def my_rating():
 
 @main.route('/view_seller_rating/<int:seller_id>')
 def view_seller_rating(seller_id):
-    # Haal een willekeurig record op van de verkoper (indien van toepassing)
-    record = db.session.query(records).filter_by(ownerid=seller_id).first()
+    recordid = request.args.get('recordid')
 
     # Query om reviews en bijbehorende auteurs (kopers) op te halen
     seller_reviews = (
@@ -729,7 +728,7 @@ def view_seller_rating(seller_id):
         'view_seller_rating.html',
         reviews=seller_reviews,
         average_score=average_score,
-        recordid=record.recordid if record else None
+        recordid=recordid if recordid else None
     )
 
 
