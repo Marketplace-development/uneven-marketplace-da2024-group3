@@ -15,7 +15,7 @@
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      color: #3d2b1f;
+      color: #8c564b;
     }
 
     .top-bar {
@@ -30,12 +30,37 @@
     }
 
     .top-bar h1 {
-      margin: 0;
+      margin-left: 30px;
       font-size: 24px;
     }
 
+    .top-bar h2 {
+      margin: 0;
+      font-size: 24px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar button {
+      padding: 8px 12px;
+      background-color: #ffffff;
+      color: #8c564b;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      margin-right: 30px;
+    }
+
+    .top-bar button:hover {
+      background-color: #8c564b;
+      color: white;
+    }
+
     .user-list, .libraries {
-      width: 90%;
+      width: 800px;;
       max-width: 900px;
       background-color: rgba(255, 255, 255, 0.9);
       padding: 20px;
@@ -65,13 +90,6 @@
       text-decoration: underline;
     }
 
-    .libraries .listing {
-      margin-bottom: 20px;
-      padding: 15px;
-      background-color: #ffe8dc;
-      border: 2px solid #f4b085;
-      border-radius: 10px;
-    }
 
     .libraries h2 {
       color: #8c564b;
@@ -114,48 +132,66 @@
     }
 
     .listing {
-      display: flex;
-      justify-content: space-between;  /* Ruimte tussen de tekst en de afbeelding */
-      align-items: flex-start; /* Zorgt ervoor dat de afbeelding aan de bovenkant uitgelijnd is */
-      padding: 15px;
       border-bottom: 1px solid #eee;
-      margin-bottom: 15px;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      min-height: 240px; /* Zorg voor een vaste minimale hoogte */
+      display: flex; /* Blijf flex voor goede lay-out */
     }
-  
+
+    .listing-details {
+      display: flex;
+      flex-direction: column; /* Zorgt ervoor dat de items onder elkaar staan */
+      gap: 0px; /* Kleine ruimte tussen de items */
+      * {
+        margin: 5px;
+        padding: 0;
+      }
+    }
+    
+    .listing-details-info p {
+      margin: 0; /* Houd de afstand tussen paragrafen consistent klein */
+      line-height: 0.4; /* Verklein de lijnhoogte voor compactere tekst */
+    }
+    
+    .listing-details-info h2 {
+      font-size: 24px;
+      margin: 0 0 10px 0;
+      color: #8c564b;
+    }
+    .listing-details-info p {
+      margin: 0px 0;
+      font-size: 14px;
+      color: #8c564b;
+    }
+    .listing-details-info strong {
+      color: #8c564b;
+    }
+
     .listing:last-child {
       border-bottom: none;
     }
-  
-    /* Minder witte ruimte tussen tekstregels */
-    .listing-details p {
-      margin: 2px 0; /* Verticale ruimte tussen regels minimaliseren */
-      font-size: 14px; /* Optioneel: tekst iets kleiner maken */
-      line-height: 1.2; /* Regelhoogte aanpassen voor compactere tekst */
-    }
 
-    .listing-details h3 {
-        margin-bottom: 5px; /* Minder ruimte onder de titel */
-        font-size: 18px; /* Iets kleinere titels voor consistentie */
-    }
-
-    /* Schalen van de afbeelding in de hoogte */
-    .listing-image {
-      height: 150px; /* Maximale hoogte van de afbeelding */
-      width: auto; /* Breedte aanpassen op basis van hoogte */
-      object-fit: cover; /* Snijd afbeelding bij om deze in het kader te laten passen */
-      object-position: top; /* Optioneel: focus op de bovenkant van de afbeelding */
-      border-radius: 5px;
+    .listing img {
+      border-radius: 8px;
       margin-left: 20px;
+      width: 200px; /* Houd de breedte consistent */
+      height: 200px; /* Houd de hoogte consistent */
+      object-fit: cover;
     }
-
   
   </style>
 </head>
 <body>
+  <!-- Top Bar with title and back button -->
   <div class="top-bar">
-    <h1>{% if username %}Collection of {{ username }}{% else %}Collections{% endif %}</h1>
+    <h1>Spinnback</h1>
+    <h2>{% if username %}Collection of {{ username }}{% else %}Collections{% endif %}</h2>
     <div>
-      <button class="dashboard-button" onclick="location.href='/dashboard'">Home</button>
+      <button onclick="location.href='/dashboard'">Home</button>
     </div>
   </div>
 
@@ -178,8 +214,6 @@
   {% else %}
     <!-- Bibliotheek van specifieke gebruiker -->
     <div class="libraries">
-      <h2>Collection of {{ username }}</h2>
-
       <!-- Zoekbalk -->
       <input type="text" id="search" class="search-bar" placeholder="Search by album or artist" onkeyup="searchRecords()" />
 
