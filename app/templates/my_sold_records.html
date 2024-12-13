@@ -252,6 +252,7 @@
                             <p><strong>Artist:</strong> {{ record.artist }}</p>
                             <p><strong>Condition:</strong> {{ record.condition }}</p>
                             <p><strong>Selling Price:</strong> €{{ record.price }}</p>
+                            <p><strong>Commission Fee</strong> €{{ "%.2f"|format(record.price * 0.05) }}</p>
                             <p><strong>Date:</strong> {{ record.date_sold }}</p>
                             <p><strong>Shipping Address:</strong></p>
                             {% for line in record.buyer_adress %}
