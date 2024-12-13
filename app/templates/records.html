@@ -210,7 +210,8 @@
       
       <div id="price-container" style="display: none;">
         <label for="price">Price (€)</label>
-        <input type="number" id="price" name="price" step="0.01" min="0">
+        <input type="number" id="price" name="price" step="0.01" min="0" oninput="calculateNetAmount()">
+        <p id="net-amount" style="font-weight: bold; margin-top: 10px;">You will receive this amount: €0.00</p>
       </div>
       
       <label for="description">Description</label>
@@ -227,7 +228,8 @@
       const Sellyesorno = document.getElementById('Sellyesorno');
       const priceContainer = document.getElementById('price-container');
       const priceInput = document.getElementById('price');
-      
+      const netAmount = document.getElementById('net-amount');
+    
       function togglePriceField() {
         if (Sellyesorno.value === 'true') {
           priceContainer.style.display = 'block';
@@ -236,9 +238,20 @@
           priceContainer.style.display = 'none';
           priceInput.required = false;
           priceInput.value = '';
+          netAmount.textContent = 'You will receive this amount: €0.00';
         }
       }
-      
+    
+      function calculateNetAmount() {
+        const price = parseFloat(priceInput.value);
+        if (!isNaN(price) && price > 0) {
+          const net = price * 0.95; // Calculate 95% of the price
+          netAmount.textContent = `You will receive this amount: €${net.toFixed(2)}`;
+        } else {
+          netAmount.textContent = 'You will receive this amount: €0.00';
+        }
+      }
+    
       Sellyesorno.addEventListener('change', togglePriceField);
       document.addEventListener('DOMContentLoaded', togglePriceField);
     </script>
