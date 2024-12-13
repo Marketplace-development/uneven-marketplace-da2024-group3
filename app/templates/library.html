@@ -165,7 +165,7 @@
     .listing-details-info p {
       margin: 0px 0;
       font-size: 14px;
-      color: #8c564b;
+      color: #333;
     }
     .listing-details-info strong {
       color: #8c564b;
@@ -227,13 +227,6 @@
                 <p><strong>Genre:</strong> {{ record['genre'] }}</p>
                 <p><strong>Condition:</strong> {{ record['condition'] }}</p>
                 <p><strong>Color:</strong> {{ record['colour'] }}</p>
-                <p><strong>Price:</strong> 
-                  {% if record['price'] %}
-                    €{{ "%.2f"|format(record['price']) }}
-                  {% else %}
-                    N/A
-                  {% endif %}
-                </p>
                 <p><strong>Status:</strong>
                   {% if record['Sellyesorno'] %}
                     <span style="color: green;">For Sale</span>
@@ -241,6 +234,9 @@
                     <span style="color: red;">Not for Sale</span>
                   {% endif %}
                 </p>
+                {% if record['price'] %}
+                <p><strong>Price:</strong> €{{ "%.2f"|format(record['price']) }}</p>
+                {% endif %}
               </div>
               <img src="{{ record['image'] }}" alt="{{ record['albumname'] }} cover" class="listing-image">
             </div>
