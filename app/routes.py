@@ -187,9 +187,9 @@ def manage_records():
         # Verwerk de afbeelding
         image = request.files.get('image')
         if image:
-            print(f"Bestand ontvangen: {image.filename}")  # Log om te controleren
+            print(f"Image: {image.filename}")  # Log om te controleren
         else:
-            print("Geen bestand ontvangen")
+            print("No image received")
         image_url = None
         if image:
             # Maak een veilige bestandsnaam
