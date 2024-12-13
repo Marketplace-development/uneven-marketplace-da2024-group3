@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,6 @@
       min-height: 100vh;
       color: #3d2b1f;
     }
-    /* Top Bar */
     .top-bar {
       width: 100%;
       background-color: #8c564b;
@@ -30,23 +29,31 @@
     }
 
     .top-bar h1 {
+      margin-left: 30px;
+      font-size: 24px;
+    }
+
+    .top-bar h2 {
       margin: 0;
       font-size: 24px;
-      font-family: 'Trebuchet MS', sans-serif;
+      align-self: center;
     }
 
     .top-bar button {
-      padding: 5px 15px;
-      background-color: white;
+      padding: 8px 12px;
+      background-color: #ffffff;
       color: #8c564b;
-      border: none;
-      border-radius: 4px;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
       cursor: pointer;
       font-size: 14px;
+      font-weight: bold;
+      margin-right: 30px;
     }
 
     .top-bar button:hover {
-      background-color: #fdd0b5;
+      background-color: #8c564b;
+      color: white;
     }
 
     /* Form Section */
@@ -135,9 +142,10 @@
 </head>
 <body>
 
-  <!-- Top Bar -->
+  <!-- Top Bar with title and back button -->
   <div class="top-bar">
     <h1>Spinnback</h1>
+    <h2>Add Record</h2>
     <div>
       <button onclick="location.href='/dashboard'">Home</button>
     </div>
