@@ -105,7 +105,7 @@
     .listing p {
       margin: 5px 0;
       font-size: 14px;
-      color: #333;
+      color: #8c564b;
     }
 
     .listing img {
@@ -204,7 +204,16 @@
               <p><strong>Condition:</strong> {{ record['condition'] }}</p>
               <p><strong>Color:</strong> {{ record['colour'] }}</p>
               <p><strong>Description:</strong> {{ record['description'] }}</p>
-              <p><strong>Price:</strong> €{{ record['price'] }}</p>
+              <p><strong>Status:</strong>
+                {% if record['Sellyesorno'] %}
+                  <span style="color: green;">For Sale</span>
+                {% else %}
+                  <span style="color: red;">Not for Sale</span>
+                {% endif %}
+              </p>
+              {% if record['price'] %}
+              <p><strong>Price:</strong> €{{ "%.2f"|format(record['price']) }}</p>
+              {% endif %}
             </div>
             <!-- Display image if available -->
             {% if record['image_url'] %}
