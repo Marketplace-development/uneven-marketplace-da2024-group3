@@ -34,7 +34,7 @@ As a [provider], I want to [sell a product], so that [I earn money]. 1
 
 # UI Prototype
 
-https://www.figma.com/
+https://www.figma.com/design/wQsvxUYYRhFNSqHFl4toaq/Spinnback?node-id=0-1&t=d5fFw9083iGb9kQ9-1
 
 # Database Design
 
