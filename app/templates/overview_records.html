@@ -15,26 +15,22 @@
       width: 100%;
       background-color: #8c564b;
       color: white;
-      padding: 10px 20px;
+      padding: 24px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
-    .top-bar h1 .intro-text{
+    .top-bar h1 {
       margin-left: 30px;
       font-size: 24px;
     }
 
-    .top-bar h2 .intro-text h2{
+    .top-bar h2 {
       margin: 0;
       font-size: 24px;
       align-self: center;
-    }
-    .top-bar .intro-text p {
-      margin: 5px 0 0;
-      font-size: 14px;
     }
 
     .top-bar button {
@@ -53,83 +49,20 @@
       background-color: #8c564b;
       color: white;
     }
-  
-
-
 /* Logo Styling */
     .LOGO-upload-container {
       position: absolute;
       top: 0px; /* Keeps the logo slightly above the top bar */
-      left: 10px; /* Keeps it closer to the top-left corner */
+      left: 0px /* Keeps it closer to the top-left corner */
       z-index: 2; /* Ensures the logo appears on top of other elements */
     }
 
     .LOGO-upload-container img {
-      max-width: 80px; /* Slightly larger than the top bar height */
-      height: 80px; /* Maintains aspect ratio */
+      max-width: 90px; /* Slightly larger than the top bar height */
+      height: 90px; /* Maintains aspect ratio */
     }
-
-
-    /* Alert Styling */
-    .alert-container {
-      position: absolute;
-      top: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      width: 80%;
-      max-width: 600px;
-      text-align: center;
-    }
-    
-    .alert {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 5px;
-      font-weight: bold;
-      display: none; /* Initially hide the alert */
-      opacity: 1; /* Initially fully visible */
-    }
-
-    .alert.success {
-      background-color: #28a745;
-      color: white;
-    }
-
-    .alert.error {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    /* Fadeout animation */
-    .alert.show {
-      display: block; /* Make the alert visible */
-      opacity: 1;
-      animation: fadeOut 4s forwards; /* Increased duration for fade-out */
-    }
-
-    @keyframes fadeOut {
-      0% {
-        opacity: 1;
-      }
-      80% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
-
 
     /* Listings Section */
-    .listing-container {
-      width: 90%;
-      max-width: 1200px;
-      background-color: #f9f9f9;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-    }
 
     h1.page-title {
       font-family: 'Georgia', serif;
@@ -161,12 +94,6 @@
       box-shadow: none; /* Verwijdert schaduwen van de vakken */
     }
 
-    *,
-    *::before,
-    *::after {
-      box-shadow: none !important;
-    }
-    
 
     .listing img {
       width: 100%;
@@ -197,36 +124,7 @@
       border-radius: 5px;
       padding: 10px;
     }
-    textarea.listing {
-      width: 100%;
-      resize: none; /* Voorkomt dat gebruikers het tekstvak handmatig kunnen vergroten/verkleinen */
-      border: none; /* Verwijdert de rand rond het tekstvak */
-      border-radius: 5px; /* Optioneel: laat de hoeken afgerond, kan verwijderd worden als je scherpe hoeken wilt */
-      padding: 10px;
-      font-size: 15.5px;
-      font-weight: bold; /* Tekst vet maken */
-      color: #5a3a28; /* Bruine tekstkleur */
-      background-color: #ede2cf; /* Achtergrondkleur */
-      font-family: 'Arial', sans-serif; /* Lettertype */
-      line-height: 1.6; /* Regelafstand */
-    }
     
-
-    .listing-container textarea.listing {
-      color: #5a3a28 !important; /* Bruine tekstkleur afdwingen */
-    }
-    
-    
-    /* Specifieke styling voor tekstvakken die 2 kolommen beslaan (zoals in rij 1) */
-    textarea.listing.span2 {
-      grid-column: span 2; /* Dit maakt het vak breed genoeg voor twee kolommen */
-    }
-
-    /* Specifieke styling voor tekstvakken die maar 1 kolom beslaan (zoals in rij 2 en 3) */
-    textarea.listing.span1 {
-      grid-column: span 1; /* Dit zorgt ervoor dat het vak maar één kolom beslaat */
-    }
-
     .image-upload-container {
       grid-column: span 2; /* Make it span 2 columns */
       background-color: #f9f9f9; /* Match the background color */
@@ -256,34 +154,41 @@
       border: 1px solid #8c564b;
       border-radius: 5px;
     }
-    
+    /* Scroll Button Styling */
+    .scroll-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #8c564b;
+      color: white;
+      font-size: 24px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .scroll-button:hover {
+      background-color: #5a3a28;
+    }
+
+        
   </style>
 </head>
 <body>
-  <!-- Flash messages section -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="alert-container">
-        {% for category, message in messages %}
-          <div class="alert {{ category }} show">
-            {{ message }}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
-
+  <!-- Top Bar -->
   <!-- Top Bar -->
   <div class="top-bar">
-    <div></div>
-    <div class="intro-text">
-      <h2>LOGIN OR REGISTER TO PROCEED TO THE SPINNBACK PLATFORM</h2>
-      <p>...Or find out what Spinnback is below!</p>
-    </div>
+    <h1></h1>
+    <h2></h2>
     <div>
       <button onclick="location.href='/login'">Login</button>
       <button onclick="location.href='/register'">Register</button>
-    </div> 
+    </div>
   </div>
   <div class="LOGO-upload-container">
     <img src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true/300x200" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 2 -->
@@ -292,19 +197,19 @@
   <!-- Listings Section -->
   <div class="listing-container">
     <div id="listings-container" class="listings-grid">
-      <div class = "listing-pair">
-        <!-- Dynamische vakken voor records -->
-        <div class="listing">Vak 1</div>
-        <div class="listing">Vak 2</div>
-      </div>
-      <div class = "listing-pair">
-        <!-- Dynamische vakken voor records -->
-        <div class="listing">Vak 3</div>
-        <div class="listing">Vak 4</div>
-      </div>
-        <div class="image-upload-container">
-            <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/text1%20overview.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 1 -->
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 1</div>
+          <div class="listing">Vak 2</div>
         </div>
+        <div class = "listing-pair">
+          <!-- Dynamische vakken voor records -->
+          <div class="listing">Vak 3</div>
+          <div class="listing">Vak 4</div>
+        </div>
+          <div class="image-upload-container">
+              <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/text1%20overview.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 1 -->
+          </div>
         <div class="image-upload-container">
           <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/text-2%20overview.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 2 -->
         </div>
@@ -345,32 +250,11 @@
           <div class="listing">Vak 4</div>
         </div>
     </div>
-    
-
+    <div id="custom-alert" style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); background-color: #23da2f; color: #ffff; padding: 15px; border: 1px solid #23da2f; border-radius: 5px; z-index: 1000;">
+      Login or Register to proceed to the Spinnback Platform
+    </div>
 
   <script>
-    // Event handler om tekstdata te versturen
-    document.querySelectorAll('textarea').forEach(textarea => {
-      textarea.addEventListener('change', async () => {
-        try {
-          const response = await fetch('/save_text', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: textarea.value })
-          });
-
-          if (!response.ok) {
-            throw new Error('Fout bij opslaan van tekst');
-          }
-
-          alert('Tekst opgeslagen!');
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Fout bij opslaan van tekst.');
-        }
-      });
-    });
-
     // Automatically hide the alert after a set duration (e.g., 100,000ms)
     setTimeout(function() {
       const alerts = document.querySelectorAll('.alert.show');
@@ -400,8 +284,8 @@
             const listing = listings[dynamicIndex++];
             vak.innerHTML = `
               <img src="${listing.image || 'placeholder.jpg'}" alt="${listing.albumname}">
-              <p class="artist">${listing.artist}</p>
-              <p>${listing.albumname}</p>
+              <p class="artist">${listing.albumname}</p>
+              <p>${listing.artist}</p>
             `;
           }
         });
@@ -423,15 +307,19 @@
         container.innerHTML = '<p>Failed to load listings. Please try again later.</p>';
       }
     }
-    
-    
-    
-    
-
     // Load the listings when the page loads
     window.onload = loadListings;
+    
+    document.addEventListener('click', function () {
+      const alertBox = document.getElementById('custom-alert');
+      alertBox.style.display = 'block';
+  
+      setTimeout(() => {
+        alertBox.style.display = 'none';
+      }, 3000); // Hides the alert after 3 seconds
+    });
+    
   </script>
-
 </body>
 </html>
 
