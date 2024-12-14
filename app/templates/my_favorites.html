@@ -237,7 +237,6 @@
           <button class="remove-favorite-button" data-recordid="{{ record['recordid'] }}" onclick="removeFavorite(this)">
             Remove from Favorite Records
           </button>
-          
           </div>
           
         <a href="{{ url_for('main.koop_1plaat', recordid=record['recordid']) }}" class="buy-button">
@@ -263,9 +262,9 @@
         const artistName = listing.getAttribute('data-artist').toLowerCase();
         
         if (albumName.includes(query) || artistName.includes(query)) {
-          listing.style.visibility = 'visible';
+          listing.style.display = 'flex';
         } else {
-          listing.style.visibility = 'hidden';
+          listing.style.display = 'none';
         }
       });
     }
