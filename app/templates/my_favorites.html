@@ -260,14 +260,22 @@
       listings.forEach(listing => {
         const albumName = listing.getAttribute('data-albumname').toLowerCase();
         const artistName = listing.getAttribute('data-artist').toLowerCase();
-        
+        const buyButton = listing.nextElementSibling; // Select the associated Buy Now button
+
         if (albumName.includes(query) || artistName.includes(query)) {
           listing.style.display = 'flex';
+          if (buyButton && buyButton.classList.contains('buy-button')) {
+            buyButton.style.display = 'block'; // Ensure the Buy Now button is visible
+          }
         } else {
           listing.style.display = 'none';
+          if (buyButton && buyButton.classList.contains('buy-button')) {
+            buyButton.style.display = 'none'; // Hide the Buy Now button
+          }
         }
       });
     }
+
     
     function removeFavorite(button) {
     const recordId = button.getAttribute("data-recordid");
