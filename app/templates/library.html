@@ -260,11 +260,11 @@
         const artistName = record.getAttribute('data-artist').toLowerCase();
     
         if (albumName.includes(query) || artistName.includes(query)) {
-          record.style.visibility = 'visible'; // Maak zichtbaar
+          record.style.display = 'flex'; // Maak zichtbaar
           record.style.height = 'auto';        // Herstel de hoogte
           record.style.marginBottom = '15px'; // Herstel marges
         } else {
-          record.style.visibility = 'hidden'; // Verberg
+          record.style.display = 'none'; // Verberg
           record.style.height = '0';         // Stel hoogte in op 0
           record.style.marginBottom = '0';   // Verwijder marges
         }
