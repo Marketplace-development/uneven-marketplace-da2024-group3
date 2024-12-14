@@ -22,44 +22,58 @@
             color: white;
             padding: 10px 20px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Centers all items in the bar */
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-        }
-
-        .top-bar h1 {
-            margin: 0;
-            font-size: 24px;
-            font-family: 'Trebuchet MS', sans-serif;
-        }
-
-
-        .back-button-container {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            text-align: right;
-            z-index: 1000;
-        }
-
-        .back-button-container .back-link {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #fdd0b5;
-            color: #8c564b;
-            text-decoration: none;
-            border: 1px solid #8c564b;
-            border-radius: 5px;
-        }
-
-        .back-button-container .back-link:hover {
-            background-color: #8c564b;
-            color: white;
-        }
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative; /* Allows positioning of the logo and button */
+          }
+          
+          .top-bar h1 {
+                  margin: 0;
+                  margin-left: 40px;
+                  font-size: 24px;
+                  font-family: 'Trebuchet MS', sans-serif;
+          }        
+          
+          .top-bar button {
+                  background-color: #f9f8f7; /* Beige achtergrond */
+                  color: #8c564b; /* Bruine tekst */
+                  border: 2px solid #8c564b; /* Bruine rand */
+                  border-radius: 8px;
+                  padding: 5px 15px; /* Ruimte rond de tekst */
+                  font-size: 14px;
+                  font-weight: bold;
+                  cursor: pointer;
+                  white-space: nowrap; /* Zorgt ervoor dat tekst op één lijn blijft */
+                  margin-right: 40px; /* Rechtermarge voor uitlijning */
+                  width: auto; /* Breedte past zich aan inhoud aan */
+                  transition: background-color 0.3s, transform 0.3s;
+                  margin-left: auto;
+          }
+          .top-bar button {
+                position: absolute;
+                right: 10px; /* Positions button on the right */
+                top: 50%;
+                transform: translateY(-50%);
+          }
+          
+          .top-bar button:hover {
+                  background-color: #fdd0b5;
+                  transform: scale(1.05);
+          }
+              
+          .LOGO-upload-container {
+            position: absolute;
+            top: -10px; /* Keeps it aligned near the top */
+            left: 25px; /* Centers horizontally */
+            z-index: 2000; /* Ensures the logo appears above other elements */
+          }
+            
+          .LOGO-upload-container img {
+                  max-width: 80px; /* Keep the size as before */
+                  height: 80px; /* Maintain aspect ratio */
+          }
+      
 
         /* Content Section */
         .content-container {
@@ -141,14 +155,13 @@
     </style>
 </head>
 <body>
-    <div class="back-button-container">
-        <!-- Back to previous page -->
-        <a href="/koop_1plaat/{{ recordid }}" class="back-link">Back to Record</a>
-    </div>
-
     <!-- Top Bar -->
     <div class="top-bar">
-        <h1>Seller Rating</h1>
+        <div class="LOGO-upload-container">
+            <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 1 -->
+        </div>
+        <h2>Seller Rating</h2>
+        <button onclick= "location.href= '/koop_1plaat/{{ recordid }}'">Back to Record</button>
     </div>
 
     <!-- Content Section -->
