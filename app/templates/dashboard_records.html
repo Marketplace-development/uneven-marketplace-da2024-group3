@@ -316,7 +316,18 @@
             text-decoration: none;
         }
         
-
+        .LOGO-upload-container {
+            position: absolute;
+            top: -10px; /* Keeps it aligned near the top */
+            left: 50%; /* Centers horizontally */
+            transform: translateX(-50%); /* Centers the logo exactly in the middle */
+            z-index: 2; /* Ensures the logo appears above other elements */
+        }
+    
+        .LOGO-upload-container img {
+            max-width: 75px; /* Keep the size as before */
+            height: 75px; /* Maintain aspect ratio */
+        }
         
     </style>
 </head>
@@ -333,7 +344,9 @@
         </div>
 
         
-        <h1>Spinnback</h1>
+        <div class="LOGO-upload-container">
+            <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 1 -->
+        </div>
         <div class="menu-button" id="menuButton">
             <div></div>
             <div></div>
