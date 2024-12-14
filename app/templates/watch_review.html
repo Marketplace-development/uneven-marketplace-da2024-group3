@@ -1,96 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spinnback - Review for Transaction</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #efe7db;
-        }
-        h1 {
-            text-align: center;
-            padding: 20px;
-            background-color: #8c564b;
-            color: white;
-            margin: 0;
-        }
-        .review-container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .review-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;  /* Aligns items to the left and right */
-            align-items: center; /* Vertically centers the items */
-        }
-        .review-item:last-child {
-            border-bottom: none;
-        }
-        .review-item h2 {
-            font-size: 24px;
-            margin: 0 0 10px 0;
-            color: #8c564b;
-        }
-        .review-item p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #333;
-        }
-        .review-item strong {
-            color: #8c564b;
-        }
-        .back-button-container {
-            display: flex;
-            justify-content: flex-end; /* Position items to the right */
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 1000;
-        }
-        .back-button-container .back-link,
-        .back-button-container .back-sold-records {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #fdd0b5;
-            color: #8c564b;
-            text-decoration: none;
-            border: 1px solid #8c564b;
-            border-radius: 5px;
-            margin-left: 10px; /* Adds space between the buttons */
-        }
-        .back-button-container .back-link:hover,
-        .back-button-container .back-sold-records:hover {
-            background-color: #8c564b;
-            color: white;
-        }
-        .back-sold-records {
-            margin-left: 10px; /* Ensures space between the two buttons */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spinnback - Buy Record</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background-color: #efe7db;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #3d2b1f;
+    }
+
+    .top-bar {
+      width: 100%;
+      background-color: #8c564b;
+      color: white;
+      padding: 24px 20px;
+      display: flex;
+      justify-content: center; /* Centers all items in the bar */
+      align-items: center;
+      position: fixed; /* Fixes the top bar at the top of the viewport */
+      top: 0;
+      left: 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .top-bar .LOGO-upload-container {
+      position: absolute;
+      left: 25px; /* Aligns the logo to the left */
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2000;
+    }
+
+    .top-bar img {
+      max-width: 80px;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .top-bar h2 {
+      margin: 0;
+      font-size: 24px;
+      font-family: 'Trebuchet MS', sans-serif;
+      color: white;
+    }
+
+    .top-bar button {
+      background-color: #f9f8f7;
+      color: #8c564b;
+      border: 2px solid #8c564b;
+      border-radius: 8px;
+      padding: 5px 15px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      position: absolute;
+      right: 50px; /* Aligns the button to the right */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .top-bar button:hover {
+      background-color: #fdd0b5;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 90%;
+      text-align: left;
+      margin-top: 80px; /* Prevents overlap with the fixed top bar */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .details {
+      flex: 1;
+      margin-right: 20px;
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      text-align: left;
+      height: 100%; 
+    }
+
+    .details p {
+      margin: 5px 0; 
+    }
+
+    .details strong {
+      display: inline-block;
+      padding-right: 15px; 
+      width: 120px; 
+    }
+
+    .seller-info {
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+    }
+
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+      flex-shrink: 0; 
+      margin-top: -20px; 
+    }
+
+    .details-image {
+      max-width: 300px;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-text {
+      text-align: center; 
+      margin-top: 10px; 
+    }
+
+    .album-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #5a3a28;
+      margin: 0;
+    }
+
+    .artist-name {
+      font-size: 16px;
+      font-weight: normal;
+      color: #000;
+      margin: 0;
+      margin-top: 5px;
+    }
+
+    h1 {
+      color: #5a3a28;
+      margin-bottom: 20px;
+    }
+
+    .rating-button {
+      margin-left: 10px;
+      background-color: white;
+      color: #5a3a28;
+      border: 2px solid #5a3a28;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .rating-button:hover {
+      background-color: #f4e9e2;
+    }
+
+    .alert {
+      padding: 15px;
+      background-color: #dff0d8;
+      color: #3c763d;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #d6e9c6;
+    }
+
+    .form {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="back-button-container">
-        <a href="/dashboard" class="back-link">Back to Home</a>
-        <a href="/my_sold_records" class="back-sold-records">Back to My Sold Records</a>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="LOGO-upload-container">
+      <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true" alt="Spinnback">
     </div>
+    <h2>Buy Record</h2>
+    <button onclick="location.href='/transactions'">Buy other Record</button>
+  </div>
 
-    <h1>Review for Transaction {{ transaction.transactionid }}</h1>
-    <div class="review-container">
-        <div class="review-item">
-            <h2>Review Score: {{ review.reviewscore }}</h2>
-        </div>
-        <p><strong>Reasoning:</strong> {{ review.reasoning }}</p>
+  <div class="container">
+    <div id="success-message" class="alert" style="display: none;">Vinyl Successfully Purchased!</div>
+    
+    <!-- Title and Artist in one row -->
+    <div class="header-info">
+      <h1>{{ record.albumname }} - {{ record.artist }}</h1>
     </div>
+    
+    <div class="content">
+      <div class="details">
+        <p><strong>GENRE</strong> {{ record.genre }}</p>
+        <p><strong>CONDITION</strong> {{ record.condition }}</p>
+        <p><strong>COLOR</strong> {{ record.colour }}</p>
+        <p><strong>DESCRIPTION</strong> 
+          {{ record.description if record.description else "No description provided by seller" }}
+        </p>
+        <p>
+          <strong>SELLER INFO</strong> {{ seller_username }}
+          <p><strong></strong> {{ seller_email }}
+          <p><strong></strong> {{ seller_telefoonnummer }}
+        </p>
+        
+        <!-- Seller Rating and View Reviews Button in a flex container -->
+        <div class="seller-info">
+          {% if seller_rating is not none %}
+            <p><strong>SELLER RATING</strong> {{ seller_rating }} / 5</p>
+          {% endif %}
+          <button class="rating-button" onclick="location.href='/view_seller_rating/{{ record.ownerid }}?recordid={{ record.recordid }}'">
+            Seller Reviews
+          </button>
+        </div>
+      </div>
+      
+      <!-- Image on the right -->
+      <div class="image-container">
+        <img src="{{ record.image }}" alt="{{ record.albumname }} cover" class="details-image">
+      </div>
+    </div>
+    
+    <!-- Buy Button -->
+    <form method="POST" action="/create_transaction/{{ record.recordid }}" class="form">
+      <button type="submit" class="button delete-button">
+        Buy - €{{ record.price }}
+      </button>
+    </form>
+  </div>
 </body>
 </html>
 
