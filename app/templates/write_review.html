@@ -11,13 +11,7 @@
             padding: 0;
             background-color: #efe7db;
         }
-        h1 {
-            text-align: center;
-            padding: 20px;
-            background-color: #8c564b;
-            color: white;
-            margin: 0;
-        }
+
         .review-container {
             max-width: 600px;
             margin: 30px auto;
@@ -26,23 +20,28 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
+
         form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
+
         label {
             font-weight: bold;
             color: #8c564b;
         }
+
         input[type="radio"] {
             margin-right: 10px;
         }
+
         .rating-container {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .reasoning-textarea {
             width: 100%;
             height: 100px;
@@ -51,6 +50,7 @@
             border-radius: 5px;
             font-size: 14px;
         }
+
         .submit-button {
             background-color: #8c564b;
             color: white;
@@ -61,11 +61,11 @@
             font-size: 16px;
             text-align: center;
         }
+
         .submit-button:hover {
             background-color: #5c3a31;
         }
 
-        /* Styling voor flash message */
         .flash-message {
             background-color: #d4edda;
             color: #155724;
@@ -76,39 +76,81 @@
             text-align: center;
         }
 
-        /* Styling voor de knoppen rechtsboven */
-        .back-button-container {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            text-align: right;
-            z-index: 1000;
-        }
-        .back-button-container .back-link,
-        .back-button-container .back-purchases {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #fdd0b5;
-            color: #8c564b;
-            text-decoration: none;
-            border: 1px solid #8c564b;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-        .back-button-container .back-link:hover,
-        .back-button-container .back-purchases:hover {
+        .top-bar {
+            width: 100%;
             background-color: #8c564b;
             color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .top-bar .LOGO-upload-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-bar img {
+            max-width: 80px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .top-bar h2 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            margin: 0;
+            color: white;
+            font-family: 'Trebuchet MS', sans-serif;
+        }    
+        .top-bar button {
+            background-color: #f9f8f7;
+            color: #8c564b;
+            border: 2px solid #8c564b;
+            border-radius: 8px;
+            padding: 5px 15px;
+            font-size: 14px;
+            margin-right: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .top-bar button:hover {
+            background-color: #fdd0b5;
+            transform: scale(1.05);
+        }
+
+        .top-bar div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-bar button:last-child {
+            margin-left: auto;
         }
     </style>
 </head>
 <body>
-    <div class="back-button-container">
-        <a href="/dashboard" class="back-link">Back to Home</a>
-        <a href="/my_purchases" class="back-purchases">Back to My Purchases</a>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="LOGO-upload-container">
+            <img src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true" alt="Spinnback Logo">
+        </div>
+        <h2>Write a Review</h2>
+        <div>
+            <button onclick="location.href='/my_purchases'">Back to My Purchases</button>
+            <button onclick="location.href='/dashboard'">Home</button>
+        </div>
     </div>
 
-    <h1>Write a Review</h1>
+    <!-- Review Container -->
     <div class="review-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -150,5 +192,6 @@
     </div>
 </body>
 </html>
+
 
 
