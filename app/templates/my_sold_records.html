@@ -255,9 +255,10 @@
                             <p><strong>Commission Fee</strong> €{{ "%.2f"|format(record.price * 0.05) }}</p>
                             <p><strong>Date:</strong> {{ record.date_sold }}</p>
                             <p><strong>Shipping Address:</strong></p>
-                            {% for line in record.buyer_adress %}
+                            {% for line in record.buyer_address %}
                                 <p>{{ line }}</p>
                             {% endfor %}
+
 
                             <div class="buyer-info">
                                 <p><strong>Buyer Info:</strong></p>
