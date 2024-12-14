@@ -1,24 +1,24 @@
 ### Marketplace Ideation
 
-Platform name: 
+Platform name: Spinnback
 
-Short description: 
+Short description: Spinnback is a vinyl resale and social media platform designed for music lovers and collectors. Whether you're hunting for rare records, selling your vinyl, or connecting with fellow enthusiasts, Spinnback will keep you updated with all of those.
 
 # Taxonomy: Business Model
 
-User Type: Person | Organization
-Listing Kind: Good Transfer |Service
-Listing Type: Physical Good | Digital Good | Offline Serviced | Online Serviced
-Frequency: One-Time | Recurring
+User Type: Person
+Listing Kind: Good Transfer 
+Listing Type: Physical Good 
+Frequency: One-Time 
 Quantity: One | Many
-Price Discovery: Set by Provider | Set by Customer | Set by Market
-Price Calculation: By Quantity | By Feature | Auction | Quote
-Conversation System: Listing Conversation | Transaction Conversation
-Review by: By Customer | By Provider
-Review of: Of Listing | Of Provider
-Trust and Safety: ID Verification | Badges | In-app reporting
-Revenue Stream: Subscription | Commission | Fixed Fee | Listing Fee
-Revenue Source: Customer | Provider
+Price Discovery: Set by Provider 
+Price Calculation: By Quantity 
+Conversation System: None
+Review by: By Customer
+Review of: Of Provider
+Trust and Safety: None
+Revenue Stream: commision and ads
+Revenue Source: customer
 
 # Ontology model
 
@@ -29,8 +29,15 @@ Revenue Source: Customer | Provider
 # User stories
 
 As a [], I want to [], so that []. Prio
-As a [Customer], I want to [buy a product], so that [I can use it]. 2
-As a [provider], I want to [sell a product], so that [I earn money]. 1
+As a [User], I want to [buy a product], so that [I can use it]. 2
+As a [User], I want to [sell a product], so that [I earn money]. 1
+As a [User] I want to [see a list of vinyls], so that [I can find what I am looking for]
+As a [User] I want to [see a vinyl description], so that [I can examine what i'm buying]
+As a [User] I want to [see a vinyl price], so that [I can know what i will pay]
+As a [User] I want to [add a vinyl], so that [I can see my collection]
+As a [User] I want to [see the collection of other users] so that [I can link with people that heve similar taste]
+As a [User] I want to [see the reviews of other users], so that [I know how good the other user is rated]
+
 
 # UI Prototype
 
