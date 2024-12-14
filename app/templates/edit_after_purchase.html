@@ -13,11 +13,65 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
       color: #202020;
-      font: 20
     }
+
+    .top-bar {
+      width: 100%;
+      background-color: #8c564b;
+      color: white;
+      padding: 24px 20px;
+      display: flex;
+      justify-content: center; /* Centers all items in the bar */
+      align-items: center;
+      position: fixed; /* Fixes the top bar at the top of the viewport */
+      top: 0;
+      left: 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .top-bar .LOGO-upload-container {
+      position: absolute;
+      left: 25px; /* Aligns the logo to the left */
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2000;
+    }
+
+    .top-bar img {
+      max-width: 80px;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .top-bar h2 {
+      margin: 0;
+      font-size: 24px;
+      font-family: 'Trebuchet MS', sans-serif;
+      color: white;
+    }
+
+    .top-bar button {
+      background-color: #f9f8f7;
+      color: #8c564b;
+      border: 2px solid #8c564b;
+      border-radius: 8px;
+      padding: 5px 15px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      position: absolute;
+      right: 50px; /* Aligns the button to the right */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .top-bar button:hover {
+      background-color: #fdd0b5;
+    }
+
     .container {
       background-color: #fff;
       padding: 20px;
@@ -25,7 +79,9 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
       width: 1000px;
+      margin-top: 80px; /* Prevents overlap with the fixed top bar */
     }
+
     .success-message {
       padding: 15px;
       background-color: #dff0d8;
@@ -34,7 +90,9 @@
       margin-bottom: 15px;
       border: 1px solid #d6e9c6;
     }
-    .form-group select, .form-group input {
+
+    .form-group select,
+    .form-group input {
       width: auto;
       padding: 8px;
       font-size: 14px;
@@ -42,14 +100,17 @@
       display: inline-block;
       text-align: center;
     }
+
     .form-group {
       margin-top: 60px;
       text-align: center;
     }
+
     .form-group label {
       display: block;
       margin-bottom: 5px;
     }
+
     .button {
       padding: 10px 20px;
       background-color: #8c564b;
@@ -60,9 +121,11 @@
       cursor: pointer;
       margin-top: 20px;
     }
+
     .button:hover {
       background-color: #5e3d2f;
     }
+
     .price-input {
       display: none;
       margin-top: 10px;
@@ -70,43 +133,52 @@
   </style>
 </head>
 <body>
-    <div class="container">
-        <div class="success-message">
-          Congrats on adding to your collection! Purchase confirmed.
-        </div>
-        
-        <h2>Now choose whether you wan't to keep your brand new record in your collection, or directly put it for sale again</h2>
-        <p>(You can later change your choice by editing the record in 'My Collection')</p>
-        <form method="POST" action="/edit_after_purchase/{{ record.recordid }}">
-          <div class="form-group">
-            <label for="decision">Keep or sell?</label>
-            <select id="decision" name="decision" required onchange="togglePriceField()">
-              <option value="">-- Select an option --</option>
-              <option value="sell">I want to sell the record</option>
-              <option value="keep">I want to keep the record in my collection</option>
-            </select>
-          </div>
-    
-          <div class="form-group price-input" id="price-field">
-            <label for="price">Price (€)</label>
-            <input type="number" id="price" name="price" placeholder="Enter your price" min="0" step="0.01">
-          </div>
-    
-          <button type="submit" class="button">Confirm</button>
-        </form>
+  <div class="top-bar">
+    <div class="LOGO-upload-container">
+      <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true" alt="Spinnback">
+    </div>
+    <h2>Keep or Sell</h2>
+    <button onclick="location.href='/overview_records'">Back to Home</button>
+  </div>
+
+  <div class="container">
+    <div class="success-message">
+      Congrats on adding to your collection! Purchase confirmed.
+    </div>
+
+    <h2>Now choose whether you want to keep your brand new record in your collection, or directly put it for sale again</h2>
+    <p>(You can later change your choice by editing the record in 'My Collection')</p>
+    <form method="POST" action="/edit_after_purchase/{{ record.recordid }}">
+      <div class="form-group">
+        <label for="decision">Keep or sell?</label>
+        <select id="decision" name="decision" required onchange="togglePriceField()">
+          <option value="">-- Select an option --</option>
+          <option value="sell">I want to sell the record</option>
+          <option value="keep">I want to keep the record in my collection</option>
+        </select>
       </div>
-    
-      <script>
-        function togglePriceField() {
-          const decision = document.getElementById('decision').value;
-          const priceField = document.getElementById('price-field');
-          
-          if (decision === 'sell') {
-            priceField.style.display = 'block';
-          } else {
-            priceField.style.display = 'none';
-          }
-        }
-      </script>
-    </body>
-    </html>
+
+      <div class="form-group price-input" id="price-field">
+        <label for="price">Price (€)</label>
+        <input type="number" id="price" name="price" placeholder="Enter your price" min="0" step="0.01">
+      </div>
+
+      <button type="submit" class="button">Confirm</button>
+    </form>
+  </div>
+
+  <script>
+    function togglePriceField() {
+      const decision = document.getElementById('decision').value;
+      const priceField = document.getElementById('price-field');
+
+      if (decision === 'sell') {
+        priceField.style.display = 'block';
+      } else {
+        priceField.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
+
