@@ -170,6 +170,15 @@
     .search-button:hover {
       background-color: #5c3a31;
     }
+
+    .sort-dropdown {
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #8c564b;
+      border-radius: 5px;
+      background-color: white;
+      color: #8c564b;
+    }
   </style>
 </head>
 <body>
@@ -190,7 +199,15 @@
     <div class="search-container">
       <input type="text" id="search" class="search-bar" placeholder="Search album or artist" onkeyup="searchListings()">
       <button class="search-button">Search</button>
+      <select id="sort-dropdown" class="sort-dropdown" onchange="sortListings()">
+        <option value="" selected disabled>Sort</option>
+        <option value="artistAZ">Artist: A-Z</option>
+        <option value="albumAZ">Albumname: A-Z</option>
+      </select>
     </div>
+    
+    
+    
 
     {% if records %}
       <div id="listings-container">
@@ -248,6 +265,35 @@
           listing.style.display = 'none'; // Verberg het element
         }
       });
+    }
+
+    function sortListings() {
+      const sortValue = document.getElementById('sort-dropdown').value;
+      const listingsContainer = document.getElementById('listings-container');
+      const listings = Array.from(listingsContainer.children);
+  
+      listings.sort((a, b) => {
+        if (sortValue === 'artistAZ') {
+          // Sorteer op artiest, en vervolgens albums alfabetisch
+          const artistA = a.dataset.artist.toLowerCase();
+          const artistB = b.dataset.artist.toLowerCase();
+          if (artistA === artistB) {
+            // Als de artiesten gelijk zijn, sorteer op albumnaam
+            const albumA = a.dataset.albumname.toLowerCase();
+            const albumB = b.dataset.albumname.toLowerCase();
+            return albumA.localeCompare(albumB);
+          }
+          return artistA.localeCompare(artistB);
+        } else if (sortValue === 'albumAZ') {
+          // Sorteer direct op albumnaam alfabetisch
+          const albumA = a.dataset.albumname.toLowerCase();
+          const albumB = b.dataset.albumname.toLowerCase();
+          return albumA.localeCompare(albumB);
+        }
+      });
+  
+      // Plaats de gesorteerde listings terug in de container
+      listings.forEach(listing => listingsContainer.appendChild(listing));
     }
   </script>
 
