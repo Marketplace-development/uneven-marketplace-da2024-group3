@@ -525,7 +525,7 @@ def my_sold_records():
         if buyer and record:
             image_url = record.image if record.image else None
             formatted_date = transaction.created_at.strftime('%Y-%m-%d %H:%M:%S')
-            formatted_address = format_shipping_address(buyer.address)  # Formatteer het adres
+            formatted_address = format_shipping_address(buyer.address)
             sold_records_data.append({
                 "transaction_id": transaction.transactionid,
                 "record_id": transaction.recordid,
