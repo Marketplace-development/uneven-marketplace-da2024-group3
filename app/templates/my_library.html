@@ -243,11 +243,9 @@
         const artistName = listing.getAttribute('data-artist').toLowerCase();
         
         if (albumName.includes(query) || artistName.includes(query)) {
-          listing.style.visibility = 'visible';
-          listing.style.opacity = '1'; // Zorg voor zichtbaarheid
+          listing.style.display = 'flex'; // Zorg voor zichtbaarheid
         } else {
-          listing.style.visibility = 'hidden';
-          listing.style.opacity = '0'; // Verberg het element
+          listing.style.display = 'none'; // Verberg het element
         }
       });
     }
