@@ -514,7 +514,7 @@ def my_sold_records():
             ]
         except ValueError:
         # Zorg voor een fallback als de invoer niet aan de verwachtingen voldoet
-            return ["Invalid Address Format"]
+            return ["Contact Buyer for adress"]
 
 
     # Haal de bijbehorende records en kopergegevens op voor elke transactie
