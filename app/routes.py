@@ -151,8 +151,10 @@ def login():
         # Controleer of de gebruikersnaam bestaat in de database
         user = users.query.filter_by(username=username).first()
         if not user:
-            # Stuur door naar de registratiepagina met een foutmelding
-            return render_template("register.html", errors="Username not found. Register your account first please.")  # Foutmelding als gebruiker niet bestaat
+            error_message = "Please register first."
+            return render_template("register.html", errors=error_message)
+
+ 
 
         # Sla de gebruikersnaam en userid op in de sessie en stuur door naar het dashboard
         session['username'] = username
