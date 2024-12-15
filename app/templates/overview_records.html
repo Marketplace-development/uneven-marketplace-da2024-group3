@@ -152,11 +152,21 @@
       border: 1px solid #8c564b;
       border-radius: 5px;
     }
+    
+    .flash-message {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      text-align: center;
+  }
+  
         
   </style>
 </head>
 <body>
-  <!-- Top Bar -->
   <!-- Top Bar -->
   <div class="top-bar">
     <h1></h1>
@@ -166,7 +176,20 @@
       <button onclick="location.href='/register'">Register</button>
     </div>
   </div>
-
+  <div>
+    <!-- Add this block in overview_records.html where messages should appear -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          <div>
+              {% for category, message in messages %}
+                  <div class="flash-message">
+                      {{ message }}
+                  </div>
+              {% endfor %}
+          </div>
+      {% endif %}
+      {% endwith %}
+  </div>
 
   <!-- Listings Section -->
   <div class="listing-container">
@@ -228,15 +251,27 @@
       Login or Register to proceed to the Spinnback Platform
     </div>
 
+
   <script>
     // Automatically hide the alert after a set duration (e.g., 100,000ms)
     setTimeout(function() {
       const alerts = document.querySelectorAll('.alert.show');
       alerts.forEach(alert => {
-        alert.classList.remove('show'); // Remove show class to trigger fade-out
+        alert.classList.remove('show'); 
       });
-    }, 100000);  // 100,000ms = 100 seconds
+    }, 100);  // 100,000ms = 100 seconds
     
+      
+    setTimeout(function() {
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(message => {
+            message.style.transition = "opacity 0.5s";
+            message.style.opacity = "0"; // Gradually fade out
+            setTimeout(() => message.remove(), 500); // Remove after fade-out
+        });
+    }, 10000); // 10 seconds
+
+  
     // Fetch listings from the backend and render them
     async function loadListings() {
       const container = document.getElementById('listings-container');
