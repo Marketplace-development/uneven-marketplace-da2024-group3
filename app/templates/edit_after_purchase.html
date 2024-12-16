@@ -133,6 +133,13 @@
       display: none;
       margin-top: 10px;
     }
+
+    .commission-info {
+      margin-top: 10px;
+      color: #8c564b;
+      font-size: 16px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -163,7 +170,11 @@
 
       <div class="form-group price-input" id="price-field">
         <label for="price">Price (€)</label>
-        <input type="number" id="price" name="price" placeholder="Enter your price" min="0" step="0.01">
+        <input type="number" id="price" name="price" placeholder="Enter your price" min="0" step="0.01" oninput="calculateCommission()">
+        <div class="commission-info" id="commission-info" style="display: none;">
+          <p>Commission fee: €<span id="commission-value">0.00</span></p>
+          <p>Net earnings: €<span id="net-earnings">0.00</span></p>
+        </div>
       </div>
 
       <button type="submit" class="button">Confirm</button>
@@ -181,7 +192,29 @@
         priceField.style.display = 'none';
       }
     }
+
+    function calculateCommission() {
+      const priceInput = document.getElementById('price').value;
+      const commissionInfo = document.getElementById('commission-info');
+      const commissionValueElement = document.getElementById('commission-value');
+      const netEarningsElement = document.getElementById('net-earnings');
+
+      const price = parseFloat(priceInput);
+      const commissionRate = 0.1; // 10% commission
+      if (!isNaN(price) && price > 0) {
+        const commissionFee = (price * commissionRate).toFixed(2);
+        const netEarnings = (price - commissionFee).toFixed(2);
+
+        commissionValueElement.textContent = commissionFee;
+        netEarningsElement.textContent = netEarnings;
+
+        commissionInfo.style.display = 'block';
+      } else {
+        commissionInfo.style.display = 'none';
+      }
+    }
   </script>
 </body>
 </html>
+
 
