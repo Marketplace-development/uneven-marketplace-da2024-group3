@@ -200,7 +200,7 @@
       const netEarningsElement = document.getElementById('net-earnings');
 
       const price = parseFloat(priceInput);
-      const commissionRate = 0.1; // 10% commission
+      const commissionRate = 0.05; // 10% commission
       if (!isNaN(price) && price > 0) {
         const commissionFee = (price * commissionRate).toFixed(2);
         const netEarnings = (price - commissionFee).toFixed(2);
