@@ -11,13 +11,65 @@
             padding: 0;
             background-color: #efe7db;
         }
-        h1 {
-            text-align: center;
-            padding: 20px;
-            background-color: #8c564b;
-            color: white;
-            margin: 0;
+        .top-bar {
+          width: 100%;
+          background-color: #8c564b;
+          color: white;
+          padding: 10px 20px;
+          display: flex;
+          justify-content: center; /* Centers all items in the bar */
+          align-items: center;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+          position: relative; /* Allows positioning of the logo and button */
         }
+        
+        .top-bar h1 {
+                margin: 0;
+                margin-left: 40px;
+                font-size: 24px;
+                font-family: 'Trebuchet MS', sans-serif;
+        }        
+        
+        .top-bar button {
+                background-color: #f9f8f7; /* Beige achtergrond */
+                color: #8c564b; /* Bruine tekst */
+                border: 2px solid #8c564b; /* Bruine rand */
+                border-radius: 8px;
+                padding: 5px 15px; /* Ruimte rond de tekst */
+                font-size: 14px;
+                font-weight: bold;
+                cursor: pointer;
+                white-space: nowrap; /* Zorgt ervoor dat tekst op één lijn blijft */
+                margin-right: 40px; /* Rechtermarge voor uitlijning */
+                width: auto; /* Breedte past zich aan inhoud aan */
+                transition: background-color 0.3s, transform 0.3s;
+                margin-left: auto;
+        }
+        .top-bar button {
+              position: absolute;
+              right: 10px; /* Positions button on the right */
+              top: 50%;
+              margin-left: 100px;
+              transform: translateY(-50%);
+        }
+        
+        .top-bar button:hover {
+                background-color: #fdd0b5;
+                transform: scale(1.05);
+        }
+            
+        .LOGO-upload-container {
+          position: absolute;
+          top: -10px; /* Keeps it aligned near the top */
+          left: 25px; /* Centers horizontally */
+          z-index: 2000; /* Ensures the logo appears above other elements */
+        }
+          
+        .LOGO-upload-container img {
+                max-width: 80px; /* Keep the size as before */
+                height: 80px; /* Maintain aspect ratio */
+        }
+    
         .review-container {
             max-width: 800px;
             margin: 20px auto;
@@ -79,12 +131,18 @@
     </style>
 </head>
 <body>
-    <div class="back-button-container">
-        <a href="/dashboard" class="back-link">Back to Home</a>
-        <a href="/my_sold_records" class="back-sold-records">Back to My Sold Records</a>
+    <!-- Top Bar with title and back button -->
+    <div class="top-bar">
+      <div class="LOGO-upload-container">
+          <img id="fixed-image" src="https://github.com/Marketplace-development/uneven-marketplace-da2024-group3/blob/main/images/LOGOOOO.png?raw=true" alt="Spinnback" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"> <!-- afbeelding 1 -->
+      </div>
+      <h2>Review for Transaction {{ transaction.transactionid }}</h2>
+      <div>
+        <button onclick="location.href='/my_sold_records'">Back to My Sold Records</button>
+        <button onclick="location.href='/dashboard'">Home</button>
+      </div>
     </div>
 
-    <h1>Review for Transaction {{ transaction.transactionid }}</h1>
     <div class="review-container">
         <div class="review-item">
             <h2>Review Score: {{ review.reviewscore }}</h2>
