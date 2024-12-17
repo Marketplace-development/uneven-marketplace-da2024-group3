@@ -148,6 +148,13 @@
     .visible {
       display: block;
     }
+
+    #commission-details {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #5a3a28;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -218,8 +225,12 @@
 
       <div id="price-container" class="{% if record.Sellyesorno %}visible{% else %}hidden{% endif %}">
         <label for="price">Price (€)</label>
-        <input type="number" id="price" name="price" step="0.01" min="0" value="{{ record.price }}">
-      </div>
+        <input type="number" id="price" name="price" step="0.01" min="0" value="{{ record.price }}" oninput="calculateNetAmount()">
+        <div id="commission-details">
+            <p>Commission (5%): €<span id="commission">0.00</span></p>
+            <p>Net Amount: €<span id="net-amount">0.00</span></p>
+        </div>
+    </div>
 
       <label for="description">Description</label>
       <textarea id="description" name="description">{{ record.description }}</textarea>
@@ -245,7 +256,25 @@
         priceInput.value = '';
       }
     }
+    function calculateNetAmount() {
+        const priceInput = document.getElementById('price');
+        const commissionSpan = document.getElementById('commission');
+        const netAmountSpan = document.getElementById('net-amount');
 
+        // Haal de prijs op en controleer of deze geldig is
+        const price = parseFloat(priceInput.value) || 0;
+
+        // Bereken commissie en netto bedrag
+        const commission = price * 0.05; // 5% van de prijs
+        const netAmount = price - commission;
+
+        // Toon de resultaten in de UI
+        commissionSpan.textContent = commission.toFixed(2); // 2 decimalen
+        netAmountSpan.textContent = netAmount.toFixed(2);
+    }
+
+    // Roep de functie aan bij het laden van de pagina om de startwaarden te berekenen
+    document.addEventListener('DOMContentLoaded', calculateNetAmount);
     Sellyesorno.addEventListener('change', togglePriceField);
     document.addEventListener('DOMContentLoaded', togglePriceField);
   </script>
