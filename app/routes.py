@@ -200,7 +200,7 @@ def manage_records():
             bucket = supabase.storage.from_('images')
             file_path = f"records/{filename}"
             file_content = image.read()
-            upload_response = bucket.upload(file_path, file_content)
+            bucket.upload(file_path, file_content)
             image_url = f"https://ydlbtcbabebtcajmvoyl.supabase.co/storage/v1/object/public/images/{file_path}"
 
 
